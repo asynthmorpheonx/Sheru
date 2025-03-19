@@ -1,21 +1,20 @@
-SRC=
+SRC= heap_controller/g_container.c heap_controller/managment_utils.c minishell.c
 OBJ= $(SRC:%.c=%.o)
 NAME= minishell
 LIBS= libs/libft.a libs/libftprintf.a
 CC= cc
 CFLAGS= -Wall -Werror -Wextra
-ILFLAGS= 
 
 all: $(NAME)
 
-$(NAME): $(LIBS) $(OBJ)
-	$(CC) $(OBJ) -I includes -L libs -lft -lprintf -o $(NAME)
+$(NAME): $(OBJ) $(LIBS)
+	$(CC) $(OBJ) -Llibs -lft -lftprintf -o $(NAME)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) -I includes $(CFLAGS) -c $< -o $@
 
 $(LIBS):
-	mkdir libs
+	mkdir -p libs
 	make -C libft bonus
 	make -C ft_printf
 
@@ -27,7 +26,7 @@ clean:
 fclean: clean
 	make -C libft fclean
 	make -C ft_printf fclean
-	rm -rf $(LIBS)
+	rm -rf $(LIBS) libs $(NAME)
 
 re: fclean all
 

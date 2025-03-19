@@ -11,7 +11,7 @@ $(NAME) : $(OBJ)
 	@ar rcs $(NAME) $(OBJ)
 
 %.o : %.c
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) -I../includes $(CFLAGS) -c $< -o $@
 
 clean :
 	@rm -rf $(OBJ)
