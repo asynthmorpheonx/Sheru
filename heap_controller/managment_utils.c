@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   managment_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 13:44:40 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/03/19 02:01:04 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/03/21 03:47:05 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,32 +17,31 @@ void	g_lst_clear(t_container **lst, void (*del)(void*))
 	t_container	*curr_node;
 	t_container	*next_node;
 
-	if (!lst || !*lst || !del)
-		return ;
 	curr_node = *lst;
-	while (curr_node != NULL)
+	while (curr_node)
 	{
 		next_node = curr_node->next;
-		(del)(curr_node->content);
+		if (curr_node->content)
+			(del)(curr_node->content);
 		free(curr_node);
 		curr_node = next_node;
 	}
 	*lst = NULL;
 }
 
-void	g_lst_addback(t_container **lst, t_container *new)
+void	g_lst_addback(t_container *new)
 {
 	t_container	*last;
+	t_container	**lst;
 
-	if (lst || new)
-		return ;
+	lst = container();
 	last = *lst;
-	if (*lst == NULL)
+	if (!*lst)
 	{
 		*lst = new;
 		return ;
 	}
-	while (last->next != NULL)
+	while (last->next)
 		last = last->next;
 	last->next = new;
 }
@@ -66,4 +65,18 @@ t_container	*g_new_garbage(void *content)
 	my_list->content = content;
 	my_list->next = NULL;
 	return (my_list);
+}
+
+void	print_stack(void)
+{
+	t_container	*node;
+
+	node = *container();
+	while (node)
+	{
+		printf("=============%s=============\n",
+			(char *)node->content);
+		node = node->next;
+	}
+	printf("%s", (char *)node);
 }

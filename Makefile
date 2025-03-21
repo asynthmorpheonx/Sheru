@@ -1,4 +1,4 @@
-SRC= heap_controller/g_container.c heap_controller/managment_utils.c minishell.c
+SRC= heap_controller/g_container.c heap_controller/managment_utils.c minishell.c utils.c
 OBJ= $(SRC:%.c=%.o)
 NAME= minishell
 LIBS= libs/libft.a libs/libftprintf.a
@@ -8,7 +8,7 @@ CFLAGS= -Wall -Werror -Wextra
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBS)
-	$(CC) $(OBJ) -Llibs -lft -lftprintf -o $(NAME)
+	$(CC) $(OBJ) -Llibs -lft -lftprintf -lreadline -o $(NAME)
 
 %.o: %.c
 	$(CC) -I includes $(CFLAGS) -c $< -o $@

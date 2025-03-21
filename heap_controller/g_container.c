@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   g_container.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:41:41 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/03/19 02:02:14 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/03/21 03:46:47 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	*safe_alloc(size_t byts_count, int mode)
 		clear_container();
 		return (perror("malloc"), NULL);
 	}
-	g_lst_addback(container(), new_node);
+	g_lst_addback(new_node);
 	if (!mode)
 		fill_zero(array, byts_count);
 	return (array);
