@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/03/21 03:53:41 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/03/21 05:20:25 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,16 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <heap_controller.h>
+
+typedef enum e_token
+{
+	PIPE,
+	INDIRECT,
+	OUDIRECT,
+	APPEND,
+	HERDOC,
+	WORD
+}	t_token;
 
 void	*safe_alloc(size_t byts_count, int mode);
 t_list	**g_container(void);
