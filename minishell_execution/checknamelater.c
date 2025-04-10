@@ -7,7 +7,7 @@ t_path  *pth(void)
     return(&x);
 }
 
-char *get_command_path(char *command)
+char *get_command_path(char *cmd)
 {
     pth()->path = getenv("PATH");
     if (!pth()->path)
@@ -23,26 +23,32 @@ char *get_command_path(char *command)
     }
     pth()->dir = ft_split(pth()->path_copy, ':');
     pth()->full_path = NULL;
+    return(pathh(cmd));
+}
 
+char *pathh(char *cmd)
+{
     while (pth()->dir[pth()->index ] != NULL)
     {
-        pth()->full_path = malloc(ft_strlen(pth()->dir[pth()->index]) + ft_strlen(command) + 2);
-        if (!pth()->full_path) {
+        pth()->full_path = malloc(ft_strlen(pth()->dir[pth()->index]) + ft_strlen(cmd) + 2);
+        if (!pth()->full_path)
+        {
             perror("minishell: malloc failed");
             free(pth()->path_copy);
             return NULL;
         }
         ft_strcpy(pth()->full_path, pth()->dir[pth()->index]);
         ft_strcat(pth()->full_path, "/");
-        ft_strcat(pth()->full_path, command);
-        if (access(pth()->full_path, X_OK) == 0) {
+        ft_strcat(pth()->full_path, cmd);
+        if (access(pth()->full_path, X_OK) == 0)
+        {
             free(pth()->path_copy);
-            return (pth()->full_path);  // Caller must free this memory
+            return (pth()->full_path);
         }
         free(pth()->full_path);
         pth()->full_path = NULL;
         pth()->index++;
     }
     free(pth()->path_copy);
-    return NULL;  // Command not found in PATH
+    return NULL;
 }
