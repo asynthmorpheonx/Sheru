@@ -21,13 +21,14 @@ char *get_command_path(char *cmd)
         perror("minishell: strdup failed");
         return NULL;
     }
-    pth()->dir = ft_split(pth()->path_copy, ':');
-    pth()->full_path = NULL;
-    return(pathh(cmd));
+    return (pat(cmd));
 }
 
-char *pathh(char *cmd)
+char *pat(char *cmd)
 {
+    pth()->index = 0;
+    pth()->dir = ft_split(pth()->path_copy, ':');
+    pth()->full_path = NULL;
     while (pth()->dir[pth()->index ] != NULL)
     {
         pth()->full_path = malloc(ft_strlen(pth()->dir[pth()->index]) + ft_strlen(cmd) + 2);

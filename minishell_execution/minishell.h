@@ -18,7 +18,9 @@ typedef struct s_path
 	int		index;
 }	t_path;
 
-char *get_command_path(char *command);
-void    check(char *cmd);
+char *get_command_path(char *cmd);
+void    check(char *commands, int pips);
+char *pat(char *cmd);
+t_path  *pth(void);
 
 #endif

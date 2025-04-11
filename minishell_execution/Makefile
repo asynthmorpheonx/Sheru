@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -lreadline -lhistory #-Wall -Wextra -Werror -ggdb
 
 NAME = minishell
 
@@ -9,10 +9,15 @@ OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 
 LIBFT = libft.a
 
+LIBS = -lreadline -lncurses
+
+# $(NAME): $(OBJS)
+# 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(LIBS) -o $(NAME)
 	@echo "minishell built successfully!"
 
 $(LIBFT):
