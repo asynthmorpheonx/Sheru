@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 18:09:45 by mel-mouh          #+#    #+#             */
-/*   Updated: 2024/11/06 17:07:54 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/15 13:47:18 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	size_t	i;
 	size_t	len1;
 	size_t	len2;
 	char	*str;
 
-	i = 0;
 	if (s1 == NULL || s2 == NULL)
 		return (NULL);
 	len1 = ft_strlen(s1);

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 01:18:13 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/03/22 01:16:25 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/15 13:53:32 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,8 @@ void	print_tokens(char **element, int *its_token)
 void	tokenize_input(char **input, int *token_array)
 {
 	int	i;
-	int	toggle;
 
 	i = 0;
-	toggle = 0;
 	while (input[i])
 	{
 		token_array[i] = set_token(input[i]);
@@ -65,26 +63,26 @@ void	tokenize_input(char **input, int *token_array)
 	}
 }
 
-void	join_splited(int *arr_token, int range)
-{
-	int	i;
-	int	toggle;
-	int	count;
-	int	token_id;
+// void	join_splited(int *arr_token, int range)
+// {
+// 	int	i;
+// 	int	toggle;
+// 	int	count;
+// 	int	token_id;
 
-	i = 0;
-	count = 0;
-	token_id = arr_token[0];
-	toggle = 0;
-	while (i + 1 < range)
-	{
-		if (token_id != arr_token[i + 1])
-			count++;
-		i++;
-	}
-	if (!count)
-		count++;
-}
+// 	i = 0;
+// 	count = 0;
+// 	token_id = arr_token[0];
+// 	toggle = 0;
+// 	while (i + 1 < range)
+// 	{
+// 		if (token_id != arr_token[i + 1])
+// 			count++;
+// 		i++;
+// 	}
+// 	if (!count)
+// 		count++;
+// }
 
 int check_token_syntax(int *token, int range)
 {
@@ -139,8 +137,8 @@ void	lexer_input(char *str)
 		printf("you good\n");
 	print_tokens(parsed_str, token_array);
 	clear_container();
+	printf("hhhhh\n");
 }
-
 int main(void)
 {
 	char	*line;
@@ -148,7 +146,6 @@ int main(void)
 	while (1)
 	{
 		line = readline("minishell>");
-		printf("the entered input ==> %s\n", line);
 		if (!line)
 			return (clear_container(), 0);
 		lexer_input(line);
