@@ -5,153 +5,137 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/18 01:18:13 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/16 16:08:00 by mel-mouh         ###   ########.fr       */
+/*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
+/*   Updated: 2025/04/16 16:53:57 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	extract_tokens_count(char **splited_line)
+//it return the token id of the the char that we are dealing with
+//it increament the value of 'i' in some cases
+int	whichtoken(char *input, int *i)
 {
-	int	i;
-
-	i = 0;
-	while (splited_line[i])
-		i++;
-
-
-
-		
-	return (i);
-}
-
-int	set_token(char *element)
-{
-	if (element[0] == '|')
-		return (PIPE);
-	else if (!ft_strncmp(element, "<<", 3))
-		return (HERDOC);
-	else if (!ft_strncmp(element, ">>", 3))
-		return (APPEND);
-	else if (element[0] == '>')
-		return (OUDIRECT);
-	else if (element[0] == '<')
-		return (INDIRECT);
-	else
-		return (WORD);
-}
-
-void	print_tokens(char **element, int *its_token)
-{
-	int	i;
-	char *token_name[6] = {"PIPE", "INDIRECT", "OUTDIRECT", "APPEND", "HEREDOC", "WORD"};
-
-	i = 0;
-	while (element[i])
+	if (!ft_strncmp(input, "<<", 2))
 	{
-		printf("VALUE \"%s\" it's token \"%s\"\n", element[i], token_name[its_token[i]]);
-		i++;
+		(*i)++;
+		return(HERDOC);
 	}
+	else if (!ft_strncmp(input, ">>", 2))
+	{
+		(*i)++;
+		return (APPEND);
+	}	
+	else if (input[0] == '|')
+		return (PIPE);
+	else if (input[0] == '<')
+		return (INDIRECT);
+	else if (input[0] == '>')
+		return (OUDIRECT);
+	else
+		return (-1);
 }
 
-void	tokenize_input(char **input, int *token_array)
+//checks the bytes if it's an white space
+int	ft_iswhitespace(int c)
+{
+	if (c == ' ' || (c >= 9 && c <= 13))
+		return (1);
+	return (0);
+}
+
+//it count how much different tokens does the user put
+int	extact_token_count(char *input)
 {
 	int	i;
+	int	tcount;
+	int	lastoken;
+	int	toggle;
 
 	i = 0;
+	toggle = 1;
+	tcount = 0;
+	lastoken = whichtoken(input, &i);
 	while (input[i])
 	{
-		token_array[i] = set_token(input[i]);
-		i++;
+		if ((!ft_iswhitespace(input[i]) && toggle == 1) || whichtoken(input + i, &i) != lastoken)
+		{
+			tcount++;
+			toggle = 0;
+		}
+		else if (ft_iswhitespace(input[i]))
+			toggle = 1;
+		lastoken = whichtoken(input + i - 1, &i);
+			i++;
 	}
+	return (tcount);
 }
 
-// void	join_splited(int *arr_token, int range)
+// int	syntax_check(int **tokens)
 // {
-// 	int	i;
-// 	int	toggle;
-// 	int	count;
-// 	int	token_id;
-
-// 	i = 0;
-// 	count = 0;
-// 	token_id = arr_token[0];
-// 	toggle = 0;
-// 	while (i + 1 < range)
-// 	{
-// 		if (token_id != arr_token[i + 1])
-// 			count++;
-// 		i++;
-// 	}
-// 	if (!count)
-// 		count++;
+	
 // }
 
-int check_token_syntax(int *token, int range)
+char	**spliting_based_token(char *line)
 {
-	int	i;
+	int		i;
+	int		j;
+	int		k;
+	int		last_t_id;
+	char	**splited_args;
 
 	i = 0;
-	while (i < range)
+	k = 0;
+	splited_args = safe_alloc(sizeof(char *) * extact_token_count(line), 1);
+	if (!splited_args)
+		return (NULL);
+	while (ft_iswhitespace(line[i]))
+		i++;
+	last_t_id = whichtoken(line, &i);
+	while (line[i])
 	{
-		if (i == 0
-			&& (token[i] == PIPE || token[i] == OUDIRECT
-			|| token[i] == APPEND))
-			return (0);
-		else
+		while (ft_iswhitespace(line[i]))
+			i++;
+		if (line[i])
 		{
-			if (token[i] == PIPE && token[i - 1] != WORD && token[i + 1] != WORD)
-				return (0);
-			else if (token[i] == HERDOC && token[i + 1] != WORD)
-				return (0);
-			else if (token[i] == APPEND && (token[i - 1] != WORD || token[i + 1] != WORD))
-				return (0);
-			else if (token[i] == INDIRECT && token[i + 1] != WORD)
-				return (0);
-			else if (token[i] == OUDIRECT && token[i + 1] != WORD)
-				return (0);
+			j = i;
+			while (!ft_iswhitespace(line[i]) && whichtoken(line + i, &i) == last_t_id)
+				i++;
+			splited_args[k] = ft_substr(line, j, i - j);
+			k++;
 		}
 		i++;
 	}
-	return (1);
+	splited_args[k] = NULL;
+	return (splited_args);
 }
 
-int	extract_y(char **str)
+void	begin_lexing(char *line)
 {
-	int	i;
+	char	**strs;
+	int		i;
 
 	i = 0;
-	while (str[i])
+	printf("====[%d]====\n",extact_token_count(line));
+	strs = spliting_based_token(line);
+	while (strs[i])
+	{
+		printf("======%s======\n",strs[i]);
 		i++;
-	return (i);
+	}
 }
 
-void	lexer_input(char *str)
+int	main(void)
 {
-	char	**parsed_str;
-	int		*token_array;
-
-	parsed_str = white_split(str);
-	token_array = safe_alloc(extract_tokens_count(parsed_str) * 4, 1);
-	tokenize_input(parsed_str, token_array);
-	if (!check_token_syntax(token_array, extract_y(parsed_str)))
-		printf("token syntax error\n");
-	else
-		printf("you good\n");
-	print_tokens(parsed_str, token_array);
-	clear_container();
-	printf("hhhhh\n");
-}
-int main(void)
-{
-	char	*line;
+	char *line;
 
 	while (1)
 	{
-		line = readline("minishell>");
+		line = readline("sheru>");
 		if (!line)
 			return (clear_container(), 0);
-		lexer_input(line);
+		add_history(line);
+		begin_lexing(line);
 	}
+	return (0);
 }
