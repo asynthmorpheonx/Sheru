@@ -36,13 +36,6 @@ char *pat(char *cmd)
         {
             perror("minishell: malloc failed");
             free(pth()->path_copy);
-
-
-
-
-
-
-            
             return NULL;
         }
         ft_strcpy(pth()->full_path, pth()->dir[pth()->index]);
