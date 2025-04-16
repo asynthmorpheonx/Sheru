@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 01:18:13 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/15 13:53:32 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/16 16:08:00 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@ int	extract_tokens_count(char **splited_line)
 	i = 0;
 	while (splited_line[i])
 		i++;
+
+
+
+		
 	return (i);
 }
 
