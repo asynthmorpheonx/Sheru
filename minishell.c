@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/17 14:38:25 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/17 17:41:09 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,132 +16,126 @@
 //it increament the value of 'i' in some cases
 int	whichtoken(char *input, int *i)
 {
-	(void)i;
-	if (!ft_strncmp(input, "<<", 2))
+	if (!ft_strncmp(input + *i, "<<", 2))
 	{
-		(*i)++;
+		(*i) += 2;
 		return(HERDOC);
 	}
-	else if (!ft_strncmp(input, ">>", 2))
+	else if (!ft_strncmp(input + *i, ">>", 2))
 	{
-		(*i)++;
-		return (APPEND);
-	}	
-	else if (input[0] == '|')
-		return (PIPE);
-	else if (input[0] == '<')
-		return (INDIRECT);
-	else if (input[0] == '>')
-		return (OUDIRECT);
-	else
-		return (-1);
-}
-
-int	give_id_value(char *input)
-{
-	if (!ft_strncmp(input, "<<", 2))
-		return(HERDOC);
-	else if (!ft_strncmp(input, ">>", 2))
+		(*i) += 2;
 		return (APPEND);	
-	else if (input[0] == '|')
+	}	
+	else if (input[*i] == '|')
 		return (PIPE);
-	else if (input[0] == '<')
+	else if (input[*i] == '<')
 		return (INDIRECT);
-	else if (input[0] == '>')
+	else if (input[*i] == '>')
 		return (OUDIRECT);
 	else
-		return (-1);
+		return (WORD);
 }
 
 //checks the bytes if it's an white space
 int	ft_iswhitespace(int c)
 {
-	if (c == ' ' || (c >= 9 && c <= 13))
-		return (1);
-	return (0);
+	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-//it count how much different tokens does the user put
-int	extact_token_count(char *input)
+//count token in the string
+int token_count(char *str)
 {
 	int	i;
 	int	tcount;
-	int	lastoken;
-	int	toggle;
 
 	i = 0;
-	toggle = 1;
 	tcount = 0;
-	lastoken = whichtoken(input, &i);
-	while (input[i])
+	while (str[i])
 	{
-		if ((!ft_iswhitespace(input[i]) && toggle == 1) || whichtoken(input + i, &i) != lastoken)
-		{
-			tcount++;
-			toggle = 0;
-		}
-		else if (ft_iswhitespace(input[i]))
-			toggle = 1;
-		lastoken = whichtoken(input + i - 1, &i);
+		while (ft_iswhitespace(str[i]))
 			i++;
+		if (str[i])
+		{
+			if ((str[i] == '>' || str[i] == '<')
+				&& (str[i + 1] == '>' || str[i + 1] == '<'))
+				i += 2;
+			else if (str[i] == '|' || str[i] == '>' || str[i] == '<')
+				i++;
+			else
+				while (str[i] && !ft_iswhitespace(str[i])
+					&& str[i] != '|' && str[i] != '>' && str[i] != '<')
+	                i++;
+			tcount++;
+		}
 	}
 	return (tcount);
 }
 
-// int	fill_with_token(char *buffer, int token_id)
-// {
-// 	char	*tokens;
-
-// 	if (token_id == PIPE)
-// 		buffer = safe
-// }
-
-char	**spliting_based_token(char *line)
+char	*fill_with_token(int token_id)
 {
-	int		i;
-	int		j;
-	int		k;
-	int		last_tid;
-	char	**strs;
+	char	*buffer;
 
-	i = 0;
-	k = 0;
-	strs = safe_alloc((extact_token_count(line) + 1) * sizeof(char *), 0);
-	if (!strs)
+	if (token_id == PIPE)
+		buffer = ft_strdup("|");
+	else if (token_id == INDIRECT)
+		buffer = ft_strdup("<");
+	else if (token_id == OUDIRECT)
+		buffer = ft_strdup(">");
+	else if (token_id == APPEND)
+		buffer = ft_strdup(">>");
+	else if (token_id == HERDOC)
+		buffer = ft_strdup("<<");
+	else
 		return (NULL);
-	last_tid = whichtoken(line, &i);
-	while(line[i])
-	{
-		while (ft_iswhitespace(line[i]))
-			i++;
-		if(line[i])
-		{
-			j = i;
-			while(line[i] && !ft_iswhitespace(line[i]) && give_id_value(line + i) == last_tid)
-				i++;
-			strs[k] = ft_substr(line, j, i - j);
-			if (!strs[k])
-				return (NULL);
-			k++;
-			last_tid = whichtoken(line + i, &i);
-		}
-	}
-	return (strs);
+	g_lst_addback(g_new_garbage(buffer));
+	return (buffer);
 }
+
+// char	**spliting_based_token(char *line)
+// {
+// 	int		i;
+// 	int		j;
+// 	int		k;
+// 	int		last_tid;
+// 	char	**strs;
+
+// 	i = 0;
+// 	k = 0;
+// 	strs = safe_alloc((extract_token_count(line) + 1) * sizeof(char *), 0);
+// 	if (!strs)
+// 		return (NULL);
+// 	while(line[i])
+// 	{
+// 		while (ft_iswhitespace(line[i]))
+// 			i++;
+// 		last_tid = whichtoken(line, &i);
+// 		if (line[i])
+// 		{
+// 			j = i;
+// 			if (last_tid == WORD)
+// 			{
+// 				while (line[i] && !ft_iswhitespace(line[i]) && last_tid == whichtoken(line + i, &i))
+// 					i++;
+// 			}
+// 		}
+// 	}
+// 	return (strs);
+// }
 
 void	begin_lexing(char *line)
 {
-	char	**strs;
-	int		i;
+	// char	**strs;
+	// int		i;
 
-	i = 0;
-	printf("====[%d]====\n",extact_token_count(line));
-	strs = spliting_based_token(line);
-	while (strs[i])
-	{
-		printf("line %d:%s\n",i, strs[i]);
-		i++;
-	}
+	// i = 0;
+	printf("====[%d]====\n",token_count(line));
+	// strs = spliting_based_token(line);
+	// while (strs[i])
+	// {
+	// 	printf("line %d:%s\n",i, strs[i]);
+	// 	i++;
+	// }
+	// printf("line %d:%s\n",i, strs[i]);
 }
 
 int	main(void)
