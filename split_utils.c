@@ -6,11 +6,11 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 01:23:17 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/03/21 04:55:33 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/17 14:41:02 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include <mini_shell.h>
 
 void	ft_free(char **strs)
 {
