@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/18 18:08:41 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/18 19:16:36 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,25 @@ char	*safe_substr(char *str, unsigned int start, size_t len)
 	return (pp);
 }
 
+char	*quot_handle_substr(char *s, unsigned int j, size_t len)
+{
+	char			*str;
+	unsigned int	i;
+
+	i = 0;
+	str = (char *)safe_alloc((len + 1) * sizeof(char), 0);
+	if (!str)
+		return (NULL);
+	printf("%zu\n", len);
+	while (i < len)
+	{
+		if (s[j + i] != '"' && s[i + j] != '\'')
+			str[i] = s[i + j];
+		i++;
+	}
+	return (str);
+}
+
 char	*buffer_filler(char *line, int *i)
 {
 	int		j;
@@ -157,7 +176,7 @@ char	*handle_quotes(char *line, int *i, int *mode)
 		if (line[*i] == line[j])
 		{
 			(*i)++;
-			return (safe_substr(line, j, *i - j));
+			return (quot_handle_substr(line, j, *i - j - 2));
 		}
 		(*i)++;
 	}
@@ -190,11 +209,7 @@ char	**spliting_based_token(char *line)
 			i++;
 		}
 		else if (line[i] == '"' || line [i] == '\'')
-		{
 			strs[k] = handle_quotes(line, &i, &quote_status);
-			if (quote_status == -1 && !strs[k])
-				return (NULL);
-		}
 		else
 		{
 			strs[k] = buffer_filler(line, &i);
