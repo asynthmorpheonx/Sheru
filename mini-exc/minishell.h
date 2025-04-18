@@ -15,6 +15,12 @@ extern char **environ;
 #define STDIN_FILENO 0
 #define STDOUT_FILENO 1
 
+typedef struct s_cd
+{
+	char	oldpwd[1024];
+	char	pwd[1024];
+} t_cd;
+
 typedef struct s_cmd
 {
     char        *cmd;       // Command name (e.g., "ls", "echo")
@@ -43,8 +49,24 @@ typedef struct s_var
 	char    **cmd_buff;
 	char	*full_path;
 	int		index;
+	int		status;
 }	t_var;
-
+//------- functions after restructuring----
+t_var *var();
+void	 execute_single(t_cmd *cmd_list, t_env *env, int input_fd, int checker);
+int	builtin_check(char *cmd);
+void	check_cmd(char *cmd, t_env *env, int fd);
+int execute_commands(t_cmd *cmd_list, t_env *env);
+char *ft_free_array(char **arr);
+int count_words(char *flags);
+char **build_args(char *cmd, char *cmd_flag);
+int envcount(t_env *current);
+void    catcpy(char *tmp, char *str, t_env *current);
+char    **env_to_array(t_env *env);
+char	*ft_cat(char *path, char *cmd);
+char	*get_path(char *cmd);
+void	ft_cd(t_cmd *cmd_list, t_env *env);
+// ----------- functions before restructuring "maight delete later"
 char *get_command_path(char *cmd);
 void    check(char *commands);
 char *pat(char *cmd);
