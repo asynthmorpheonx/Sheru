@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/20 18:43:54 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/21 00:04:48 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ char	*safe_substr(char *str, unsigned int start, size_t len)
 {
 	char	*pp;
 
+	printf("substr  the len is: %zu\n", len);
 	pp = ft_substr(str, start, len);
 	if (!pp)
 		return (NULL);
@@ -134,66 +135,50 @@ char	*safe_substr(char *str, unsigned int start, size_t len)
 	return (pp);
 }
 
-char	*quot_handle_substr(char *s, unsigned int j, size_t len, char skips)
-{
-	char			*str;
-	unsigned int	i;
-
-	i = 0;
-	str = (char *)safe_alloc((len + 1) * sizeof(char), 0);
-	if (!str)
-		return (NULL);
-	printf("the len is:%zu\n", len);
-	while (i < len)
-	{
-		if (s[j] != skips)
-		{
-			str[i] = s[j];
-			i++;
-		}
-		j++;
-	}
-	return (str);
-}
-
-char	*buffer_filler(char *line, int *i)
-{
-	int		j;
-	char	*str;
-
-	j = *i;
-	while (line[*i] && !ft_iswhitespace(line[*i]) && !ft_ispecial(line[*i]))
-		(*i)++;
-	str = safe_substr(line, j, *i - j);
-	return (str);
-}
-
-char	*handle_quotes(char *line, int *i, int *mode)
+char	*handle_quote(char *line, int *i, int *mode)
 {
 	int	j;
 	int	k;
-	int	toggle;
 
-	j = (*i);
+	j = *i;
 	k = 0;
-	toggle = 0;
 	(*i)++;
 	while (line[*i])
 	{
-		if (line[*i] == line[j] && (ft_iswhitespace(line[*i + 1]) || !line[*i + 1]))
+		if (line[*i] == line[j])
 		{
 			(*i)++;
-			return (quot_handle_substr(line, j, k, line[j]));
+			return (safe_substr(line, j + 1, k));
 		}
-		else if (line[*i] != line[j])
+		else
 			k++;
-		else if (line[*i] == line[j] && toggle == 0)
-			toggle += 1;
 		(*i)++;
 	}
-	if (!toggle)
-		*mode = -1;
+	*mode = -1;
 	return (NULL);
+}
+
+char	*buffer_filler(char *line, int *i, int *mode)
+{
+	int	j;
+	char	*str;
+
+	str = NULL;
+	while (line[*i])
+	{
+		while (ft_iswhitespace(line[*i]))
+			(*i)++;
+		if (line[*i] == '\'' || line[*i] == '"')
+			str = ft_gnl_strjoin(str, handle_quote(line, i, mode));
+		else
+		{
+			j = *i;
+			while (line[*i] && line[*i] != '\'' && line[*i] != '"' && !ft_iswhitespace(line[*i]))
+				(*i)++;
+			str = ft_gnl_strjoin(str, safe_substr(line, j, *i - j));
+		}
+	}
+	return (str);
 }
 
 char	**spliting_based_token(char *line)
@@ -216,18 +201,14 @@ char	**spliting_based_token(char *line)
 		if (!line[i])
 			break ;
 		if (line[i] == '|' || line[i] == '>' || line[i] == '<')
-		{
 			fill_with_token(strs + k, whichtoken(line, &i));
-			i++;
-		}
-		else if (line[i] == '"' || line [i] == '\'')
-			strs[k] = handle_quotes(line, &i, &quote_status);
 		else
 		{
-			strs[k] = buffer_filler(line, &i);
+			strs[k] = buffer_filler(line, &i, &quote_status);
 			if (!strs[k])
 				return (NULL);
 		}
+		i++;
 		k++;
 	}
 	return (strs);
