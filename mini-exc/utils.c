@@ -28,6 +28,28 @@ void    free_things(char *one, char **two, char *msg, int check)
         perror(msg);
     exit(1);
 }
+void	sort_tenv(char **env)
+{
+	char	*tmp;
+	
+	int (i), (u);
+	i = 0;
+	while (env[i])
+	{
+		u = i + 1;
+		while(env[u])
+		{
+			if (ft_strcmp(env[u], env[i]) < 0)
+			{
+				tmp = env[u];
+				env[u] = env[i];
+				env[i] = tmp; 
+			}
+			u++;
+		}
+		i++;
+	}
+}
 
 void	set_env_var(t_env **env, const char *key, const char *value)
 {
