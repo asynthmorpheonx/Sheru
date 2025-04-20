@@ -1,17 +1,50 @@
 #include "minishell.h"
 
-void	ft_export(t_cmd *cmd_list, t_env *env)
+void	export_print(t_env *env)
 {
-	if(!cmd_list->cmd_flag)
+	int		i;
+	char	**tenv;
+	t_env	*tmp;
+	tenv = env_to_array(env);
+	sort_tenv(tenv);
+	i = 0;
+	while(tenv[i]) 
 	{
-		while(env)
+		tmp = env;
+		while(tmp)
 		{
-			printf("%s=%s\n", env->key, env->value);
-			env = env->next;
+			if(ft_strcmp(tmp->key, tenv[i]) == 0)
+			{
+				if (tmp->value)
+					printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+				else
+				printf("declare -x %s\n", tmp->key);
+			}
+			tmp = tmp->next;
 		}
+		i++;
+	}
+	ft_free_array(tenv);
+}
+
+void	ft_export(t_cmd *cmd_list, t_env *env) // need a restructing for export's own struct that contains only its data
+{
+	t_export	*data;
+
+	if(!cmd_list->cmd_flag[0])
+	{
+		export_print(env);
 	}
 	else
-		set_env_var(&env, cmd_list->var, cmd_list->value);
+	{
+		if (!data)
+			return ;
+		while(data)
+		{
+			set_env_var(&env, data->var, data->value);
+			data = data->next;
+		}
+	}
 }
 void	ft_unset(t_cmd *cmd_list, t_env **env)
 {
@@ -43,23 +76,6 @@ void	ft_exit(t_cmd *cmd_list)
 		exit(0);
 	exit(cmd_list->code);
 }
-void	ft_unset(t_cmd *cmd_list, t_env **env)
-{
-	t_env	*(prev), *(current);
-	while(env)
-	{
-		if(ft_strcmp((*env)->key, cmd_list->var) == 0)
-		{
-			if(prev)
-				prev->next = (*env)->next;
-			free((*env)->key);
-			free((*env)->value);
-			free(*env);
-		}
-		prev = env;
-		env = (*env)->next;
-	}
-}
 void	ft_cd(t_cmd *cmd_list, t_env *env)
 {
 	char	*path;
@@ -71,9 +87,9 @@ void	ft_cd(t_cmd *cmd_list, t_env *env)
 		set_env_var(&env, "OLDPWD", x->oldpwd);
 	else
 		perror("getcwd");
-	if(cmd_list->cmd_flag)
+	if(cmd_list->cmd_flag[0])
 	{
-		if (chdir(cmd_list->cmd_flag) != 0)
+		if (chdir(cmd_list->cmd_flag[0]) != 0)
 			perror("cd");
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/04/18 12:48:13 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/04/19 18:49:18 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,14 @@
 // pwd, wcho, env 
 
 
-void	 execute_single(t_cmd *cmd_list, t_env *env, int input_fd, int checker)
+
+
+void	 execute_single(t_cmd *cmd_list, t_env *env, int input_fd)
 {
 	char *(path), **(args);
+	// here i call the function that takes care of them 
 	var()->pid = fork();
-	if (var()->pid == 0)
+	if (var()->pid == 0 && check)
 	{
 		if (cmd_list->infd != STDIN_FILENO)
 		{
@@ -48,7 +51,7 @@ void	 execute_single(t_cmd *cmd_list, t_env *env, int input_fd, int checker)
 			close(cmd_list->outfd);
 		}
 		path = get_path(cmd_list->cmd);
-		args = build_args(cmd_list->cmd, cmd_list->cmd_flag);
+		args = build_args(cmd_list->cmd, cmd_list->cmd_flag[0]); // cmd_flag is 2D array so check if loop through pointer is needed
 		execve(path, args, env_to_array(env));
 		args = ft_free_array(args);
 		exit(1);
@@ -64,17 +67,10 @@ int	builtin_check(char *cmd)
 	var()->index = 0;
 	while(builtins[var()->index])
 	{
-		if (ft_strcmp(cmd, builtins[var()->index]) == 0 &&
-			(var()->index >= 0 && var()->index <= 2))
+		if (ft_strcmp(cmd, builtins[var()->index]) == 0)
 		{
 			builtins = ft_free_array(builtins);
-			return (1); // for "echo env pwd" that needs fork
-		}
-		else if (ft_strcmp(cmd, builtins[var()->index]) == 0 &&
-			(var()->index >= 3 && var()->index <= 6))
-		{
-			builtins = ft_free_array(builtins);
-			return (2); // for "cd, export, unset, exit" that i need to take care of in another function
+			return (1);
 		}
 		var()->index++;
 	}
@@ -85,21 +81,17 @@ int	builtin_check(char *cmd)
 void	ft_ceue(t_cmd *cmd_list, t_env *env)
 {
 	if(ft_strcmp(cmd_list->cmd, "cd") == 0)
-	{
 		ft_cd(cmd_list, env);
-	}
 	else if(ft_strcmp(cmd_list->cmd, "export") == 0)
-	{
-		
-	}
+		ft_export(cmd_list, env);
 	else if(ft_strcmp(cmd_list->cmd, "unset") == 0)
-	{
-		
-	}
+		ft_unset(cmd_list, &env);
 	else if(ft_strcmp(cmd_list->cmd, "exit") == 0)
-	{
-		
-	}
+		ft_exit(cmd_list);
+	else if(ft_strcmp(cmd_list->cmd, "echo") == 0)
+		ft_echo(cmd_list, env);
+	else if(ft_strcmp(cmd_list->cmd, "env") == 0)
+		ft_env();
 }
 
 void	check_cmd(t_cmd *cmd_list, t_env *env, int fd)
@@ -111,10 +103,8 @@ void	check_cmd(t_cmd *cmd_list, t_env *env, int fd)
 	{
 		ft_ceue(cmd_list, env);
 	}
-	else if (check == 2) // means i can run it in the child
-		execute_single(cmd_list->cmd, env, STDIN_FILENO, 0);
 	else
-		execute_single(cmd_list->cmd, env, STDIN_FILENO, 1);
+		execute_single(cmd_list->cmd, env, STDIN_FILENO);
 }
 
 int execute_commands(t_cmd *cmd_list, t_env *env) //beggining
