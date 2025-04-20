@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/18 19:16:36 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/20 18:43:54 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ char	*safe_substr(char *str, unsigned int start, size_t len)
 	return (pp);
 }
 
-char	*quot_handle_substr(char *s, unsigned int j, size_t len)
+char	*quot_handle_substr(char *s, unsigned int j, size_t len, char skips)
 {
 	char			*str;
 	unsigned int	i;
@@ -143,12 +143,15 @@ char	*quot_handle_substr(char *s, unsigned int j, size_t len)
 	str = (char *)safe_alloc((len + 1) * sizeof(char), 0);
 	if (!str)
 		return (NULL);
-	printf("%zu\n", len);
+	printf("the len is:%zu\n", len);
 	while (i < len)
 	{
-		if (s[j + i] != '"' && s[i + j] != '\'')
-			str[i] = s[i + j];
-		i++;
+		if (s[j] != skips)
+		{
+			str[i] = s[j];
+			i++;
+		}
+		j++;
 	}
 	return (str);
 }
@@ -168,19 +171,28 @@ char	*buffer_filler(char *line, int *i)
 char	*handle_quotes(char *line, int *i, int *mode)
 {
 	int	j;
+	int	k;
+	int	toggle;
 
-	j = *i;
+	j = (*i);
+	k = 0;
+	toggle = 0;
 	(*i)++;
 	while (line[*i])
 	{
-		if (line[*i] == line[j])
+		if (line[*i] == line[j] && (ft_iswhitespace(line[*i + 1]) || !line[*i + 1]))
 		{
 			(*i)++;
-			return (quot_handle_substr(line, j, *i - j - 2));
+			return (quot_handle_substr(line, j, k, line[j]));
 		}
+		else if (line[*i] != line[j])
+			k++;
+		else if (line[*i] == line[j] && toggle == 0)
+			toggle += 1;
 		(*i)++;
 	}
-	*mode = -1;
+	if (!toggle)
+		*mode = -1;
 	return (NULL);
 }
 
@@ -236,10 +248,9 @@ void	begin_lexing(char *line)
 	strs = spliting_based_token(line);
 	while (strs[i])
 	{
-		printf("line %d:%s\n",i, strs[i]);
+		printf("line %d:[%s]\n",i, strs[i]);
 		i++;
 	}
-	printf("line %d:%s\n",i, strs[i]);
 }
 
 int	main(void)
