@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/21 00:04:48 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/22 23:31:06 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,27 @@ int	ft_ispecial(int c)
 int	skip_quots(char *line, int *i)
 {
 	int	j;
+	int	toggle;
 
-	j = *i;
-	(*i)++;
+	toggle = 1;
 	while (line[*i])
 	{
-		if (line[*i] == line[j])
+		if (line[*i] == '\'' || line[*i] == '"')
 		{
-			(*i)++;
-			return (1);
+			if (toggle == 1)
+			{
+				j = (*i);
+				toggle = 0;
+			}
+			else if (line[*i] == line[j])
+				toggle = 1;
 		}
+		else if (ft_iswhitespace(line[*i]) && toggle == 1)
+			break ;
 		(*i)++;
 	}
+	if (toggle)
+		return (1);
 	return (0);
 }
 
@@ -71,26 +80,19 @@ int token_count(char *str)
 {
 	int	i;
 	int	tcount;
-	int	toggle;
 
 	i = 0;
 	tcount = 0;
-	toggle = 0;
 	while (str[i])
 	{
 		while (ft_iswhitespace(str[i]))
-		{
-			toggle = 1;
 			i++;
-		}
-		if (!str[i])
-			break ;
 		if ((str[i] == '>' || str[i] == '<')
 			&& (str[i + 1] == '>' || str[i + 1] == '<'))
 			i += 2;
 		else if (str[i] == '|' || str[i] == '>' || str[i] == '<')
 			i++;
-		else if ((str[i] == '"' || str[i] == '\'') && toggle == 1)
+		else if (str[i] == '"' || str[i] == '\'')
 		{
 			if (!skip_quots(str, &i))
 				return (-1);
@@ -98,10 +100,8 @@ int token_count(char *str)
 		else
 		{
 			while (str[i] && !ft_iswhitespace(str[i])
-				&& str[i] != '|' && str[i] != '>' && str[i] != '<'
-				&& ((str[i] != '"' && str[i] != '\'') || toggle == 0))
+				&& str[i] != '|' && str[i] != '>' && str[i] != '<')
 					i++;
-			toggle = 0;
 		}
 		tcount++;
 	}
@@ -164,16 +164,19 @@ char	*buffer_filler(char *line, int *i, int *mode)
 	char	*str;
 
 	str = NULL;
+	while (ft_iswhitespace(line[*i]))
+		(*i)++;
 	while (line[*i])
 	{
-		while (ft_iswhitespace(line[*i]))
-			(*i)++;
-		if (line[*i] == '\'' || line[*i] == '"')
+		if (ft_iswhitespace(line[*i]) || ft_ispecial(line[*i]))
+			break ;
+		else if (line[*i] == '\'' || line[*i] == '"')
 			str = ft_gnl_strjoin(str, handle_quote(line, i, mode));
 		else
 		{
 			j = *i;
-			while (line[*i] && line[*i] != '\'' && line[*i] != '"' && !ft_iswhitespace(line[*i]))
+			while (line[*i] && line[*i] != '\'' && line[*i] != '"'
+				&& !ft_iswhitespace(line[*i]) && !ft_ispecial(line[*i]))
 				(*i)++;
 			str = ft_gnl_strjoin(str, safe_substr(line, j, *i - j));
 		}
@@ -201,14 +204,16 @@ char	**spliting_based_token(char *line)
 		if (!line[i])
 			break ;
 		if (line[i] == '|' || line[i] == '>' || line[i] == '<')
+		{
 			fill_with_token(strs + k, whichtoken(line, &i));
+			i++;
+		}
 		else
 		{
 			strs[k] = buffer_filler(line, &i, &quote_status);
 			if (!strs[k])
 				return (NULL);
 		}
-		i++;
 		k++;
 	}
 	return (strs);
