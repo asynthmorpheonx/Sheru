@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/04/19 18:49:18 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:43:28 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,6 @@
 //----------------------------------
 // builtins that i can't 
 // pwd, wcho, env 
-
-
-
 
 void	 execute_single(t_cmd *cmd_list, t_env *env, int input_fd)
 {
@@ -91,7 +88,9 @@ void	ft_ceue(t_cmd *cmd_list, t_env *env)
 	else if(ft_strcmp(cmd_list->cmd, "echo") == 0)
 		ft_echo(cmd_list, env);
 	else if(ft_strcmp(cmd_list->cmd, "env") == 0)
-		ft_env();
+		ft_env(env);
+	else if(ft_strcmp(cmd_list->cmd, "pwd") == 0)
+		ft_pwd();
 }
 
 void	check_cmd(t_cmd *cmd_list, t_env *env, int fd)
