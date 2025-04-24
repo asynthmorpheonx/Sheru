@@ -9,6 +9,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sched.h>
+#include <stdbool.h>
 
 extern char **environ;
 
@@ -17,12 +18,32 @@ extern char **environ;
 
 typedef struct s_cd
 {
+	char	*path;
 	char	oldpwd[1024];
 	char	pwd[1024];
 } t_cd;
 
+typedef struct s_export
+{
+	bool			export_check;
+	const char		*export_appe;
+	char			*export_var;
+	char			*export_value;
+	struct s_export	*next;
+} 	t_export;
+
+typedef struct s_echo
+{
+	char		**data;
+	bool		n_check;
+}		t_echo;
+
 typedef struct s_cmd
 {
+	t_cd 		*cd_data;
+	t_echo		*echo_data;
+	t_export 	*export_data;
+	bool		eflag_check;
 	int			code;
     char        *cmd;       // Command name (e.g., "ls", "echo")
     char        **cmd_flag;
@@ -33,21 +54,14 @@ typedef struct s_cmd
     struct s_cmd *next;     // Next command in pipeline/list
 } t_cmd;
 
+
 typedef struct s_env {
     char        *key;           // Variable name (e.g., "PATH")
     char        *value;         // Variable value (e.g., "/usr/bin:/bin")
     struct s_env   *next;       // Pointer to next node
 } t_env;
 
-typedef struct s_export // keep working on export you're almost there
-{
-	int			check;
-	char		*var;
-	char		*value;
-	struct s_export	*next;
-}			t_export;
-
-typedef struct s_var
+typedef struct s_var // maight delete later(j cole hhhhh)
 {
 	int prev_pipe[2];
     int next_pipe[2];		
@@ -65,7 +79,7 @@ typedef struct s_var
 
 
 //------- functions after restructuring----
-t_var 	*var();
+t_var 	*var(void);
 void	 execute_single(t_cmd *cmd_list, t_env *env, int input_fd);
 int		builtin_check(char *cmd);
 void	check_cmd(t_cmd *cmd_list, t_env *env, int fd);
@@ -78,17 +92,32 @@ void    catcpy(char *tmp, char *str, t_env *current);
 char    **env_to_array(t_env *env);
 char	*ft_cat(char *path, char *cmd);
 char	*get_path(char *cmd);
+
+
+// ######### BUILTINs ###############################################
 void	ft_cd(t_cmd *cmd_list, t_env *env);
+char	*get_home(t_env *env);
+
 void	set_env_var(t_env **env, const char *key, const char *value);
-void	ft_export(t_cmd *cmd_list, t_env *env);
-void	ft_unset(t_cmd *cmd_list, t_env **env);
-void	ft_exit(t_cmd *cmd_list);
-void	ft_unset(t_cmd *cmd_list, t_env **env);
-void	git_dollar(char *str, t_env *env);
-void	ft_echo(t_cmd *cmd_list, t_env *env);
 void	sort_tenv(char **env);
 
+void	ft_export(t_cmd *cmd_list, t_env *env);
+void	ft_var_append(t_env *env, char *var, char *appe);
+void	export_print(t_env *env);
+char	*ft_envcat(char *dest, const char *src);
 
+void	ft_unset(t_cmd *cmd_list, t_env **env);
+
+void	ft_exit(t_cmd *cmd_list);
+
+void	git_dollar(char *str, t_env *env);
+void	ft_echo(t_cmd *cmd_list, t_env *env);
+void	echo_print(char *str);
+
+void	ft_env(t_env *env);
+
+void	ft_pwd(void);
+//####################################################################
 
 
 
