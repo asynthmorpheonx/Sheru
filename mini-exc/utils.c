@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void    free_things(char *one, char **two, char *msg, int check)
+void    free_things(char *one, char **two, char *msg, int check) // maight delet later
 {
     if(check == 1)
     {
@@ -28,6 +28,44 @@ void    free_things(char *one, char **two, char *msg, int check)
         perror(msg);
     exit(1);
 }
+
+void	git_dollar(char *str, t_env *env)
+{
+	int		check;
+	
+	check = 1;
+	while (env && check)
+	{
+		if (ft_strcmp(str, env->key) == 0)
+		{
+			printf("%s", env->value);
+			check = 0;
+		}
+		env = env->next;
+	}
+}
+
+void	echo_print(char *str)
+{
+	int	i;
+	int	len;
+
+	len = ft_strlen(str);
+	i = 0;
+	if(str[0] == '"' && str[len - 1] == '"') // check how i should deal with one "
+		printf("%s", str);
+	else
+	{
+		while(str[i])
+		{
+			if(str[i] == '\\')
+				i++;
+			write(1, &str[i], 1);
+			i++;
+		}
+	}
+}
+
 void	sort_tenv(char **env)
 {
 	char	*tmp;
@@ -49,32 +87,4 @@ void	sort_tenv(char **env)
 		}
 		i++;
 	}
-}
-
-void	set_env_var(t_env **env, const char *key, const char *value)
-{
-	t_env *(current), *(prev), *(new_var);
-	current = *env;
-	prev = NULL;
-	while (current != NULL)
-	{
-		if (ft_strcmp(current->key, key) == 0)
-		{
-			free(current->value);
-			current->value = ft_strdup(value);
-			return;
-		}
-		prev = current;
-		current = current->next;
-	}
-	new_var = malloc(sizeof(t_env));
-	if (!new_var)
-		return ;
-	new_var->key = ft_strdup(key);
-	new_var->value = ft_strdup(value);
-	new_var->next = NULL;
-	if (prev != NULL)
-		prev->next = new_var;
-	else
-		*env = new_var;
 }
