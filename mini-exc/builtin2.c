@@ -1,43 +1,43 @@
 #include "minishell.h"
 
-void	git_dollar(char *str, t_env *env)
-{
-	int		check;
-	
-	check = 1;
-	while (env && check)
-	{
-		if (ft_strcmp(str, env->key) == 0)
-		{
-			printf("%s", env->value);
-			check = 0;
-		}
-		env = env->next;
-	}
-}
-
 void	ft_echo(t_cmd *cmd_list, t_env *env)
 {
-	char	*var;
-	int	i;
-	
-	i = 0;
-	while (cmd_list->cmd_flag[i])
+	int		i;
+	t_echo	*data;
+	char	**buff;
+
+	data = cmd_list->echo_data;
+	i = 0; 
+	while (data->data[i])
 	{
-		if (cmd_list->cmd_flag[i][0] == '$')
+		if (data->data[i][0] == '$')
 		{
-			git_dollar(cmd_list->cmd_flag[i] + 1, env);
-			if (cmd_list->cmd_flag[i + 1])
+			git_dollar(data->data[i] + 1, env);
+			if (data->data[i + 1])
 				printf(" ");
 		}
 		else
 		{
-			printf("%s", cmd_list->cmd_flag[i]);
-			if (cmd_list->cmd_flag[i + 1])
+			echo_print(data->data[i]); // ask if you should handle "hello\world"
+			if (data->data[i + 1])
 				printf(" ");
 		}
 		i++;
 	}
-	if (ft_strcmp(cmd_list->cmd_flag[0], "-n") != 0)
+	if (data->n_check == false)
 		printf("\n");
+}
+
+void	ft_pwd(void)
+{
+	char	*path;
+
+	if(!(path = getcwd(NULL, 0)))
+	{
+		//free memory
+		perror("pwd");
+	}
+	else
+		ft_putstr_fd(path, 1);
+	free(path);
 }
