@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/22 23:31:06 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/28 02:09:40 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,21 @@
 
 //it return the token id of the the char that we are dealing with
 //it increament the value of 'i' in some cases
+
+t_data	**box(void)
+{
+	static t_data	*pp;
+
+	return (&pp);
+}
+
+t_utils	*util(void)
+{
+	static t_utils	pp;
+
+	return (&pp);
+}
+
 int	whichtoken(char *input, int *i)
 {
 	if (!ft_strncmp(input + *i, "<<", 2))
@@ -24,14 +39,30 @@ int	whichtoken(char *input, int *i)
 	else if (!ft_strncmp(input + *i, ">>", 2))
 	{
 		(*i) += 1;
-		return (APPEND);	
+		return (APP);	
 	}	
 	else if (input[*i] == '|')
 		return (PIPE);
 	else if (input[*i] == '<')
-		return (INDIRECT);
+		return (IND);
 	else if (input[*i] == '>')
-		return (OUDIRECT);
+		return (OUD);
+	else
+		return (WORD);
+}
+
+int	token_value(char *input)
+{
+	if (!ft_strncmp(input, "<<", 2))
+		return(HERDOC);
+	else if (!ft_strncmp(input, ">>", 2))
+		return (APP);	
+	else if (input[0] == '|')
+		return (PIPE);
+	else if (input[0] == '<')
+		return (IND);
+	else if (input[0] == '>')
+		return (OUD);
 	else
 		return (WORD);
 }
@@ -48,6 +79,7 @@ int	ft_ispecial(int c)
 	return (c == '|' || c == '>' || c == '<');
 }
 
+//it skips till '\0' or whitespace or it counter another token
 int	skip_quots(char *line, int *i)
 {
 	int	j;
@@ -58,7 +90,7 @@ int	skip_quots(char *line, int *i)
 	{
 		if (line[*i] == '\'' || line[*i] == '"')
 		{
-			if (toggle == 1)
+			if (toggle)
 			{
 				j = (*i);
 				toggle = 0;
@@ -66,7 +98,7 @@ int	skip_quots(char *line, int *i)
 			else if (line[*i] == line[j])
 				toggle = 1;
 		}
-		else if (ft_iswhitespace(line[*i]) && toggle == 1)
+		else if ((ft_iswhitespace(line[*i]) || ft_ispecial(line[*i])) && toggle)
 			break ;
 		(*i)++;
 	}
@@ -87,54 +119,54 @@ int token_count(char *str)
 	{
 		while (ft_iswhitespace(str[i]))
 			i++;
+		if (!str[i])
+			break ;
 		if ((str[i] == '>' || str[i] == '<')
 			&& (str[i + 1] == '>' || str[i + 1] == '<'))
 			i += 2;
 		else if (str[i] == '|' || str[i] == '>' || str[i] == '<')
 			i++;
-		else if (str[i] == '"' || str[i] == '\'')
-		{
-			if (!skip_quots(str, &i))
-				return (-1);
-		}
 		else
-		{
-			while (str[i] && !ft_iswhitespace(str[i])
-				&& str[i] != '|' && str[i] != '>' && str[i] != '<')
-					i++;
-		}
+			if (!skip_quots(str, &i))
+					return (ft_putendl_fd("non end quots", 2), -1);
 		tcount++;
 	}
 	return (tcount);
 }
 
+// it fills the buffer that is given with and one of the token based on the token_id
 void	fill_with_token(char **buffer, int token_id)
 {
 	if (token_id == PIPE)
 		*buffer = ft_strdup("|");
-	else if (token_id == INDIRECT)
+	else if (token_id == IND)
 		*buffer = ft_strdup("<");
-	else if (token_id == OUDIRECT)
+	else if (token_id == OUD)
 		*buffer = ft_strdup(">");
-	else if (token_id == APPEND)
+	else if (token_id == APP)
 		*buffer = ft_strdup(">>");
 	else if (token_id == HERDOC)
 		*buffer = ft_strdup("<<");
 	g_lst_addback(g_new_garbage(*buffer));
 }
 
+// just calls the regular ft_substr and add it's allocated memory it the linked list
 char	*safe_substr(char *str, unsigned int start, size_t len)
 {
 	char	*pp;
 
-	printf("substr  the len is: %zu\n", len);
-	pp = ft_substr(str, start, len);
-	if (!pp)
-		return (NULL);
-	g_lst_addback(g_new_garbage(pp));
-	return (pp);
+	if (len)
+	{
+		pp = ft_substr(str, start, len);
+		if (!pp)
+			return (NULL);
+		g_lst_addback(g_new_garbage(pp));
+		return (pp);		
+	}
+	return (NULL);
 }
 
+// it handles the quote and return an allocated memory that doesnt contain those quotes
 char	*handle_quote(char *line, int *i, int *mode)
 {
 	int	j;
@@ -158,6 +190,7 @@ char	*handle_quote(char *line, int *i, int *mode)
 	return (NULL);
 }
 
+// this function breaks string line (input) into small strings that is tokenized 
 char	*buffer_filler(char *line, int *i, int *mode)
 {
 	int	j;
@@ -181,9 +214,12 @@ char	*buffer_filler(char *line, int *i, int *mode)
 			str = ft_gnl_strjoin(str, safe_substr(line, j, *i - j));
 		}
 	}
+	if (str)
+		g_lst_addback(g_new_garbage(str));
 	return (str);
 }
 
+// split 
 char	**spliting_based_token(char *line)
 {
 	int		i;
@@ -219,30 +255,199 @@ char	**spliting_based_token(char *line)
 	return (strs);
 }
 
-void	begin_lexing(char *line)
+// it creates an array of integers that contain token ids of the splited input 
+bool	tokenize(void)
 {
-	char	**strs;
-	int		i;
+	int	i;
 
 	i = 0;
-	printf("====[%d]====\n",token_count(line));
-	if (token_count(line) < 0)
+	util()->a = safe_alloc(util()->t * sizeof(int), 1);
+	if (!util()->a || !util()->s)
+		return (perror("sheru:"), false);
+	while (i < util()->t)
 	{
-		printf("non end quots\n");
-		return ;
-	}
-	strs = spliting_based_token(line);
-	while (strs[i])
-	{
-		printf("line %d:[%s]\n",i, strs[i]);
+		util()->a[i] = token_value(util()->s[i]);
 		i++;
 	}
+	return (true);
+}
+
+void	print_token(char **strs, int *token_arr, int tcount)
+{
+	int	i;
+	char	*tokens[] = {"PIPE", "IND", "OUD", "APP", "HERDOC", "WORD"};
+
+	i = 0;
+	while (i < tcount)
+	{
+		printf("the line[%d]: [%s] \n\tit's id is :%s\n", i, strs[i], tokens[token_arr[i]]);
+		i++;
+	}
+}
+
+bool	syntax_check(void)
+{
+	int	i;
+
+	i = 0;
+	while (i < util()->t)
+	{
+		if (util()->a[i] == PIPE && (i + 1 >= util()->t || !i))
+			return (ft_putendl_fd("syntax error", 2), false);
+		else if ((util()->a[i] == IND || util()->a[i] == OUD)
+			&& (i + 1 >= util()->t || util()->a[i + 1] != WORD))
+			return (ft_putendl_fd("syntax error", 2), false);
+		else if ((util()->a[i] == APP || util()->a[i] == HERDOC)
+			&& (i + 1 >= util()->t || util()->a[i + 1] != WORD))
+			return (ft_putendl_fd("syntax error", 2), false);
+		i++;
+	}
+	return (true);
+}
+
+int	cmd_count(char **strs, int *arr)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (strs[i] && arr[i] != PIPE)
+	{
+		if (arr[i] == IND || arr[i] == OUD
+			|| arr[i] == APP || arr[i] == HERDOC)
+			i++;
+		else
+			j++;
+		i++;
+	}
+	return (j);
+}
+
+int	cmd_filler(char **strs, int *arr, char **buffer)
+{
+	int	i;
+	int	j;
+	int	p;
+
+	i = 0;
+	p = 0;
+	j = 0;
+	while (strs[i] && arr[i] != PIPE)
+	{
+		if (arr[i] == IND || arr[i] == OUD 
+			|| arr[i] == APP || arr[i] == HERDOC)
+		{
+			if (!p)
+				p = i;
+			i++;
+		}
+		else
+			buffer[j++] = strs[i];
+		i++;
+	}
+	return (p);
+}
+
+bool	cmd_flag_handle(char **strs, int *arr, int *i, t_data **inlist)
+{
+	int	j;
+
+	j = cmd_count(strs, arr);
+	(*inlist)->cmd = safe_alloc((j + 1) * sizeof(char *), 0);
+	if (!(*inlist)->cmd)
+		return (false);
+	*i += cmd_filler(strs, arr, (*inlist)->cmd);
+	return (true);
+}
+
+void	token_handle(int tid, char *str, int *i, t_data *buffer)
+{
+	if (tid == IND)
+		buffer->file.infile = str;
+	else
+	{
+		buffer->file.outfile = str;
+		buffer->file.o_type = tid;
+	}
+	*i += 2;
+}
+
+bool	stor_in_list(char **strs, int *arr, t_data **inlst)
+{
+	int	i;
+	int	toggle;
+
+	i = 0;
+	toggle = 1;
+	if (!*strs)
+		return (true);
+	*inlst = safe_alloc(sizeof(t_data), 0);
+	if (!*inlst)
+		return (false);
+	while (strs[i] && arr[i] != PIPE)
+	{
+		if (arr[i] == WORD && toggle)
+		{
+			cmd_flag_handle(strs, arr, &i, inlst);
+			toggle = 0;
+		}
+		else if (arr[i] == IND || arr[i] == OUD || arr[i] == APP)
+			token_handle(arr[i], strs[i + 1], &i, *inlst);
+		else
+			i++;
+	}
+	if (strs[i] && arr[i] == PIPE)
+		stor_in_list(strs + i + 1, arr + i + 1, &(*inlst)->next);
+	return (true);
+}
+
+void	print_data(void)
+{
+	t_data	*inlist;
+	int		i;
+	int		j;
+
+	inlist = *box();
+	j = 0;
+	while (inlist)
+	{
+		i = 0;
+		printf("===============node %d===============\n", j);
+		printf("struct t_data\n{");
+		printf("\t*cmd =");
+		while (inlist->cmd && inlist->cmd[i])
+			printf("  {%s},", inlist->cmd[i++]);
+		printf("\n");
+		// printf("*data[0] = %s\n", (*box())->data[0]);
+		printf("\tt_files.infile = %s\n", inlist->file.infile);
+		printf("\tt_files.outfile = %s\n", inlist->file.outfile);
+		printf("\tt_files.o_type = %i\n", inlist->file.o_type);
+		printf("}\tt_data");
+		printf("\n==============================\n");
+		inlist = inlist->next; 
+		j++;	
+	}
+}
+
+// it's start the lexure
+void	begin_lexing(char *line)
+{
+	util()->t = token_count(line);
+	if (util()->t < 0)
+		return ;
+	util()->s = spliting_based_token(line);
+	if (!tokenize() || !syntax_check()
+		|| !stor_in_list(util()->s, util()->a, box()))
+		return ;
+	print_data();
 }
 
 int	main(void)
 {
 	char *line;
 
+	line = NULL;
 	while (1)
 	{
 		line = readline("sheru>");
