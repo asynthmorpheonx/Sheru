@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/18 15:17:40 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/28 01:46:04 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,52 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <heap_controller.h>
+# include <stdbool.h>
 
 typedef enum e_token
 {
 	PIPE,
-	INDIRECT,
-	OUDIRECT,
-	APPEND,
+	IND,
+	OUD,
+	APP,
 	HERDOC,
 	WORD
 }	t_token;
 
-void	*safe_alloc(size_t byts_count, int mode);
-t_list	**g_container(void);
-char	**white_split(char const *s);
-void	ft_free(char **strs);
+typedef struct s_utils
+{
+	char	**s;
+	int		*a;
+	int		t;
+}	t_utils;
+
+typedef struct s_files
+{
+	char	*infile;
+	char	*outfile;
+	int		o_type;
+}	t_files;
+
+typedef	struct s_data
+{
+	char			**cmd;
+	char			**data;
+	bool			isbuilt_in;
+	t_files			file;
+	struct s_data	*next;
+}	t_data;
+
+void	begin_lexing(char *line);
+int		whichtoken(char *input, int *i);
+int		ft_iswhitespace(int c);
+int		ft_ispecial(int c);
+int		skip_quots(char *line, int *i);
+int		token_count(char *str);
+void	fill_with_token(char **buffer, int token_id);
+char	*safe_substr(char *str, unsigned int start, size_t len);
+char	*handle_quote(char *line, int *i, int *mode);
+char	*buffer_filler(char *line, int *i, int *mode);
+char	**spliting_based_token(char *line);
+
 
 #endif
