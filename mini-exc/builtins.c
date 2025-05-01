@@ -2,13 +2,13 @@
 
 // // export PATH+=:/new/path PATH=VALUE
 
-void	ft_export(t_cmd *cmd_list, t_env *env) // need a restructing for export's own struct that contains only its data
+void	ft_export(t_data *cmd, t_env *env) // need a restructing for export's own struct that contains only its data
 {
 	int	i;
 	t_export	*data;
 
-	data = cmd_list->export_data;
-	if (!cmd_list->eflag_check) // printing all the variables (this is done and don't ever touch it)
+	data = cmd->export_data;
+	if (!cmd->cmd[1]) // printing all the variables (this is done and don't ever touch it)
 		export_print(env);
 	while(data)
 	{
@@ -20,7 +20,7 @@ void	ft_export(t_cmd *cmd_list, t_env *env) // need a restructing for export's o
 	}
 }
 
-void	ft_unset(t_cmd *cmd_list, t_env **env)
+void	ft_unset(t_data *data, t_env **env)
 {
 	t_env *(prev), *(current);
 
@@ -28,7 +28,7 @@ void	ft_unset(t_cmd *cmd_list, t_env **env)
 	current = *env;
 	while (current)
 	{
-		if (ft_strcmp(current->key, cmd_list->var) == 0)
+		if (ft_strcmp(current->key, data->cmd[1]) == 0)
 		{
 			if (prev)
 				prev->next = current->next;
@@ -43,35 +43,36 @@ void	ft_unset(t_cmd *cmd_list, t_env **env)
 		current = current->next;
 	}
 }
-void	ft_exit(t_cmd *cmd_list)
+void	ft_exit(t_data *data)
 {
+	int	code;
+
+	code = ft_atoi(data->cmd[1]);
 	// free all the memory or call the garbage collector to dod so
-	if(!cmd_list->code) // check the exit code if it's valid or not
+	if(!code) // check the exit code if it's valid or not
 		exit(0);
-	exit(cmd_list->code);
+	exit(code);
 }
 
 //absoult path : /home/user/Documents
 //relative path : ../Downloads / ./Downloads
 
-void	ft_cd(t_cmd *cmd_list, t_env *env)
+void	ft_cd(t_data *data, t_env *env)
 {
 	char	*path;
-	t_cd 	*x;
 
-	x = cmd_list->cd_data;
-	if (getcwd(x->oldpwd, sizeof(x->oldpwd)) != NULL)
-		set_env_var(&env, "OLDPWD", x->oldpwd);
+	if (getcwd(data->oldpwd, sizeof(data->oldpwd)) != NULL)
+		set_env_var(&env, "OLDPWD", data->oldpwd);
 	else
 		perror("getcwd");
-	if (!x->path || x->path[0] == '\0')
+	if (!data->cmd[1] || data->cmd[1][0] == '\0')
 		path = get_home(env);
 	else
-		path = x->path;
+		path = data->cmd[1];
 	if (chdir(path) != 0)
 		perror("cd");
-	if (getcwd(x->pwd, sizeof(x->pwd)) != NULL)
-		set_env_var(&env, "PWD", x->pwd);
+	if (getcwd(data->pwd, sizeof(data->pwd)) != NULL)
+		set_env_var(&env, "PWD", data->pwd);
 	else
 		perror("getcwd");
 }
