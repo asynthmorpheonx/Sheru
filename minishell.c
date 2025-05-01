@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/28 02:09:40 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/04/30 23:47:43 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,91 +324,147 @@ int	cmd_count(char **strs, int *arr)
 	return (j);
 }
 
-int	cmd_filler(char **strs, int *arr, char **buffer)
+void	cmd_filler(char **strs, int *arr, char **buffer)
 {
-	int	i;
 	int	j;
-	int	p;
+	int	i;
 
-	i = 0;
-	p = 0;
 	j = 0;
+	i = 0;
 	while (strs[i] && arr[i] != PIPE)
 	{
 		if (arr[i] == IND || arr[i] == OUD 
 			|| arr[i] == APP || arr[i] == HERDOC)
-		{
-			if (!p)
-				p = i;
 			i++;
-		}
 		else
 			buffer[j++] = strs[i];
 		i++;
 	}
-	return (p);
 }
 
-bool	cmd_flag_handle(char **strs, int *arr, int *i, t_data **inlist)
+void	cmd_flag_handle(char **strs, int *arr, t_data *node, int *mode)
 {
 	int	j;
 
 	j = cmd_count(strs, arr);
-	(*inlist)->cmd = safe_alloc((j + 1) * sizeof(char *), 0);
-	if (!(*inlist)->cmd)
-		return (false);
-	*i += cmd_filler(strs, arr, (*inlist)->cmd);
-	return (true);
+	printf("cmd count %d\n", j);
+	node->cmd = safe_alloc((j + 1) * sizeof(char *), 0);
+	if (!node->cmd)
+		exit (EXIT_FAILURE);
+	cmd_filler(strs, arr, node->cmd);
+	*mode = 0;
 }
 
-void	token_handle(int tid, char *str, int *i, t_data *buffer)
+void	stor_redirections(int *arr, char **strs, t_files *file)
 {
-	if (tid == IND)
-		buffer->file.infile = str;
-	else
-	{
-		buffer->file.outfile = str;
-		buffer->file.o_type = tid;
-	}
-	*i += 2;
-}
-
-bool	stor_in_list(char **strs, int *arr, t_data **inlst)
-{
+	int	j;
+	int	p;
 	int	i;
-	int	toggle;
 
+	j = 0;
+	p = 0;
 	i = 0;
-	toggle = 1;
-	if (!*strs)
-		return (true);
-	*inlst = safe_alloc(sizeof(t_data), 0);
-	if (!*inlst)
-		return (false);
 	while (strs[i] && arr[i] != PIPE)
 	{
-		if (arr[i] == WORD && toggle)
+		if (arr[i] == APP || arr[i] == OUD)
 		{
-			cmd_flag_handle(strs, arr, &i, inlst);
-			toggle = 0;
+			file->outfile[j] = strs[i + 1];
+			file->o_type[j] = arr[i];
+			j++;
+			i += 2;
 		}
-		else if (arr[i] == IND || arr[i] == OUD || arr[i] == APP)
-			token_handle(arr[i], strs[i + 1], &i, *inlst);
+		else if (arr[i] == IND)
+		{
+			file->infile[p] = strs[i + 1];
+			p++;
+			i += 2;
+		}
 		else
 			i++;
 	}
-	if (strs[i] && arr[i] == PIPE)
-		stor_in_list(strs + i + 1, arr + i + 1, &(*inlst)->next);
+}
+
+void	make_a_file(int incount, int outcount, t_files *file)
+{
+	file->infile = safe_alloc((incount + 1) * sizeof(char *), 0);
+	file->outfile = safe_alloc((outcount + 1) * sizeof(char *), 0);
+	file->o_type = safe_alloc(outcount * sizeof(int), 0);
+	if (!file->o_type || !file->outfile || !file->infile)
+		exit(EXIT_FAILURE);
+}
+
+void	handle_redirections(int *arr, char **strs, t_files *file, int *mode)
+{
+	int	incount;
+	int	outcount;
+	int	i;
+
+	incount = 0;
+	outcount = 0;
+	i = 0;
+	while (strs[i] && arr[i] != PIPE)
+	{
+		if (arr[i] == APP || arr[i] == OUD || arr[i] == IND)
+		{
+			if (arr[i] == IND)
+				incount++;
+			else
+				outcount++;
+			i += 2;
+		}
+		else
+			i++;
+	}
+	make_a_file(incount, outcount, file);
+	stor_redirections(arr, strs, file);
+	*mode = 0;
+}
+
+t_data	*last_node(t_data *lst)
+{
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
+}
+
+bool	stor_in_list(char **strs, int *arr, t_data **node)
+{
+	int		i;
+	int		toggle;
+	int		boggle;
+	t_data	*tmp;
+
+	i = 0;
+	while (strs[i])
+	{
+		toggle = 1;
+		boggle = 1;
+		tmp = safe_alloc(sizeof(t_data), 0);
+		if (!tmp)
+			return (false);
+		if (arr[i] == PIPE)
+			i++;
+		while (strs[i] && arr[i] != PIPE)
+		{
+			if (arr[i] == WORD && toggle)
+				cmd_flag_handle(strs + i, arr + i, tmp, &toggle);
+			else if ((arr[i] == APP || arr[i] == OUD || arr[i] == IND) && boggle)
+				handle_redirections(arr + i, strs + i, &tmp->file, &boggle);
+			i++;
+		}
+		if (!*node)
+			*node = tmp;
+		else
+			last_node(*node)->next = tmp;
+	}
 	return (true);
 }
 
-void	print_data(void)
+void	print_data(t_data *inlist)
 {
-	t_data	*inlist;
 	int		i;
 	int		j;
 
-	inlist = *box();
 	j = 0;
 	while (inlist)
 	{
@@ -420,9 +476,21 @@ void	print_data(void)
 			printf("  {%s},", inlist->cmd[i++]);
 		printf("\n");
 		// printf("*data[0] = %s\n", (*box())->data[0]);
-		printf("\tt_files.infile = %s\n", inlist->file.infile);
-		printf("\tt_files.outfile = %s\n", inlist->file.outfile);
-		printf("\tt_files.o_type = %i\n", inlist->file.o_type);
+		i = 0;
+		printf("\tt_files.infile :");
+		while (inlist->file.infile && inlist->file.infile[i])
+			printf(" {%s},", inlist->file.infile[i++]);
+		printf("\n");
+		i = 0;
+		printf("\tt_files.outfile :");
+		while (inlist->file.outfile && inlist->file.outfile[i])
+			printf(" {%s},", inlist->file.outfile[i++]);
+		printf("\n");
+		i = 0;
+		printf("\tt_files.o_types :");
+		while (inlist->file.outfile && inlist->file.outfile[i])
+			printf(" {%d},", inlist->file.o_type[i++]);
+		printf("\n");
 		printf("}\tt_data");
 		printf("\n==============================\n");
 		inlist = inlist->next; 
@@ -437,10 +505,11 @@ void	begin_lexing(char *line)
 	if (util()->t < 0)
 		return ;
 	util()->s = spliting_based_token(line);
+	*box() = NULL;
 	if (!tokenize() || !syntax_check()
 		|| !stor_in_list(util()->s, util()->a, box()))
 		return ;
-	print_data();
+	print_data(*box());
 }
 
 int	main(void)
