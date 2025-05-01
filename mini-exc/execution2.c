@@ -67,21 +67,21 @@ char	*ft_cat(char *path, char *cmd)
 
 char	*get_path(char *cmd)
 {
-	char	**path_buf;
 	int	i;
-
-	var()->cmd_path = getenv("PATH");
-	path_buf = ft_split(var()->cmd_path, ':');
+	
+	char **(path_buf), *(cmd_path), *(path_copy);
+	cmd_path = getenv("PATH");
+	path_buf = ft_split(cmd_path, ':');
 	i = 0;
 	while(path_buf[i])
 	{
-		var()->path_copy = ft_cat(path_buf[i], cmd);
-		if (access(var()->path_copy, X_OK) == 0)
+		path_copy = ft_cat(path_buf[i], cmd);
+		if (access(path_copy, X_OK) == 0)
 		{
 			path_buf = ft_free_array(path_buf);
-			return (var()->path_copy);
+			return (path_copy);
 		}
-		free(var()->path_copy);
+		free(path_copy);
 		i++;
 	}
 	return (ft_free_array(path_buf));

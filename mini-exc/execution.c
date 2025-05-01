@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/04/19 18:49:18 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:57:55 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,97 +23,66 @@
 //------------------------
 // Heredoc (<<):
 // Feed multiline input directly to a command until a delimiter is reached.
-// *******************************************************************************
-// builtins that i can run in the parent
-// cd , exit, export, unset
-//----------------------------------
-// builtins that i can't 
-// pwd, wcho, env 
+// ******************************************************************************* 
 
-
-
-
-void	 execute_single(t_cmd *cmd_list, t_env *env, int input_fd)
-{
-	char *(path), **(args);
-	// here i call the function that takes care of them 
-	var()->pid = fork();
-	if (var()->pid == 0 && check)
-	{
-		if (cmd_list->infd != STDIN_FILENO)
-		{
-			dup2(cmd_list->infd, STDIN_FILENO);
-			close(cmd_list->infd);
-		}
-		if(cmd_list->outfd != STDOUT_FILENO)
-		{
-			dup2(cmd_list->outfd, STDOUT_FILENO);
-			close(cmd_list->outfd);
-		}
-		path = get_path(cmd_list->cmd);
-		args = build_args(cmd_list->cmd, cmd_list->cmd_flag[0]); // cmd_flag is 2D array so check if loop through pointer is needed
-		execve(path, args, env_to_array(env));
-		args = ft_free_array(args);
-		exit(1);
-	}
-	else if(var()->pid > 0)
-		waitpid(var()->pid, &var()->status, 0);
-}
 int	builtin_check(char *cmd)
 {
-	char  **builtins;
+	char	**builtins;
+	int		index;
 
 	builtins = ft_split("echo env pwd cd export unset exit", ' ');
-	var()->index = 0;
-	while(builtins[var()->index])
+	index = 0;
+	while(builtins[index])
 	{
-		if (ft_strcmp(cmd, builtins[var()->index]) == 0)
+		if (ft_strcmp(cmd, builtins[index]) == 0)
 		{
 			builtins = ft_free_array(builtins);
 			return (1);
 		}
-		var()->index++;
+		index++;
 	}
 	builtins = ft_free_array(builtins);
 	return (0);
 }
 
-void	ft_ceue(t_cmd *cmd_list, t_env *env)
+
+void	ft_ceue(t_data *data, t_env *env)
 {
-	if(ft_strcmp(cmd_list->cmd, "cd") == 0)
-		ft_cd(cmd_list, env);
-	else if(ft_strcmp(cmd_list->cmd, "export") == 0)
-		ft_export(cmd_list, env);
-	else if(ft_strcmp(cmd_list->cmd, "unset") == 0)
-		ft_unset(cmd_list, &env);
-	else if(ft_strcmp(cmd_list->cmd, "exit") == 0)
-		ft_exit(cmd_list);
-	else if(ft_strcmp(cmd_list->cmd, "echo") == 0)
-		ft_echo(cmd_list, env);
-	else if(ft_strcmp(cmd_list->cmd, "env") == 0)
-		ft_env();
+	if(ft_strcmp(data->cmd[0], "cd") == 0)
+		ft_cd(data, env);
+	else if(ft_strcmp(data->cmd[0], "export") == 0)
+		ft_export(data, env);
+	else if(ft_strcmp(data->cmd[0], "unset") == 0)
+		ft_unset(data, &env);
+	else if(ft_strcmp(data->cmd[0], "exit") == 0)
+		ft_exit(data);
+	else if(ft_strcmp(data->cmd[0], "echo") == 0)
+		ft_echo(data, env);
+	else if(ft_strcmp(data->cmd[0], "env") == 0)
+		ft_env(env);
+	else if(ft_strcmp(data->cmd[0], "pwd") == 0)
+		ft_pwd();
 }
 
-void	check_cmd(t_cmd *cmd_list, t_env *env, int fd)
+void	check_cmd(t_data *cmd, t_env *env, int fd)
 {
 	int	check;
 
-	check = builtin_check(cmd_list->cmd);
+	check = builtin_check(cmd->cmd[0]);
 	if(check == 1) // to run in(outside) the parent
 	{
-		ft_ceue(cmd_list, env);
+		ft_ceue(cmd, env);
 	}
 	else
-		execute_single(cmd_list->cmd, env, STDIN_FILENO);
+		execute_single(cmd, env, STDIN_FILENO);
 }
 
-int execute_commands(t_cmd *cmd_list, t_env *env) //beggining
+int execute_commands(t_data *cmd, t_env *env) //beggining
 {
-    if (!cmd_list)
+	t_data *tmp;
+	
+	int	(index), (last);
+    if (!cmd)
 		return 0;
-    // if (cmd_list->next)
-    //     execute_pipeline(cmd_list, env);
-	else 
-        check_cmd(cmd_list, env,  STDIN_FILENO);
-    //return get_exit_status();  // From global or waitpid result
+    execute_pipeline(cmd, env);
 }
