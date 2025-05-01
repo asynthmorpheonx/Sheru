@@ -1,12 +1,10 @@
 #include "minishell.h"
 
-void	ft_echo(t_cmd *cmd_list, t_env *env)
+void	ft_echo(t_data *data, t_env *env)
 {
 	int		i;
-	t_echo	*data;
 	char	**buff;
 
-	data = cmd_list->echo_data;
 	i = 0; 
 	while (data->data[i])
 	{
@@ -24,7 +22,7 @@ void	ft_echo(t_cmd *cmd_list, t_env *env)
 		}
 		i++;
 	}
-	if (data->n_check == false)
+	if (!data->cmd[1])
 		printf("\n");
 }
 
