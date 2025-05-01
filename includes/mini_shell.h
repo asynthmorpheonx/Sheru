@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/28 01:46:04 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/01 16:22:42 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,14 @@ typedef struct s_utils
 
 typedef struct s_files
 {
-	char	*infile;
-	char	*outfile;
-	int		o_type;
+	char			**infile;
+	char			**outfile;
+	int				*o_type;
 }	t_files;
 
 typedef	struct s_data
 {
 	char			**cmd;
-	char			**data;
-	bool			isbuilt_in;
 	t_files			file;
 	struct s_data	*next;
 }	t_data;
