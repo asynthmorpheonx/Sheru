@@ -6,14 +6,11 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/06 14:36:26 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/06 22:11:54 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-
-//it return the token id of the the char that we are dealing with
-//it increament the value of 'i' in some cases
 
 t_data	**box(void)
 {
@@ -42,44 +39,6 @@ t_utils	*util(void)
 	return (&pp);
 }
 
-int	whichtoken(char *input, int *i)
-{
-	if (!ft_strncmp(input + *i, "<<", 2))
-	{
-		(*i) += 1;
-		return(HERDOC);
-	}
-	else if (!ft_strncmp(input + *i, ">>", 2))
-	{
-		(*i) += 1;
-		return (APP);	
-	}	
-	else if (input[*i] == '|')
-		return (PIPE);
-	else if (input[*i] == '<')
-		return (IND);
-	else if (input[*i] == '>')
-		return (OUD);
-	else
-		return (WORD);
-}
-
-int	token_value(char *input)
-{
-	if (!ft_strncmp(input, "<<", 3))
-		return(HERDOC);
-	else if (!ft_strncmp(input, ">>", 3))
-		return (APP);	
-	else if (!ft_strncmp(input, "|", 2))
-		return (PIPE);
-	else if (!ft_strncmp(input, "<", 2))
-		return (IND);
-	else if (!ft_strncmp(input, ">", 2))
-		return (OUD);
-	else
-		return (WORD);
-}
-
 //checks the bytes if it's an white space
 int	ft_iswhitespace(int c)
 {
@@ -90,78 +49,6 @@ int	ft_iswhitespace(int c)
 int	ft_ispecial(int c)
 {
 	return (c == '|' || c == '>' || c == '<');
-}
-
-//it skips till '\0' or whitespace or it counter another token
-int	skip_quots(char *line, int *i)
-{
-	int	j;
-	int	toggle;
-
-	toggle = 1;
-	while (line[*i])
-	{
-		if (line[*i] == '\'' || line[*i] == '"')
-		{
-			if (toggle)
-			{
-				j = (*i);
-				toggle = 0;
-			}
-			else if (line[*i] == line[j])
-				toggle = 1;
-		}
-		else if ((ft_iswhitespace(line[*i]) || ft_ispecial(line[*i])) && toggle)
-			break ;
-		(*i)++;
-	}
-	if (toggle)
-		return (1);
-	return (0);
-}
-
-//count token in the string
-bool token_count(char *str)
-{
-	int	i;
-	int	tcount;
-
-	i = 0;
-	tcount = 0;
-	while (str[i])
-	{
-		while (ft_iswhitespace(str[i]))
-			i++;
-		if (!str[i])
-			break ;
-		if ((str[i] == '>' || str[i] == '<')
-			&& (str[i + 1] == str[i]))
-			i += 2;
-		else if (str[i] == '|' || str[i] == '>' || str[i] == '<')
-			i++;
-		else
-			if (!skip_quots(str, &i))
-				return (ft_putendl_fd("non end quots", 2), false);
-		tcount++;
-	}
-	util()->t = tcount;
-	return (true);
-}
-
-// it fills the buffer that is given with and one of the token based on the token_id
-void	fill_with_token(char **buffer, int token_id)
-{
-	if (token_id == PIPE)
-		*buffer = ft_strdup("|");
-	else if (token_id == IND)
-		*buffer = ft_strdup("<");
-	else if (token_id == OUD)
-		*buffer = ft_strdup(">");
-	else if (token_id == APP)
-		*buffer = ft_strdup(">>");
-	else if (token_id == HERDOC)
-		*buffer = ft_strdup("<<");
-	g_lst_addback(g_new_garbage(*buffer));
 }
 
 // just calls the regular ft_substr and add it's allocated memory it the linked list
@@ -195,83 +82,6 @@ char	*safe_join(char *s1, char *s2)
 	}
 	g_lst_addback(g_new_garbage(pp));
 	return (pp);
-}
-
-// this function breaks string line (input) into small strings that is tokenized 
-char	*buffer_filler(char *s, int *i)
-{
-	int		j;
-	int		q;
-	char	*str;
-
-	while (ft_iswhitespace(s[*i]))
-		(*i)++;
-	q = -1;
-	j = *i;
-	while (s[*i])
-	{
-		if (q == -1 && (ft_iswhitespace(s[*i]) || ft_ispecial(s[*i])))
-			break ;
-		else if (s[*i] == '\'' || s[*i] == '"')
-		{
-			if (q == -1)
-				q = *i;
-			else if (q >= 0 && s[*i] == s[q])
-				q = -1;			
-		}
-		(*i)++;
-	}
-	str = safe_substr(s, j, *i - j);
-	return (str);
-}
-
-// split 
-char	**spliting_based_token(char *line)
-{
-	int		i;
-	int		k;
-	char	**strs;
-
-	i = 0;
-	k = 0;
-	strs = safe_alloc((util()->t + 1) * sizeof(char *), 0);
-	if (!strs)
-		exit (EXIT_FAILURE);
-	while (line[i])
-	{
-		while(ft_iswhitespace(line[i]))
-			i++;
-		if (!line[i])
-			break ;
-		if (line[i] == '|' || line[i] == '>' || line[i] == '<')
-		{
-			fill_with_token(strs + k, whichtoken(line, &i));
-			i++;
-		}
-		else
-			strs[k] = buffer_filler(line, &i);
-		k++;
-	}
-	return (strs);
-}
-
-// it creates an array of integers that contain token ids of the splited input 
-bool	tokenize(void)
-{
-	int	i;
-
-	i = 0;
-	util()->a = safe_alloc(util()->t * sizeof(int), 1);
-	if (!util()->a || !util()->s)
-		return (perror("sheru:"), false);
-	while (i < util()->t)
-	{
-		util()->a[i] = token_value(util()->s[i]);
-		i++;
-	}
-	// for (int i = 0; i < util()->t; i++)
-	// 	printf("==============++++> %d\n", util()->a[i]);
-	return (true);
 }
 
 bool	syntax_check(void)
@@ -379,28 +189,34 @@ void	make_a_file(int incount, int outcount, t_files *file)
 		exit(EXIT_FAILURE);
 }
 
-void	handle_redirections(int *arr, char **strs, t_files *file, int *mode)
+void	count_in_out(int *in, int *out, int *arr, char **strs)
 {
-	int	incount;
-	int	outcount;
 	int	i;
 
-	incount = 0;
-	outcount = 0;
 	i = 0;
 	while (strs[i] && arr[i] != PIPE)
 	{
 		if (arr[i] == APP || arr[i] == OUD || arr[i] == IND)
 		{
 			if (arr[i] == IND)
-				incount++;
+				(*in)++;
 			else
-				outcount++;
+				(*out)++;
 			i += 2;
 		}
 		else
 			i++;
 	}
+}
+
+void	handle_redirections(int *arr, char **strs, t_files *file, int *mode)
+{
+	int	incount;
+	int	outcount;
+
+	incount = 0;
+	outcount = 0;
+	count_in_out(&incount, &outcount, arr, strs);
 	make_a_file(incount, outcount, file);
 	stor_redirections(arr, strs, file);
 	*mode = 0;
@@ -421,52 +237,6 @@ void	store_in_tdata(t_data **node, t_data *tmp)
 		last_node(*node)->next = tmp;
 }
 
-char	**heredoc_heandler(char **str, int *arr, int *mode)
-{
-	int		i;
-	int		j;
-	char	**buff;
-
-	i = 0;
-	j = 0;
-	while (str[i] && arr[i] != PIPE)
-	{
-		if (arr[i] == HERDOC)
-		{
-			j++;
-			i += 2;
-		}
-		else
-			i++;
-	}
-	if (j == 0 || j > 16)
-	{
-		if (j > 16)
-			ft_putendl_fd("maximum here-document count exceeded", 2);
-		return (NULL);
-	}
-	printf("------------------___>%d\n", j);
-	buff = safe_alloc((j + 1) * sizeof(char *), 0);
-	if (!buff)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (str[i] && arr[i] != PIPE)
-	{
-		if (arr[i] == HERDOC)
-		{
-			buff[j++] = str[i + 1];
-			i += 2;
-		}
-		else
-			i++;
-	}
-	printf("=========================>%s\n", *buff);
-	*mode = 0;
-	return (buff);
-}
-
-// fix this asi zbi i kaidkhl line word secion fach kaikon non word
 // it store the char **strs in linked-list.
 bool	stor_in_list(char **strs, int *arr, t_data **node)
 {
@@ -493,20 +263,14 @@ bool	stor_in_list(char **strs, int *arr, t_data **node)
 			{
 				if (to)
 					cmd_flag_handle(strs + i, arr + i, tmp, &to);
-			}
-			else if (arr[i] == APP || arr[i] == OUD || arr[i] == IND)
-			{
-				if (bo)
-					handle_redirections(arr + i, strs + i, &tmp->file, &bo);
 				i++;
+				continue;
 			}
-			else if (arr[i] == HERDOC)
-			{
-				if (zo)
-					tmp->her_doc = heredoc_heandler(strs + i, arr + i, &zo);
-				i++;
-			}
-			i++;
+			else if ((arr[i] == APP || arr[i] == OUD || arr[i] == IND) && bo)
+				handle_redirections(arr + i, strs + i, &tmp->file, &bo);
+			else if (arr[i] == HERDOC && zo)
+				tmp->her_doc = heredoc_heandler(strs + i, arr + i, &zo);
+			i += 2;
 		}
 		store_in_tdata(node, tmp);
 	}
@@ -559,30 +323,26 @@ void	print_data(t_data *inlist)
 char	*key_value(char *key)
 {
 	t_envp	*pp;
-	int		i;
 	char	*tmp;
+	int		i;
 
 	if (key[0] == '$' || !key[0])
 		return ("\0");
 	i = 0;
 	pp = *envp();
-	while (key[i] && !ft_iswhitespace(key[i]) && (ft_isalpha(key[i]) || key[i] == '_'))
+	while (key[i] && !ft_iswhitespace(key[i])
+		&& (ft_isalpha(key[i]) || key[i] == '_'))
 		i++;
 	tmp = ft_substr(key, 0, i);
 	if (!tmp)
 		ult_exit();
-	printf("______________________________>[%s]\n", tmp);
 	while (pp)
 	{
 		if (!ft_strncmp(pp->key, tmp, i))
-		{
-			free(tmp);
-			return (pp->value);
-		}
+			return (free(tmp), pp->value);
 		pp = pp->next;
 	}
-	free(tmp);
-	return ("\0");
+	return (free(tmp), "\0");
 }
 
 // saraha this the one that expand the *str a fia ktrt lhadra.
@@ -639,79 +399,6 @@ void	expansion_data(int i, int j, int to, int bo)
 	}
 }
 
-// it returns count of byts but the closed quotes execluded.
-size_t	size_quot(char *str)
-{
-	size_t	i;
-	size_t	k;
-	int		j;
-
-	i = 0;
-	j = -1;
-	k = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '"')
-		{
-			if (j == -1)
-				j = i;
-			else if (j >= 0 && str[j] == str[i])
-			{
-				j = -1;
-				k += 2;
-			}
-		}
-		i++;
-	}
-	return (i - k);
-}
-
-// this function the something that i cant explain.
-void	remove_quote(size_t len, char **str, int i, int j)
-{
-	char	*ptr;
-	int		q;
-
-	q = -1;
-	ptr = safe_alloc((len + 1) * sizeof(char), 0);
-	if (!ptr)
-		return ;
-	while ((*str)[i])
-	{
-		if ((*str)[i] == '\'' || (*str)[i] == '"')
-		{
-			if (q == -1 || (*str)[q] == (*str)[i])
-			{
-				if (q == -1)
-					q = i;
-				else
-					q = -1;
-				i++;
-				continue ;
-			}
-		}
-		ptr[j++] = (*str)[i++];
-	}
-	delete_one(*str);
-	*str = ptr;
-}
-
-//this function recreate the string data for handling quote
-void	handle_quote(void)
-{
-	int		i;
-	size_t	len;
-
-	i = 0;
-	while (util()->s[i])
-	{
-		len = size_quot(util()->s[i]);
-		if (util()->a[i] == WORD && ft_strlen(util()->s[i]) != len)
-			remove_quote(len, &util()->s[i], 0, 0);
-		i++;
-	}
-}
-
 // it's start the lexure
 void	begin_lexing(char *line)
 {
@@ -728,52 +415,6 @@ void	begin_lexing(char *line)
 		print_data(*box());		
 	}
 }
-
-// it returns pointer the last node in the list "lst".
-t_envp	*last_env(t_envp *lst)
-{
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
-}
-
-// it just adds the node *tmp to the linked list **lst.
-void	add_to_envp(t_envp **lst, t_envp *tmp)
-{
-	if (!*lst)
-		*lst = tmp;
-	else
-		last_env(*lst)->next = tmp;
-}
-
-// it stores char **envp into and linked list-list with memebers key, value for each node.
-	void	make_env(char **env, t_envp **lst, int i, int j)
-	{
-		int		toggle;
-		t_envp	*tmp;
-
-		while (env[i])
-		{
-			j = 0;
-			toggle = 1;
-			tmp = safe_alloc(sizeof(t_envp), 0);
-			if (!tmp)
-				exit (EXIT_FAILURE);
-			while(env[i][j])
-			{
-				if (env[i][j] == '=' && toggle)
-				{
-					tmp->key = safe_substr(env[i], 0, j);
-					tmp->value = safe_substr
-					(env[i], j + 1, ft_strlen(env[i] + j + 1));
-					toggle = 0;
-				}
-				j++;
-			}
-			add_to_envp(lst, tmp);
-			i++;
-		}
-	}
 
 int	main(int ac, char **av, char **env)
 {
