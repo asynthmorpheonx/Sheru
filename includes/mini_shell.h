@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/06 22:10:53 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:19:05 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,17 @@ char	*buffer_filler(char *s, int *i);
 char	**spliting_based_token(char *line);
 bool	tokenize(void);
 
+void	stor_redirections(int *arr, char **strs, t_files *file);
+void	make_a_file(int incount, int outcount, t_files *file);
+void	count_in_out(int *in, int *out, int *arr, char **strs);
+void	handle_redirections(int *arr, char **strs, t_files *file, int *mode);
+
+t_data	*last_node(t_data *lst);
+void	store_in_tdata(t_data **node, t_data *tmp);
+bool	stor_in_list(char **strs, int *arr, t_data **node);
+
+int	cmd_count(char **strs, int *arr);
+void	cmd_filler(char **strs, int *arr, char **buffer);
+void	cmd_flag_handle(char **strs, int *arr, t_data *node, int *mode);
 
 #endif
