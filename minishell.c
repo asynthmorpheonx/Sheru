@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/07 16:18:15 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/11 00:50:09 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,33 @@ t_data	**box(void)
 	return (&pp);
 }
 
+bool	**ambiguous_ptr(void)
+{
+	static bool	*ptr;
+
+	return (&ptr);
+}
+
+bool	is_ifs(int c)
+{
+	char	*ptr;
+	int		i;
+
+	ptr = key_value("IFS");
+	if (*ptr)
+	{
+		i = 0;
+		while (ptr[i])
+		{
+			if (ptr[i] == c)
+				return (true);
+			i++;
+		}
+		return (false);
+	}
+	return (c == '\n' || c == '\t' || c == ' ');
+}
+
 void	ult_exit(void)
 {
 	clear_container();
@@ -28,6 +55,13 @@ void	ult_exit(void)
 t_envp	**envp(void)
 {
 	static t_envp	*pp;
+
+	return (&pp);
+}
+
+t_ferror	*fetcher(void)
+{
+	static t_ferror	pp;
 
 	return (&pp);
 }
@@ -84,6 +118,7 @@ char	*safe_join(char *s1, char *s2)
 	return (pp);
 }
 
+// checks for the syntex of input tokens
 bool	syntax_check(void)
 {
 	int	i;
@@ -91,7 +126,7 @@ bool	syntax_check(void)
 	i = 0;
 	while (i < util()->t)
 	{
-		if (util()->a[i] == PIPE && (i + 1 >= util()->t || !i || util()->a[i + 1] != WORD || util()->a[i - 1] != WORD))
+		if (util()->a[i] == PIPE && (i + 1 >= util()->t || !i || util()->a[i - 1] != WORD))
 			return (ft_putendl_fd("syntax error", 2), false);
 		else if ((util()->a[i] == IND || util()->a[i] == OUD) && (i + 1 >= util()->t || util()->a[i + 1] != WORD))
 			return (ft_putendl_fd("syntax error", 2), false);
@@ -113,19 +148,23 @@ void	print_data(t_data *inlist)
 		i = 0;
 		printf("===============node %d===============\n", j);
 		printf("struct t_data\n{");
+		if (inlist->ab_redir)
+			printf("\n\tambiguous error {true}\n");
+		else
+			printf("\n\tambiguous error {false}\n");
 		printf("\t*cmd =");
 		while (inlist->cmd && inlist->cmd[i])
 			printf("  {%s},", inlist->cmd[i++]);
 		printf("\n");
 		i = 0;
-		printf("\t*here_doc :");
-		while (inlist->her_doc && inlist->her_doc[i])
-			printf(" {%s},", inlist->her_doc[i++]);
-		printf("\n");
-		i = 0;
 		printf("\tt_files.infile :");
 		while (inlist->file.infile && inlist->file.infile[i])
 			printf(" {%s},", inlist->file.infile[i++]);
+		printf("\n");
+		i = 0;
+		printf("\tt_files.i_type :");
+		while (inlist->file.infile && inlist->file.infile[i])
+			printf(" {%d},", inlist->file.i_type[i++]);
 		printf("\n");
 		i = 0;
 		printf("\tt_files.outfile :");
@@ -140,11 +179,11 @@ void	print_data(t_data *inlist)
 		printf("}\tt_data");
 		printf("\n==============================\n");
 		inlist = inlist->next; 
-		j++;	
+		j++;
 	}
 }
 
-// it return the value if the key is exist, or a "\0" if there no ket that match that.
+// it return the value if the key is exist, or a "\0" if there no key that match that.
 char	*key_value(char *key)
 {
 	t_envp	*pp;
@@ -167,7 +206,50 @@ char	*key_value(char *key)
 			return (free(tmp), pp->value);
 		pp = pp->next;
 	}
-	return (free(tmp), "\0");
+	return (free(tmp), "");
+}
+
+bool	check_value(char *value)
+{
+	int	i;
+
+	i = 0;
+	if (value[i] == '\0')
+		return (false);
+	while (value[i])
+	{
+		if (is_ifs(value[i]))
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+void	full_expand(char **str, char *ptr)
+{
+	int	len;
+	int	i;
+	int	toggle;
+
+	len = ft_strlen(*str);
+	i = 0;
+	toggle = 1;
+	while (is_ifs(ptr[i]))
+	{
+		i++;
+		toggle = 0;
+	}
+	while (ptr[i])
+	{
+		while (!is_ifs(ptr[i]))
+		{
+			len++;
+			i++;
+		}
+		if (is_ifs(ptr[i]) && toggle)
+			break ;
+		i++;
+	}
 }
 
 // saraha this the one that expand the *str a fia ktrt lhadra.
@@ -185,6 +267,11 @@ int	expand_var(char **str, int start)
 	if (start)
 		dup = ft_substr(*str, 0, start);
 	ptr = key_value(*str + start + 1);
+	if (fetcher()->full_exp && fetcher()->flage && !check_value(ptr))
+	{
+		fetcher()->error_id = AMBIGUOUS_REDIRECT;
+		return (0);
+	}
 	tmp = ft_gnl_strjoin(dup, ptr);
 	dup = safe_join(tmp, *str + j);
 	delete_one(*str);
@@ -202,26 +289,84 @@ void	switch_toggles(int *toggle)
 		*toggle = 1;
 }
 
+// it's that set the fetch struct into store previous token and type expansion(full/normal)
+void	fetch_setter(bool mode, int i, bool is_full)
+{
+	if (mode)
+	{
+		if (i && util()->a[i - 1] <= PIPE)
+			fetcher()->flage = true;
+		fetcher()->full_exp = is_full;
+	}
+	else
+	{
+		fetcher()->flage = false;
+		fetcher()->error_id = 0;
+		fetcher()->full_exp = false;
+	}
+}
+
 // it expand the char **s from the struct utils when it found '$'.
 void	expansion_data(int i, int j, int to, int bo)
 {
+	int	pi;
+
+	pi = 0;
 	while (util()->s[i])
 	{
 		j = 0;
 		to = 1;
 		bo = 1;
-		while (util()->s[i][j])
+		while (util()->a[i] == WORD && util()->s[i][j])
 		{
+			fetch_setter(RESET, 0, 0);
 			if (util()->s[i][j] == '\'' && to)
 				switch_toggles(&bo);
 			else if (util()->s[i][j] == '"' && bo)
 				switch_toggles(&to);
-			else if (util()->s[i][j] == '$' && bo)
+			else if ((!i || (i && util()->a[i - 1] != HERDOC)) && util()->s[i][j] == '$' && bo)
+			{
+				if (to)
+					fetch_setter(SET, i, true);
+				else
+					fetch_setter(SET, i, false);
 				j += expand_var(&util()->s[i], j);
+				if (fetcher()->error_id == AMBIGUOUS_REDIRECT)
+				{
+					printf("i value %d\n", i);
+					*ambiguous_ptr()[pi] = true;
+					break ;
+				}
+			}
 			j++;
 		}
 		i++;
 	}
+}
+
+void	reset_data_box(void)
+{
+	t_data	*next;
+
+	if (*box())
+	{
+		while (*box())
+		{
+			next = (*box())->next;
+			delete_one(*box());
+			*box() = next;
+		}
+		*box() = NULL;	
+	}
+}
+
+void	reset_util_box(void)
+{
+	delete_one(util()->s);
+	delete_one(util()->a);
+	util()->a = 0;
+	util()->s = 0;
+	util()->t = 0;
 }
 
 // it's start the lexure
@@ -234,10 +379,11 @@ void	begin_lexing(char *line)
 	{
 		expansion_data(0, 0, 1, 1);
 		handle_quote();
-		*box() = NULL;
+		reset_data_box();
 		if (!stor_in_list(util()->s, util()->a, box()))
 			return ;
-		print_data(*box());		
+		reset_util_box();
+		print_data(*box());			
 	}
 }
 
