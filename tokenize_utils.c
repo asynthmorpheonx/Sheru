@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:07:38 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/07 16:15:33 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/11 00:08:31 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	token_value(char *input)
 	else
 		return (WORD);
 }
+
 //count token in the string
 bool token_count(char *str)
 {
@@ -67,16 +68,15 @@ bool token_count(char *str)
 			i += 2;
 		else if (str[i] == '|' || str[i] == '>' || str[i] == '<')
 			i++;
-		else
-			if (!skip_quots(str, &i))
-				return (ft_putendl_fd("non end quots", 2), false);
+		else if (!skip_quots(str, &i))
+			return (ft_putendl_fd("non end quots", 2), false);
 		tcount++;
 	}
 	util()->t = tcount;
 	return (true);
 }
-// it fills the buffer that is given with and one of the token based on the token_id
 
+// it fills the buffer that is given with and one of the token based on the token_id
 void	fill_with_token(char **buffer, int token_id)
 {
 	if (token_id == PIPE)
@@ -91,8 +91,8 @@ void	fill_with_token(char **buffer, int token_id)
 		*buffer = ft_strdup("<<");
 	g_lst_addback(g_new_garbage(*buffer));
 }
-// this function breaks string line (input) into small strings that is tokenized 
 
+// this function breaks string line (input) into small strings that is tokenized 
 char	*buffer_filler(char *s, int *i)
 {
 	int		j;
@@ -154,17 +154,22 @@ char	**spliting_based_token(char *line)
 bool	tokenize(void)
 {
 	int	i;
+	int	pi;
 
 	i = 0;
+	pi = 0;
 	util()->a = safe_alloc(util()->t * sizeof(int), 1);
-	if (!util()->a || !util()->s)
-		return (perror("sheru:"), false);
+	if (!util()->a)
+		return (false);
 	while (i < util()->t)
 	{
 		util()->a[i] = token_value(util()->s[i]);
+		if (util()->a[i] == PIPE)
+			pi++;
 		i++;
 	}
-	// for (int i = 0; i < util()->t; i++)
-	// 	printf("==============++++> %d\n", util()->a[i]);
+	*ambiguous_ptr() = safe_alloc((pi + 1) * sizeof(bool), 0);
+	if (!*ambiguous_ptr())
+		return (false);
 	return (true);
 }

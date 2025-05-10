@@ -6,11 +6,14 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:07:45 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/07 16:10:56 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/10 16:58:11 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
+
+// ft_putstr_fd("maximum here-document", 2);
+// ft_putendl_fd(" count exceeded", 2);
 
 void	stor_redirections(int *arr, char **strs, t_files *file)
 {
@@ -25,15 +28,14 @@ void	stor_redirections(int *arr, char **strs, t_files *file)
 	{
 		if (arr[i] == APP || arr[i] == OUD)
 		{
-			file->outfile[j] = strs[i + 1];
-			file->o_type[j] = arr[i];
-			j++;
+			file->outfile[j++] = strs[i + 1];
+			file->o_type[j - 1] = arr[i];
 			i += 2;
 		}
-		else if (arr[i] == IND)
+		else if (arr[i] == IND || arr[i] == HERDOC)
 		{
-			file->infile[p] = strs[i + 1];
-			p++;
+			file->infile[p++] = strs[i + 1];
+			file->i_type[p - 1] = arr[i];
 			i += 2;
 		}
 		else
@@ -46,21 +48,28 @@ void	make_a_file(int incount, int outcount, t_files *file)
 	file->infile = safe_alloc((incount + 1) * sizeof(char *), 0);
 	file->outfile = safe_alloc((outcount + 1) * sizeof(char *), 0);
 	file->o_type = safe_alloc(outcount * sizeof(int), 0);
-	if (!file->o_type || !file->outfile || !file->infile)
+	file->i_type = safe_alloc(incount * sizeof(int), 0);
+	if (!file->o_type || !file->outfile || !file->infile || !file->i_type)
 		exit(EXIT_FAILURE);
 }
 
 void	count_in_out(int *in, int *out, int *arr, char **strs)
 {
 	int	i;
+	int	herdoc;
 
 	i = 0;
+	herdoc = 0;
 	while (strs[i] && arr[i] != PIPE)
 	{
-		if (arr[i] == APP || arr[i] == OUD || arr[i] == IND)
+		if (arr[i] < PIPE || arr[i] == HERDOC)
 		{
-			if (arr[i] == IND)
+			if (arr[i] == IND || arr[i] == HERDOC)
+			{
+				if (arr[i] == HERDOC)
+					herdoc++;
 				(*in)++;
+			}
 			else
 				(*out)++;
 			i += 2;
@@ -68,6 +77,8 @@ void	count_in_out(int *in, int *out, int *arr, char **strs)
 		else
 			i++;
 	}
+	if (herdoc > 16)
+		exit (2);
 }
 
 void	handle_redirections(int *arr, char **strs, t_files *file, int *mode)

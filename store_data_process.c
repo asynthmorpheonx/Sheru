@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:16:29 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/07 16:17:16 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/10 19:12:44 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ bool	stor_in_list(char **strs, int *arr, t_data **node)
 	int		i;
 	int		to;
 	int		bo;
-	int		zo;
 	t_data	*tmp;
 
 	i = 0;
@@ -41,12 +40,12 @@ bool	stor_in_list(char **strs, int *arr, t_data **node)
 	{
 		to = 1;
 		bo = 1;
-		zo = 1;
 		tmp = safe_alloc(sizeof(t_data), 0);
 		if (!tmp)
 			return (false);
-		if (arr[i] == PIPE)
+		if (i)
 			i++;
+		tmp->ab_redir = *ambiguous_ptr()[i];
 		while (strs[i] && arr[i] != PIPE)
 		{
 			if (arr[i] == WORD)
@@ -54,13 +53,13 @@ bool	stor_in_list(char **strs, int *arr, t_data **node)
 				if (to)
 					cmd_flag_handle(strs + i, arr + i, tmp, &to);
 				i++;
-				continue;
 			}
-			else if ((arr[i] == APP || arr[i] == OUD || arr[i] == IND) && bo)
-				handle_redirections(arr + i, strs + i, &tmp->file, &bo);
-			else if (arr[i] == HERDOC && zo)
-				tmp->her_doc = heredoc_heandler(strs + i, arr + i, &zo);
-			i += 2;
+			else if (arr[i] < PIPE || arr[i] == HERDOC)
+			{
+				if (bo)
+					handle_redirections(arr + i, strs + i, &tmp->file, &bo);
+				i += 2;
+			}
 		}
 		store_in_tdata(node, tmp);
 	}
