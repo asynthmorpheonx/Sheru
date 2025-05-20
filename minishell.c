@@ -6,11 +6,11 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/20 15:19:12 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:24:23 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include <mini_shell.h>
 
 t_quote	*mask_set(void)
 {

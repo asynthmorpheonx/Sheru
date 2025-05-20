@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/20 15:21:52 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:25:12 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,29 @@ typedef enum e_token
 	HERDOC,
 	WORD
 }	t_token;
+
+typedef struct s_export
+{
+	bool			export_check;
+	const char		*export_appe;
+	char			*export_var;
+	char			*export_value;
+	// struct s_export	*next;
+} 					t_export;
+
+typedef struct s_offs
+{
+	bool			redirection;
+	int 			check;
+	int				redir;
+	int				in_backup;
+	int				out_backup;
+	int				prev_fds[2];
+	int 			curr_fds[2];
+	char			oldpwd[1024];
+	char			pwd[1024];
+	int				redirected_fd;
+}	t_offs;
 
 typedef struct s_ferror
 {
