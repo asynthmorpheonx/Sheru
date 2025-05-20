@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:07:38 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/11 00:08:31 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/14 00:09:51 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,22 +154,15 @@ char	**spliting_based_token(char *line)
 bool	tokenize(void)
 {
 	int	i;
-	int	pi;
 
 	i = 0;
-	pi = 0;
 	util()->a = safe_alloc(util()->t * sizeof(int), 1);
 	if (!util()->a)
 		return (false);
 	while (i < util()->t)
 	{
 		util()->a[i] = token_value(util()->s[i]);
-		if (util()->a[i] == PIPE)
-			pi++;
 		i++;
 	}
-	*ambiguous_ptr() = safe_alloc((pi + 1) * sizeof(bool), 0);
-	if (!*ambiguous_ptr())
-		return (false);
 	return (true);
 }

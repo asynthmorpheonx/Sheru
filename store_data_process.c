@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:16:29 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/10 19:12:44 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/14 00:23:52 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ bool	stor_in_list(char **strs, int *arr, t_data **node)
 			return (false);
 		if (i)
 			i++;
-		tmp->ab_redir = *ambiguous_ptr()[i];
 		while (strs[i] && arr[i] != PIPE)
 		{
 			if (arr[i] == WORD)

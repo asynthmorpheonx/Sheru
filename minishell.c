@@ -6,30 +6,30 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/11 00:50:09 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:11:48 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-t_data	**box(void)
+t_data **box(void)
 {
-	static t_data	*pp;
+	static t_data *pp;
 
 	return (&pp);
 }
 
-bool	**ambiguous_ptr(void)
+bool **ambiguous_ptr(void)
 {
-	static bool	*ptr;
+	static bool *ptr;
 
 	return (&ptr);
 }
 
-bool	is_ifs(int c)
+bool is_ifs(int c)
 {
-	char	*ptr;
-	int		i;
+	char *ptr;
+	int i;
 
 	ptr = key_value("IFS");
 	if (*ptr)
@@ -46,49 +46,50 @@ bool	is_ifs(int c)
 	return (c == '\n' || c == '\t' || c == ' ');
 }
 
-void	ult_exit(void)
+void ult_exit(void)
 {
 	clear_container();
-	exit (EXIT_FAILURE);
+	exit(EXIT_FAILURE);
 }
 
-t_envp	**envp(void)
+t_envp **envp(void)
 {
-	static t_envp	*pp;
+	static t_envp *pp;
 
 	return (&pp);
 }
 
-t_ferror	*fetcher(void)
+//
+t_ferror *fetcher(void)
 {
-	static t_ferror	pp;
+	static t_ferror pp;
 
 	return (&pp);
 }
 
-t_utils	*util(void)
+t_utils *util(void)
 {
-	static t_utils	pp;
+	static t_utils pp;
 
 	return (&pp);
 }
 
-//checks the bytes if it's an white space
-int	ft_iswhitespace(int c)
+// checks the bytes if it's an white space
+int ft_iswhitespace(int c)
 {
 	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-//check the bytes if it's an a an special character
-int	ft_ispecial(int c)
+// check the bytes if it's an a an special character
+int ft_ispecial(int c)
 {
 	return (c == '|' || c == '>' || c == '<');
 }
 
 // just calls the regular ft_substr and add it's allocated memory it the linked list
-char	*safe_substr(char *str, unsigned int start, size_t len)
+char *safe_substr(char *str, unsigned int start, size_t len)
 {
-	char	*pp;
+	char *pp;
 
 	if (len)
 	{
@@ -96,32 +97,32 @@ char	*safe_substr(char *str, unsigned int start, size_t len)
 		if (!pp)
 		{
 			clear_container();
-			exit (EXIT_FAILURE);
+			exit(EXIT_FAILURE);
 		}
 		g_lst_addback(g_new_garbage(pp));
-		return (pp);		
+		return (pp);
 	}
 	return (NULL);
 }
 
-char	*safe_join(char *s1, char *s2)
+char *safe_join(char *s1, char *s2)
 {
-	char	*pp;
+	char *pp;
 
 	pp = ft_gnl_strjoin(s1, s2);
 	if (!pp)
 	{
 		clear_container();
-		exit (EXIT_FAILURE);
+		exit(EXIT_FAILURE);
 	}
 	g_lst_addback(g_new_garbage(pp));
 	return (pp);
 }
 
 // checks for the syntex of input tokens
-bool	syntax_check(void)
+bool syntax_check(void)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (i < util()->t)
@@ -137,10 +138,10 @@ bool	syntax_check(void)
 	return (true);
 }
 
-void	print_data(t_data *inlist)
+void print_data(t_data *inlist)
 {
-	int		i;
-	int		j;
+	int i;
+	int j;
 
 	j = 0;
 	while (inlist)
@@ -148,10 +149,6 @@ void	print_data(t_data *inlist)
 		i = 0;
 		printf("===============node %d===============\n", j);
 		printf("struct t_data\n{");
-		if (inlist->ab_redir)
-			printf("\n\tambiguous error {true}\n");
-		else
-			printf("\n\tambiguous error {false}\n");
 		printf("\t*cmd =");
 		while (inlist->cmd && inlist->cmd[i])
 			printf("  {%s},", inlist->cmd[i++]);
@@ -178,110 +175,46 @@ void	print_data(t_data *inlist)
 		printf("\n");
 		printf("}\tt_data");
 		printf("\n==============================\n");
-		inlist = inlist->next; 
+		inlist = inlist->next;
 		j++;
 	}
 }
 
-// it return the value if the key is exist, or a "\0" if there no key that match that.
-char	*key_value(char *key)
+// hadi azbi hia li kat7sb 
+int key_len(char *str, int pos)
 {
-	t_envp	*pp;
-	char	*tmp;
-	int		i;
+	int i;
+
+	i = pos + 1;
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+		i++;
+	return (i);
+}
+
+// it return the value if the key is exist, or a "\0" if there no key that match that.
+char *key_value(char *key)
+{
+	t_envp *pp;
+	char *tmp;
+	int i;
 
 	if (key[0] == '$' || !key[0])
-		return ("\0");
-	i = 0;
+		return ("");
+	i = key_len(key, 0);
 	pp = *envp();
-	while (key[i] && !ft_iswhitespace(key[i])
-		&& (ft_isalpha(key[i]) || key[i] == '_'))
-		i++;
 	tmp = ft_substr(key, 0, i);
 	if (!tmp)
 		ult_exit();
 	while (pp)
 	{
-		if (!ft_strncmp(pp->key, tmp, i))
+		if (!ft_memcmp(pp->key, tmp, i + 1))
 			return (free(tmp), pp->value);
 		pp = pp->next;
 	}
 	return (free(tmp), "");
 }
 
-bool	check_value(char *value)
-{
-	int	i;
-
-	i = 0;
-	if (value[i] == '\0')
-		return (false);
-	while (value[i])
-	{
-		if (is_ifs(value[i]))
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
-void	full_expand(char **str, char *ptr)
-{
-	int	len;
-	int	i;
-	int	toggle;
-
-	len = ft_strlen(*str);
-	i = 0;
-	toggle = 1;
-	while (is_ifs(ptr[i]))
-	{
-		i++;
-		toggle = 0;
-	}
-	while (ptr[i])
-	{
-		while (!is_ifs(ptr[i]))
-		{
-			len++;
-			i++;
-		}
-		if (is_ifs(ptr[i]) && toggle)
-			break ;
-		i++;
-	}
-}
-
-// saraha this the one that expand the *str a fia ktrt lhadra.
-int	expand_var(char **str, int start)
-{
-	char	*dup;
-	char	*ptr;
-	char	*tmp;
-	int		j;
-
-	j = start + 1;
-	dup = NULL;
-	while ((*str)[j] && (ft_isalpha((*str)[j]) || (*str)[j] == '_'))
-		j++;
-	if (start)
-		dup = ft_substr(*str, 0, start);
-	ptr = key_value(*str + start + 1);
-	if (fetcher()->full_exp && fetcher()->flage && !check_value(ptr))
-	{
-		fetcher()->error_id = AMBIGUOUS_REDIRECT;
-		return (0);
-	}
-	tmp = ft_gnl_strjoin(dup, ptr);
-	dup = safe_join(tmp, *str + j);
-	delete_one(*str);
-	*str = dup;
-	if (!*ptr)
-		return (start);
-	return (j);
-}
-
-void	switch_toggles(int *toggle)
+void switch_toggles(int *toggle)
 {
 	if (*toggle)
 		*toggle = 0;
@@ -289,8 +222,8 @@ void	switch_toggles(int *toggle)
 		*toggle = 1;
 }
 
-// it's that set the fetch struct into store previous token and type expansion(full/normal)
-void	fetch_setter(bool mode, int i, bool is_full)
+// it's function that set the fetch struct into store previous token and type expansion(full/normal)
+void fetch_setter(bool mode, int i, bool is_full)
 {
 	if (mode)
 	{
@@ -301,42 +234,190 @@ void	fetch_setter(bool mode, int i, bool is_full)
 	else
 	{
 		fetcher()->flage = false;
-		fetcher()->error_id = 0;
+		fetcher()->error = false;
 		fetcher()->full_exp = false;
 	}
 }
 
-// it expand the char **s from the struct utils when it found '$'.
-void	expansion_data(int i, int j, int to, int bo)
+int lenght_both(char **s1, char **s2)
 {
-	int	pi;
+	int i;
+	int len;
 
-	pi = 0;
+	i = 0;
+	while (s1 && s1[i])
+		i++;
+	len = i;
+	i = 0;
+	while (s2 && s2[i])
+		i++;
+	len += i;
+	return (len);
+}
+
+// it extend the util().s and update the the array
+void extend_key(int *index, int *start, char *value, int end)
+{
+	int i;
+	int j;
+	int u;
+	int len;
+	char *tmp;
+	char **extnd;
+	char **dup;
+	int *a_dup;
+
+	i = 0;
+	j = 0;
+	u = 0;
+	tmp = NULL;
+	if (*start)
+		tmp = ft_substr(util()->s[*index], 0, *start);
+	extnd = ifs_split(value);
+	if (!extnd)
+		return ;
+	if (*extnd && extnd[1] && is_ifs(*value))
+		len = lenght_both(extnd, util()->s);
+	else
+		len = lenght_both(extnd, util()->s) - 1;
+	printf("len %d\n", len);
+	dup = safe_alloc((len + 1) * sizeof(char *), 0);
+	a_dup = safe_alloc(len * sizeof(int), 0);
+	if (!dup || !a_dup)
+	{
+		if (tmp)
+			free(tmp);
+		ult_exit();
+	}
+	while (i < *index)
+	{
+		dup[i] = util()->s[i];
+		a_dup[i] = util()->a[i];
+		i++;
+	}
+	if (tmp && !is_ifs(*value))
+	{
+		dup[i++] = safe_join(tmp, extnd[j]);
+		a_dup[i - 1] = WORD;
+		j++;
+	}
+	else if (tmp)
+	{
+		g_lst_addback(g_new_garbage(tmp));
+		dup[i++] = tmp;
+		a_dup[i - 1] = WORD;
+	}
+	while (extnd[j])
+	{
+		dup[i++] = extnd[j++];
+		a_dup[i - 1] = WORD;
+	}
+	if (i)
+		u = ft_strlen(dup[i - 1]);
+	if (!ft_isalpha(util()->s[*index][end]))
+		dup[i - 1] = safe_join(dup[i - 1], util()->s[*index] + end);
+	*index = i - 1;
+	*start = u;
+	while (i < len)
+	{
+		dup[i] = util()->s[i - j + 1];
+		a_dup[i] = util()->a[i - j + 1];
+		i++;
+	}
+	util()->s = dup;
+	util()->a = a_dup;
+}
+
+void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
+{
+	char	*dup;
+	int		var;
+
+	dup = NULL;
+	if (*strt)
+		dup = ft_substr(util()->s[*ind], 0, *strt);
+	dup = ft_gnl_strjoin(dup, value);
+	var = ft_strlen(dup);
+	dup = safe_join(dup, util()->s[*ind] + k_len);
+	delete_one(util()->s[*ind]);
+	util()->s[*ind] = dup;
+	if (*value)
+		*strt = ft_strlen(value);
+}
+
+bool	check_value(char *str)
+{
+	int	i;
+	int	toggle;
+	int	count;
+
+	i = 0;
+	toggle = 1;
+	count = 0;
+	if (str && !*str)
+		return (false);
+	while (str[i])
+	{
+		if (!is_ifs(str[i]) && toggle)
+		{
+			count++;
+			toggle = 0;
+			if (count >	1)
+				return (false);
+		}
+		else if (is_ifs(str[i]))
+			toggle = 1;
+		i++;
+	}
+	if (!count)
+		return (false);
+	return (true);
+}
+
+// this function expand the key found in util().s[index] and return the index after the expand
+void expand_value(int *index, int *start)
+{
+	char	*dup;
+	char	*value;
+	bool	status;
+	int		i;
+
+	i = key_len(util()->s[*index], *start + 1);
+	dup = NULL;
+	value = key_value(util()->s[*index] + *start + 1);
+	status = check_value(value);
+	if (fetcher()->flage && fetcher()->full_exp && !status)
+		fetcher()->error = true;
+	else if (*value && fetcher()->full_exp && !status)
+		extend_key(index, start, value, i);
+	else
+		replace_key_to_value(index, start, i, value);
+}
+
+// TODO : handle quote removal and empty value of variable
+void expansion_data(int i, int j, int to, int sto)
+{
 	while (util()->s[i])
 	{
 		j = 0;
 		to = 1;
-		bo = 1;
-		while (util()->a[i] == WORD && util()->s[i][j])
+		sto = 1;
+		while (util()->s[i] && util()->s[i][j] && util()->a[i] == WORD)
 		{
 			fetch_setter(RESET, 0, 0);
 			if (util()->s[i][j] == '\'' && to)
-				switch_toggles(&bo);
-			else if (util()->s[i][j] == '"' && bo)
+				switch_toggles(&sto);
+			else if (util()->s[i][j] == '"' && sto)
 				switch_toggles(&to);
-			else if ((!i || (i && util()->a[i - 1] != HERDOC)) && util()->s[i][j] == '$' && bo)
+			else if ((!i || (i && util()->a[i - 1] != HERDOC)) && util()->s[i][j] == '$' && sto)
 			{
+				fetch_setter(SET, i, false);
 				if (to)
 					fetch_setter(SET, i, true);
-				else
-					fetch_setter(SET, i, false);
-				j += expand_var(&util()->s[i], j);
-				if (fetcher()->error_id == AMBIGUOUS_REDIRECT)
-				{
-					printf("i value %d\n", i);
-					*ambiguous_ptr()[pi] = true;
-					break ;
-				}
+				expand_value(&i, &j);
+				if (!fetcher()->error)
+					continue;
+				util()->a[i] = -1;
 			}
 			j++;
 		}
@@ -344,9 +425,9 @@ void	expansion_data(int i, int j, int to, int bo)
 	}
 }
 
-void	reset_data_box(void)
+void reset_data_box(void)
 {
-	t_data	*next;
+	t_data *next;
 
 	if (*box())
 	{
@@ -356,24 +437,34 @@ void	reset_data_box(void)
 			delete_one(*box());
 			*box() = next;
 		}
-		*box() = NULL;	
+		*box() = NULL;
 	}
 }
 
-void	reset_util_box(void)
+void reset_util_box(void)
 {
 	delete_one(util()->s);
 	delete_one(util()->a);
-	util()->a = 0;
-	util()->s = 0;
 	util()->t = 0;
 }
 
+void print_tokens(void)
+{
+	int i;
+
+	i = 0;
+	while (util()->s[i])
+	{
+		printf("====> %s it's token id %d\n", util()->s[i], util()->a[i]);
+		i++;
+	}
+}
+
 // it's start the lexure
-void	begin_lexing(char *line)
+void begin_lexing(char *line)
 {
 	if (!token_count(line))
-		return ;
+		return;
 	util()->s = spliting_based_token(line);
 	if (tokenize() && syntax_check())
 	{
@@ -381,27 +472,83 @@ void	begin_lexing(char *line)
 		handle_quote();
 		reset_data_box();
 		if (!stor_in_list(util()->s, util()->a, box()))
-			return ;
+			return;
 		reset_util_box();
-		print_data(*box());			
+		print_data(*box());
 	}
 }
 
-int	main(int ac, char **av, char **env)
+size_t	session_name_len(char *str)
 {
-	char *line;
+	size_t	i;
+
+	i = 0;
+	while (ft_isalnum(str[i]))
+		i++;
+	return (i);
+}
+
+char	*export_session(void)
+{
+	static char	*str;
+	char	*ptr;
+
+	if (!str)
+	{
+		ptr = key_value(SESSIO);
+		str = safe_substr(ptr, 6, session_name_len(ptr + 6));
+	}
+	return (str);
+}
+
+// creat an customize shell prompt just to show the user [USER@SESSION]-[OS@SHELL_NAME]
+char	*creat_prompt(void)
+{
+	char	*str;
+	char	*user;
+	char	*os;
+	char	*session;
+
+	user = key_value(USR);
+	os = key_value(OS);
+	session = export_session();
+	str = ft_strjoin("┌─[", user);
+	if (str && *session)
+	{
+		if (*user)
+			str = ft_gnl_strjoin(str, "@");
+		str = ft_gnl_strjoin(str, session);
+		str = ft_gnl_strjoin(str, "]——[");
+	}
+	if (str && *os)
+	{
+		str = ft_gnl_strjoin(str, os);
+		str = ft_gnl_strjoin(str, "@sheru]—\n└─$");
+	}
+	else if (str)
+		str = ft_gnl_strjoin(str, "sheru]—\n└─$");
+	return (str);
+}
+
+int main(int ac, char **av, char **env)
+{
+	char	*line;
+	char	*prompt;
 
 	line = NULL;
 	(void)ac;
 	(void)av;
 	make_env(env, envp(), 0, 0);
+	prompt = creat_prompt();
+	if (!prompt)
+		ult_exit();
 	while (1)
 	{
-		line = readline("sheru>");
+		line = readline(prompt);
 		if (!line)
 		{
 			write(1, "exit\n", 5);
-			return (clear_container(), 0);
+			return (free(prompt), clear_container(), 0);
 		}
 		add_history(line);
 		begin_lexing(line);

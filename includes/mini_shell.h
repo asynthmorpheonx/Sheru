@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/11 00:32:33 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/19 23:31:58 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@
 # define RESET 0
 # define SET 1
 
+# define USR "USER"
+# define OS "DESKTOP_SESSION"
+# define SESSIO "SESSION_MANAGER"
+
 typedef enum e_token
 {
 	IND,
@@ -39,7 +43,7 @@ typedef struct s_ferror
 {
 	bool	flage;
 	bool	full_exp;
-	int		error_id;
+	bool	error;
 }	t_ferror;
 
 typedef struct s_utils
@@ -67,7 +71,6 @@ typedef struct s_envp
 typedef	struct s_data
 {
 	char			**cmd;
-	bool			ab_redir;
 	t_files			file;
 	struct s_data	*next;
 }	t_data;
@@ -119,9 +122,11 @@ void	cmd_filler(char **strs, int *arr, char **buffer);
 void	cmd_flag_handle(char **strs, int *arr, t_data *node, int *mode);
 
 char	*key_value(char *key);
+int		key_len(char *str, int pos);
 
 bool	**ambiguous_ptr(void);
 
 bool	is_ifs(int c);
+char	**ifs_split(char const *s);
 
 #endif

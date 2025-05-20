@@ -6,14 +6,11 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:07:45 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/10 16:58:11 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/15 23:34:37 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-
-// ft_putstr_fd("maximum here-document", 2);
-// ft_putendl_fd(" count exceeded", 2);
 
 void	stor_redirections(int *arr, char **strs, t_files *file)
 {
@@ -30,12 +27,16 @@ void	stor_redirections(int *arr, char **strs, t_files *file)
 		{
 			file->outfile[j++] = strs[i + 1];
 			file->o_type[j - 1] = arr[i];
+			if (arr[i + 1] == -1)
+				file->o_type[j - 1] = -1;
 			i += 2;
 		}
 		else if (arr[i] == IND || arr[i] == HERDOC)
 		{
 			file->infile[p++] = strs[i + 1];
 			file->i_type[p - 1] = arr[i];
+			if (arr[i + 1] == -1)
+				file->i_type[p - 1] = -1;
 			i += 2;
 		}
 		else
