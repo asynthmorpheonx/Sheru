@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/19 23:31:58 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:32:27 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@
 # define USR "USER"
 # define OS "DESKTOP_SESSION"
 # define SESSIO "SESSION_MANAGER"
+
+typedef struct s_quote
+{
+	char	**strs;
+	bool	**bitmaks;
+}	t_quote;
 
 typedef enum e_token
 {
