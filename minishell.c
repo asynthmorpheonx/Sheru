@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/30 23:47:43 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/19 16:55:45 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mini_shell.h>
+#include <minishell.h>
 
 //it return the token id of the the char that we are dealing with
 //it increament the value of 'i' in some cases
@@ -274,6 +274,7 @@ bool	tokenize(void)
 
 void	print_token(char **strs, int *token_arr, int tcount)
 {
+	printf("parsing 13\n");
 	int	i;
 	char	*tokens[] = {"PIPE", "IND", "OUD", "APP", "HERDOC", "WORD"};
 
@@ -347,7 +348,7 @@ void	cmd_flag_handle(char **strs, int *arr, t_data *node, int *mode)
 	int	j;
 
 	j = cmd_count(strs, arr);
-	printf("cmd count %d\n", j);
+	// printf("cmd count %d\n", j);
 	node->cmd = safe_alloc((j + 1) * sizeof(char *), 0);
 	if (!node->cmd)
 		exit (EXIT_FAILURE);
@@ -415,6 +416,8 @@ void	handle_redirections(int *arr, char **strs, t_files *file, int *mode)
 		else
 			i++;
 	}
+	if (!file)
+		printf("non init\n"); 
 	make_a_file(incount, outcount, file);
 	stor_redirections(arr, strs, file);
 	*mode = 0;
@@ -449,7 +452,7 @@ bool	stor_in_list(char **strs, int *arr, t_data **node)
 			if (arr[i] == WORD && toggle)
 				cmd_flag_handle(strs + i, arr + i, tmp, &toggle);
 			else if ((arr[i] == APP || arr[i] == OUD || arr[i] == IND) && boggle)
-				handle_redirections(arr + i, strs + i, &tmp->file, &boggle);
+				handle_redirections(arr + i, strs + i, &tmp->files, &boggle);
 			i++;
 		}
 		if (!*node)
@@ -478,18 +481,18 @@ void	print_data(t_data *inlist)
 		// printf("*data[0] = %s\n", (*box())->data[0]);
 		i = 0;
 		printf("\tt_files.infile :");
-		while (inlist->file.infile && inlist->file.infile[i])
-			printf(" {%s},", inlist->file.infile[i++]);
+		while (inlist->files.infile && inlist->files.infile[i])
+			printf(" {%s},", inlist->files.infile[i++]);
 		printf("\n");
 		i = 0;
 		printf("\tt_files.outfile :");
-		while (inlist->file.outfile && inlist->file.outfile[i])
-			printf(" {%s},", inlist->file.outfile[i++]);
+		while (inlist->files.outfile && inlist->files.outfile[i])
+			printf(" {%s},", inlist->files.outfile[i++]);
 		printf("\n");
 		i = 0;
 		printf("\tt_files.o_types :");
-		while (inlist->file.outfile && inlist->file.outfile[i])
-			printf(" {%d},", inlist->file.o_type[i++]);
+		while (inlist->files.outfile && inlist->files.outfile[i])
+			printf(" {%d},", inlist->files.o_type[i++]);
 		printf("\n");
 		printf("}\tt_data");
 		printf("\n==============================\n");
@@ -499,7 +502,7 @@ void	print_data(t_data *inlist)
 }
 
 // it's start the lexure
-void	begin_lexing(char *line)
+void	begin_lexing(char *line, char **env)
 {
 	util()->t = token_count(line);
 	if (util()->t < 0)
@@ -510,20 +513,25 @@ void	begin_lexing(char *line)
 		|| !stor_in_list(util()->s, util()->a, box()))
 		return ;
 	print_data(*box());
+	// t_data *tmp = *box();
+	// printf("=====> %s\n", tmp->cmd[0]);
+	execute_commands(*box(), env);
 }
 
-int	main(void)
+int	main(int ac, char **av, char **env)
 {
 	char *line;
 
 	line = NULL;
+	(void)ac;
+	(void)av;
 	while (1)
 	{
 		line = readline("sheru>");
 		if (!line)
 			return (clear_container(), 0);
 		add_history(line);
-		begin_lexing(line);
+		begin_lexing(line, env);
 	}
 	return (0);
 }

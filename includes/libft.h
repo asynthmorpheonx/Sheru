@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 16:46:00 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/04/20 17:12:55 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/02 16:20:24 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,13 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h>
+# include <heap_controller.h>
 
 # define BUFFER_SIZE 1
 
+char	*ft_strcat(char *dest, const char *src);
+char	*ft_strcpy(char *dest, const char *src);
+int		ft_strcmp(char *s1, const char *s2);
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
 int		ft_isalnum(int c);

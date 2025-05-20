@@ -1,4 +1,6 @@
-SRC= heap_controller/g_container.c heap_controller/managment_utils.c minishell.c
+SRC= heap_controller/g_container.c heap_controller/managment_utils.c minishell.c \
+		mini_exc/b_utils1.c mini_exc/b_utils2.c mini_exc/builtin2.c mini_exc/builtins.c mini_exc/execution.c \
+		mini_exc/execution1.c mini_exc/execution2.c mini_exc/pipline.c mini_exc/utils.c mini_exc/export_helpers.c
 OBJ= $(SRC:%.c=%.o)
 NAME= minishell
 LIBS= libs/libft.a libs/libftprintf.a
