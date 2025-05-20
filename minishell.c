@@ -6,467 +6,149 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/19 16:55:45 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:19:12 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-//it return the token id of the the char that we are dealing with
-//it increament the value of 'i' in some cases
-
-t_data	**box(void)
+t_quote	*mask_set(void)
 {
-	static t_data	*pp;
+	static t_quote	box;
+
+	return (&box);
+}
+
+t_data **box(void)
+{
+	static t_data *pp;
 
 	return (&pp);
 }
 
-t_utils	*util(void)
+bool **ambiguous_ptr(void)
 {
-	static t_utils	pp;
+	static bool *ptr;
 
-	return (&pp);
+	return (&ptr);
 }
 
-int	whichtoken(char *input, int *i)
+bool is_ifs(int c)
 {
-	if (!ft_strncmp(input + *i, "<<", 2))
+	char *ptr;
+	int i;
+
+	ptr = key_value("IFS");
+	if (*ptr)
 	{
-		(*i) += 1;
-		return(HERDOC);
+		i = 0;
+		while (ptr[i])
+		{
+			if (ptr[i] == c)
+				return (true);
+			i++;
+		}
+		return (false);
 	}
-	else if (!ft_strncmp(input + *i, ">>", 2))
-	{
-		(*i) += 1;
-		return (APP);	
-	}	
-	else if (input[*i] == '|')
-		return (PIPE);
-	else if (input[*i] == '<')
-		return (IND);
-	else if (input[*i] == '>')
-		return (OUD);
-	else
-		return (WORD);
+	return (c == '\n' || c == '\t' || c == ' ');
 }
 
-int	token_value(char *input)
+void ult_exit(void)
 {
-	if (!ft_strncmp(input, "<<", 2))
-		return(HERDOC);
-	else if (!ft_strncmp(input, ">>", 2))
-		return (APP);	
-	else if (input[0] == '|')
-		return (PIPE);
-	else if (input[0] == '<')
-		return (IND);
-	else if (input[0] == '>')
-		return (OUD);
-	else
-		return (WORD);
+	clear_container();
+	exit(EXIT_FAILURE);
 }
 
-//checks the bytes if it's an white space
-int	ft_iswhitespace(int c)
+t_envp **envp(void)
+{
+	static t_envp *pp;
+
+	return (&pp);
+}
+
+//
+t_ferror *fetcher(void)
+{
+	static t_ferror pp;
+
+	return (&pp);
+}
+
+t_utils *util(void)
+{
+	static t_utils pp;
+
+	return (&pp);
+}
+
+// checks the bytes if it's an white space
+int ft_iswhitespace(int c)
 {
 	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-//check the bytes if it's an a an special character
-int	ft_ispecial(int c)
+// check the bytes if it's an a an special character
+int ft_ispecial(int c)
 {
 	return (c == '|' || c == '>' || c == '<');
 }
 
-//it skips till '\0' or whitespace or it counter another token
-int	skip_quots(char *line, int *i)
-{
-	int	j;
-	int	toggle;
-
-	toggle = 1;
-	while (line[*i])
-	{
-		if (line[*i] == '\'' || line[*i] == '"')
-		{
-			if (toggle)
-			{
-				j = (*i);
-				toggle = 0;
-			}
-			else if (line[*i] == line[j])
-				toggle = 1;
-		}
-		else if ((ft_iswhitespace(line[*i]) || ft_ispecial(line[*i])) && toggle)
-			break ;
-		(*i)++;
-	}
-	if (toggle)
-		return (1);
-	return (0);
-}
-
-//count token in the string
-int token_count(char *str)
-{
-	int	i;
-	int	tcount;
-
-	i = 0;
-	tcount = 0;
-	while (str[i])
-	{
-		while (ft_iswhitespace(str[i]))
-			i++;
-		if (!str[i])
-			break ;
-		if ((str[i] == '>' || str[i] == '<')
-			&& (str[i + 1] == '>' || str[i + 1] == '<'))
-			i += 2;
-		else if (str[i] == '|' || str[i] == '>' || str[i] == '<')
-			i++;
-		else
-			if (!skip_quots(str, &i))
-					return (ft_putendl_fd("non end quots", 2), -1);
-		tcount++;
-	}
-	return (tcount);
-}
-
-// it fills the buffer that is given with and one of the token based on the token_id
-void	fill_with_token(char **buffer, int token_id)
-{
-	if (token_id == PIPE)
-		*buffer = ft_strdup("|");
-	else if (token_id == IND)
-		*buffer = ft_strdup("<");
-	else if (token_id == OUD)
-		*buffer = ft_strdup(">");
-	else if (token_id == APP)
-		*buffer = ft_strdup(">>");
-	else if (token_id == HERDOC)
-		*buffer = ft_strdup("<<");
-	g_lst_addback(g_new_garbage(*buffer));
-}
-
 // just calls the regular ft_substr and add it's allocated memory it the linked list
-char	*safe_substr(char *str, unsigned int start, size_t len)
+char *safe_substr(char *str, unsigned int start, size_t len)
 {
-	char	*pp;
+	char *pp;
 
 	if (len)
 	{
 		pp = ft_substr(str, start, len);
 		if (!pp)
-			return (NULL);
+		{
+			clear_container();
+			exit(EXIT_FAILURE);
+		}
 		g_lst_addback(g_new_garbage(pp));
-		return (pp);		
+		return (pp);
 	}
 	return (NULL);
 }
 
-// it handles the quote and return an allocated memory that doesnt contain those quotes
-char	*handle_quote(char *line, int *i, int *mode)
+char *safe_join(char *s1, char *s2)
 {
-	int	j;
-	int	k;
+	char *pp;
 
-	j = *i;
-	k = 0;
-	(*i)++;
-	while (line[*i])
+	pp = ft_gnl_strjoin(s1, s2);
+	if (!pp)
 	{
-		if (line[*i] == line[j])
-		{
-			(*i)++;
-			return (safe_substr(line, j + 1, k));
-		}
-		else
-			k++;
-		(*i)++;
-	}
-	*mode = -1;
-	return (NULL);
-}
-
-// this function breaks string line (input) into small strings that is tokenized 
-char	*buffer_filler(char *line, int *i, int *mode)
-{
-	int	j;
-	char	*str;
-
-	str = NULL;
-	while (ft_iswhitespace(line[*i]))
-		(*i)++;
-	while (line[*i])
-	{
-		if (ft_iswhitespace(line[*i]) || ft_ispecial(line[*i]))
-			break ;
-		else if (line[*i] == '\'' || line[*i] == '"')
-			str = ft_gnl_strjoin(str, handle_quote(line, i, mode));
-		else
-		{
-			j = *i;
-			while (line[*i] && line[*i] != '\'' && line[*i] != '"'
-				&& !ft_iswhitespace(line[*i]) && !ft_ispecial(line[*i]))
-				(*i)++;
-			str = ft_gnl_strjoin(str, safe_substr(line, j, *i - j));
-		}
-	}
-	if (str)
-		g_lst_addback(g_new_garbage(str));
-	return (str);
-}
-
-// split 
-char	**spliting_based_token(char *line)
-{
-	int		i;
-	int		k;
-	int		quote_status;
-	char	**strs;
-
-	i = 0;
-	k = 0;
-	strs = safe_alloc((token_count(line) + 1) * sizeof(char *), 0);
-	if (!strs)
-		return (NULL);
-	while (line[i])
-	{
-		quote_status = 0;
-		while(ft_iswhitespace(line[i]))
-			i++;
-		if (!line[i])
-			break ;
-		if (line[i] == '|' || line[i] == '>' || line[i] == '<')
-		{
-			fill_with_token(strs + k, whichtoken(line, &i));
-			i++;
-		}
-		else
-		{
-			strs[k] = buffer_filler(line, &i, &quote_status);
-			if (!strs[k])
-				return (NULL);
-		}
-		k++;
-	}
-	return (strs);
-}
-
-// it creates an array of integers that contain token ids of the splited input 
-bool	tokenize(void)
-{
-	int	i;
-
-	i = 0;
-	util()->a = safe_alloc(util()->t * sizeof(int), 1);
-	if (!util()->a || !util()->s)
-		return (perror("sheru:"), false);
-	while (i < util()->t)
-	{
-		util()->a[i] = token_value(util()->s[i]);
-		i++;
-	}
-	return (true);
-}
-
-void	print_token(char **strs, int *token_arr, int tcount)
-{
-	printf("parsing 13\n");
-	int	i;
-	char	*tokens[] = {"PIPE", "IND", "OUD", "APP", "HERDOC", "WORD"};
-
-	i = 0;
-	while (i < tcount)
-	{
-		printf("the line[%d]: [%s] \n\tit's id is :%s\n", i, strs[i], tokens[token_arr[i]]);
-		i++;
-	}
-}
-
-bool	syntax_check(void)
-{
-	int	i;
-
-	i = 0;
-	while (i < util()->t)
-	{
-		if (util()->a[i] == PIPE && (i + 1 >= util()->t || !i))
-			return (ft_putendl_fd("syntax error", 2), false);
-		else if ((util()->a[i] == IND || util()->a[i] == OUD)
-			&& (i + 1 >= util()->t || util()->a[i + 1] != WORD))
-			return (ft_putendl_fd("syntax error", 2), false);
-		else if ((util()->a[i] == APP || util()->a[i] == HERDOC)
-			&& (i + 1 >= util()->t || util()->a[i + 1] != WORD))
-			return (ft_putendl_fd("syntax error", 2), false);
-		i++;
-	}
-	return (true);
-}
-
-int	cmd_count(char **strs, int *arr)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (strs[i] && arr[i] != PIPE)
-	{
-		if (arr[i] == IND || arr[i] == OUD
-			|| arr[i] == APP || arr[i] == HERDOC)
-			i++;
-		else
-			j++;
-		i++;
-	}
-	return (j);
-}
-
-void	cmd_filler(char **strs, int *arr, char **buffer)
-{
-	int	j;
-	int	i;
-
-	j = 0;
-	i = 0;
-	while (strs[i] && arr[i] != PIPE)
-	{
-		if (arr[i] == IND || arr[i] == OUD 
-			|| arr[i] == APP || arr[i] == HERDOC)
-			i++;
-		else
-			buffer[j++] = strs[i];
-		i++;
-	}
-}
-
-void	cmd_flag_handle(char **strs, int *arr, t_data *node, int *mode)
-{
-	int	j;
-
-	j = cmd_count(strs, arr);
-	// printf("cmd count %d\n", j);
-	node->cmd = safe_alloc((j + 1) * sizeof(char *), 0);
-	if (!node->cmd)
-		exit (EXIT_FAILURE);
-	cmd_filler(strs, arr, node->cmd);
-	*mode = 0;
-}
-
-void	stor_redirections(int *arr, char **strs, t_files *file)
-{
-	int	j;
-	int	p;
-	int	i;
-
-	j = 0;
-	p = 0;
-	i = 0;
-	while (strs[i] && arr[i] != PIPE)
-	{
-		if (arr[i] == APP || arr[i] == OUD)
-		{
-			file->outfile[j] = strs[i + 1];
-			file->o_type[j] = arr[i];
-			j++;
-			i += 2;
-		}
-		else if (arr[i] == IND)
-		{
-			file->infile[p] = strs[i + 1];
-			p++;
-			i += 2;
-		}
-		else
-			i++;
-	}
-}
-
-void	make_a_file(int incount, int outcount, t_files *file)
-{
-	file->infile = safe_alloc((incount + 1) * sizeof(char *), 0);
-	file->outfile = safe_alloc((outcount + 1) * sizeof(char *), 0);
-	file->o_type = safe_alloc(outcount * sizeof(int), 0);
-	if (!file->o_type || !file->outfile || !file->infile)
+		clear_container();
 		exit(EXIT_FAILURE);
-}
-
-void	handle_redirections(int *arr, char **strs, t_files *file, int *mode)
-{
-	int	incount;
-	int	outcount;
-	int	i;
-
-	incount = 0;
-	outcount = 0;
-	i = 0;
-	while (strs[i] && arr[i] != PIPE)
-	{
-		if (arr[i] == APP || arr[i] == OUD || arr[i] == IND)
-		{
-			if (arr[i] == IND)
-				incount++;
-			else
-				outcount++;
-			i += 2;
-		}
-		else
-			i++;
 	}
-	if (!file)
-		printf("non init\n"); 
-	make_a_file(incount, outcount, file);
-	stor_redirections(arr, strs, file);
-	*mode = 0;
+	g_lst_addback(g_new_garbage(pp));
+	return (pp);
 }
 
-t_data	*last_node(t_data *lst)
+// checks for the syntex of input tokens
+bool syntax_check(void)
 {
-	while (lst->next)
-		lst = lst->next;
-	return (lst);
-}
-
-bool	stor_in_list(char **strs, int *arr, t_data **node)
-{
-	int		i;
-	int		toggle;
-	int		boggle;
-	t_data	*tmp;
+	int i;
 
 	i = 0;
-	while (strs[i])
+	while (i < util()->t)
 	{
-		toggle = 1;
-		boggle = 1;
-		tmp = safe_alloc(sizeof(t_data), 0);
-		if (!tmp)
-			return (false);
-		if (arr[i] == PIPE)
-			i++;
-		while (strs[i] && arr[i] != PIPE)
-		{
-			if (arr[i] == WORD && toggle)
-				cmd_flag_handle(strs + i, arr + i, tmp, &toggle);
-			else if ((arr[i] == APP || arr[i] == OUD || arr[i] == IND) && boggle)
-				handle_redirections(arr + i, strs + i, &tmp->files, &boggle);
-			i++;
-		}
-		if (!*node)
-			*node = tmp;
-		else
-			last_node(*node)->next = tmp;
+		if (util()->a[i] == PIPE && (i + 1 >= util()->t || !i || util()->a[i - 1] != WORD))
+			return (ft_putendl_fd("syntax error", 2), false);
+		else if ((util()->a[i] == IND || util()->a[i] == OUD) && (i + 1 >= util()->t || util()->a[i + 1] != WORD))
+			return (ft_putendl_fd("syntax error", 2), false);
+		else if ((util()->a[i] == APP || util()->a[i] == HERDOC) && (i + 1 >= util()->t || util()->a[i + 1] != WORD))
+			return (ft_putendl_fd("syntax error", 2), false);
+		i++;
 	}
 	return (true);
 }
 
-void	print_data(t_data *inlist)
+void print_data(t_data *inlist)
 {
-	int		i;
-	int		j;
+	int i;
+	int j;
 
 	j = 0;
 	while (inlist)
@@ -478,11 +160,15 @@ void	print_data(t_data *inlist)
 		while (inlist->cmd && inlist->cmd[i])
 			printf("  {%s},", inlist->cmd[i++]);
 		printf("\n");
-		// printf("*data[0] = %s\n", (*box())->data[0]);
 		i = 0;
 		printf("\tt_files.infile :");
 		while (inlist->files.infile && inlist->files.infile[i])
 			printf(" {%s},", inlist->files.infile[i++]);
+		printf("\n");
+		i = 0;
+		printf("\tt_files.i_type :");
+		while (inlist->file.infile && inlist->file.infile[i])
+			printf(" {%d},", inlist->file.i_type[i++]);
 		printf("\n");
 		i = 0;
 		printf("\tt_files.outfile :");
@@ -496,42 +182,383 @@ void	print_data(t_data *inlist)
 		printf("\n");
 		printf("}\tt_data");
 		printf("\n==============================\n");
-		inlist = inlist->next; 
-		j++;	
+		inlist = inlist->next;
+		j++;
+	}
+}
+
+// hadi azbi hia li kat7sb 
+int key_len(char *str, int pos)
+{
+	int i;
+
+	i = pos + 1;
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+		i++;
+	return (i);
+}
+
+// it return the value if the key is exist, or a "\0" if there no key that match that.
+char *key_value(char *key)
+{
+	t_envp *pp;
+	char *tmp;
+	int i;
+
+	if (key[0] == '$' || !key[0])
+		return ("");
+	i = key_len(key, 0);
+	pp = *envp();
+	tmp = ft_substr(key, 0, i);
+	if (!tmp)
+		ult_exit();
+	while (pp)
+	{
+		if (!ft_memcmp(pp->key, tmp, i + 1))
+			return (free(tmp), pp->value);
+		pp = pp->next;
+	}
+	return (free(tmp), "");
+}
+
+void switch_toggles(int *toggle)
+{
+	if (*toggle)
+		*toggle = 0;
+	else
+		*toggle = 1;
+}
+
+// it's function that set the fetch struct into store previous token and type expansion(full/normal)
+void fetch_setter(bool mode, int i, bool is_full)
+{
+	if (mode)
+	{
+		if (i && util()->a[i - 1] <= PIPE)
+			fetcher()->flage = true;
+		fetcher()->full_exp = is_full;
+	}
+	else
+	{
+		fetcher()->flage = false;
+		fetcher()->error = false;
+		fetcher()->full_exp = false;
+	}
+}
+
+int lenght_both(char **s1, char **s2)
+{
+	int i;
+	int len;
+
+	i = 0;
+	while (s1 && s1[i])
+		i++;
+	len = i;
+	i = 0;
+	while (s2 && s2[i])
+		i++;
+	len += i;
+	return (len);
+}
+
+// it extend the util().s and update the the array
+void extend_key(int *index, int *start, char *value, int end)
+{
+	int i;
+	int j;
+	int u;
+	int len;
+	char *tmp;
+	char **extnd;
+	char **dup;
+	int *a_dup;
+
+	i = 0;
+	j = 0;
+	u = 0;
+	tmp = NULL;
+	if (*start)
+		tmp = ft_substr(util()->s[*index], 0, *start);
+	extnd = ifs_split(value);
+	if (!extnd)
+		return ;
+	if (*extnd && extnd[1] && is_ifs(*value))
+		len = lenght_both(extnd, util()->s);
+	else
+		len = lenght_both(extnd, util()->s) - 1;
+	printf("len %d\n", len);
+	dup = safe_alloc((len + 1) * sizeof(char *), 0);
+	a_dup = safe_alloc(len * sizeof(int), 0);
+	if (!dup || !a_dup)
+	{
+		if (tmp)
+			free(tmp);
+		ult_exit();
+	}
+	while (i < *index)
+	{
+		dup[i] = util()->s[i];
+		a_dup[i] = util()->a[i];
+		i++;
+	}
+	if (tmp && !is_ifs(*value))
+	{
+		dup[i++] = safe_join(tmp, extnd[j]);
+		a_dup[i - 1] = WORD;
+		j++;
+	}
+	else if (tmp)
+	{
+		g_lst_addback(g_new_garbage(tmp));
+		dup[i++] = tmp;
+		a_dup[i - 1] = WORD;
+	}
+	while (extnd[j])
+	{
+		dup[i++] = extnd[j++];
+		a_dup[i - 1] = WORD;
+	}
+	if (i)
+		u = ft_strlen(dup[i - 1]);
+	if (!ft_isalpha(util()->s[*index][end]))
+		dup[i - 1] = safe_join(dup[i - 1], util()->s[*index] + end);
+	*index = i - 1;
+	*start = u;
+	while (i < len)
+	{
+		dup[i] = util()->s[i - j + 1];
+		a_dup[i] = util()->a[i - j + 1];
+		i++;
+	}
+	util()->s = dup;
+	util()->a = a_dup;
+}
+
+void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
+{
+	char	*dup;
+	int		var;
+
+	dup = NULL;
+	if (*strt)
+		dup = ft_substr(util()->s[*ind], 0, *strt);
+	dup = ft_gnl_strjoin(dup, value);
+	var = ft_strlen(dup);
+	dup = safe_join(dup, util()->s[*ind] + k_len);
+	delete_one(util()->s[*ind]);
+	util()->s[*ind] = dup;
+	if (*value)
+		*strt = ft_strlen(value);
+}
+
+bool	check_value(char *str)
+{
+	int	i;
+	int	toggle;
+	int	count;
+
+	i = 0;
+	toggle = 1;
+	count = 0;
+	if (str && !*str)
+		return (false);
+	while (str[i])
+	{
+		if (!is_ifs(str[i]) && toggle)
+		{
+			count++;
+			toggle = 0;
+			if (count >	1)
+				return (false);
+		}
+		else if (is_ifs(str[i]))
+			toggle = 1;
+		i++;
+	}
+	if (!count)
+		return (false);
+	return (true);
+}
+
+// this function expand the key found in util().s[index] and return the index after the expand
+void expand_value(int *index, int *start)
+{
+	char	*dup;
+	char	*value;
+	bool	status;
+	int		i;
+
+	i = key_len(util()->s[*index], *start + 1);
+	dup = NULL;
+	value = key_value(util()->s[*index] + *start + 1);
+	status = check_value(value);
+	if (fetcher()->flage && fetcher()->full_exp && !status)
+		fetcher()->error = true;
+	else if (*value && fetcher()->full_exp && !status)
+		extend_key(index, start, value, i);
+	else
+		replace_key_to_value(index, start, i, value);
+}
+
+// TODO : handle quote removal and empty value of variable
+void expansion_data(int i, int j, int to, int sto)
+{
+	while (util()->s[i])
+	{
+		j = 0;
+		to = 1;
+		sto = 1;
+		while (util()->s[i] && util()->s[i][j] && util()->a[i] == WORD)
+		{
+			fetch_setter(RESET, 0, 0);
+			if (util()->s[i][j] == '\'' && to)
+				switch_toggles(&sto);
+			else if (util()->s[i][j] == '"' && sto)
+				switch_toggles(&to);
+			else if ((!i || (i && util()->a[i - 1] != HERDOC)) && util()->s[i][j] == '$' && sto)
+			{
+				fetch_setter(SET, i, false);
+				if (to)
+					fetch_setter(SET, i, true);
+				expand_value(&i, &j);
+				if (!fetcher()->error)
+					continue;
+				util()->a[i] = -1;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+void reset_data_box(void)
+{
+	t_data *next;
+
+	if (*box())
+	{
+		while (*box())
+		{
+			next = (*box())->next;
+			delete_one(*box());
+			*box() = next;
+		}
+		*box() = NULL;
+	}
+}
+
+void reset_util_box(void)
+{
+	delete_one(util()->s);
+	delete_one(util()->a);
+	util()->t = 0;
+}
+
+void print_tokens(void)
+{
+	int i;
+
+	i = 0;
+	while (util()->s[i])
+	{
+		printf("====> %s it's token id %d\n", util()->s[i], util()->a[i]);
+		i++;
 	}
 }
 
 // it's start the lexure
-void	begin_lexing(char *line, char **env)
+void begin_lexing(char *line)
 {
-	util()->t = token_count(line);
-	if (util()->t < 0)
-		return ;
+	if (!token_count(line))
+		return;
 	util()->s = spliting_based_token(line);
-	*box() = NULL;
-	if (!tokenize() || !syntax_check()
-		|| !stor_in_list(util()->s, util()->a, box()))
-		return ;
-	print_data(*box());
-	// t_data *tmp = *box();
-	// printf("=====> %s\n", tmp->cmd[0]);
-	execute_commands(*box(), env);
+	if (tokenize() && syntax_check())
+	{
+		expansion_data(0, 0, 1, 1);
+		handle_quote();
+		reset_data_box();
+		if (!stor_in_list(util()->s, util()->a, box()))
+			return;
+		reset_util_box();
+		// print_data(*box());
+	}
 }
 
-int	main(int ac, char **av, char **env)
+size_t	session_name_len(char *str)
 {
-	char *line;
+	size_t	i;
+
+	i = 0;
+	while (ft_isalnum(str[i]))
+		i++;
+	return (i);
+}
+
+char	*export_session(void)
+{
+	static char	*str;
+	char	*ptr;
+
+	if (!str)
+	{
+		ptr = key_value(SESSIO);
+		str = safe_substr(ptr, 6, session_name_len(ptr + 6));
+	}
+	return (str);
+}
+
+// creat an customize shell prompt just to show the user [USER@SESSION]-[OS@SHELL_NAME]
+char	*creat_prompt(void)
+{
+	char	*str;
+	char	*user;
+	char	*os;
+	char	*session;
+
+	user = key_value(USR);
+	os = key_value(OS);
+	session = export_session();
+	str = ft_strjoin("┌─[", user);
+	if (str && *session)
+	{
+		if (*user)
+			str = ft_gnl_strjoin(str, "@");
+		str = ft_gnl_strjoin(str, session);
+		str = ft_gnl_strjoin(str, "]——[");
+	}
+	if (str && *os)
+	{
+		str = ft_gnl_strjoin(str, os);
+		str = ft_gnl_strjoin(str, "@sheru]—\n└─$");
+	}
+	else if (str)
+		str = ft_gnl_strjoin(str, "sheru]—\n└─$");
+	return (str);
+}
+
+int main(int ac, char **av, char **env)
+{
+	char	*line;
+	char	*prompt;
 
 	line = NULL;
 	(void)ac;
 	(void)av;
+	make_env(env, envp(), 0, 0);
+	prompt = creat_prompt();
+	if (!prompt)
+		ult_exit();
 	while (1)
 	{
-		line = readline("sheru>");
+		line = readline(prompt);
 		if (!line)
-			return (clear_container(), 0);
+		{
+			write(1, "exit\n", 5);
+			return (free(prompt), clear_container(), 0);
+		}
 		add_history(line);
-		begin_lexing(line, env);
+		begin_lexing(line);
 	}
 	return (0);
 }
