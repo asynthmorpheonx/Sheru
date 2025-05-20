@@ -6,11 +6,18 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/20 14:11:48 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/20 14:57:47 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
+
+t_quote	*mask_set(void)
+{
+	static t_quote	box;
+
+	return (&box);
+}
 
 t_data **box(void)
 {
@@ -474,7 +481,7 @@ void begin_lexing(char *line)
 		if (!stor_in_list(util()->s, util()->a, box()))
 			return;
 		reset_util_box();
-		print_data(*box());
+		// print_data(*box());
 	}
 }
 
