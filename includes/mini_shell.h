@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/20 15:25:12 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:26:21 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ char	*safe_substr(char *str, unsigned int start, size_t len);
 char	*buffer_filler(char *line, int *i);
 char	**spliting_based_token(char *line);
 
-t_envp	*last_env(t_envp *lst);
+t_envp	*last_envp(t_envp *lst);
 void	add_to_envp(t_envp **lst, t_envp *tmp);
 void	make_env(char **env, t_envp **lst, int i, int j);
 
@@ -160,43 +160,43 @@ char	**ifs_split(char const *s);
 
 int		builtin_check(char *cmd);
 void 	execute_commands(t_data *data, char **env);
-void	execute_pipeline(t_data *cmd, t_env *env);
+void	execute_pipeline(t_data *cmd, t_envp *env);
 char	*ft_free_array(char **arr);
 int 	count_words(char *flags);
-int 	envcount(t_env *current);
-void    catcpy(char *tmp, char *str, t_env *current);
-char    **env_to_array(t_env *env);
+int 	envcount(t_envp *current);
+void    catcpy(char *tmp, char *str, t_envp *current);
+char    **env_to_array(t_envp *env);
 char	*ft_cat(char *path, char *cmd);
 char	*get_path(char *cmd);
 void 	err(char *str);
 void	redirect(t_data *cmd);
 char 	*word(char *str);
 t_offs	*offs(void);
-void	ft_ceue(t_data *data, t_env *env);
+void	ft_ceue(t_data *data, t_envp *env);
 
 
 // ######### BUILTINs ###############################################
-void	ft_cd(t_data *data, t_env *env);
-char	*get_home(t_env *env);
+void	ft_cd(t_data *data, t_envp *env);
+char	*get_home(t_envp *env);
 
-void	set_env_var(t_env **env, const char *key, const char *value);
+void	set_envp_var(t_envp **env, const char *key, const char *value);
 void	sort_tenv(char **env);
 
-void	ft_export(t_data *cmd, t_env **env);
-void	ft_var_append(t_env *env, char *var, const char *appe);
-void	export_print(t_env *env);
-char	*ft_envcat(char *dest, const char *src);
+void	ft_export(t_data *cmd, t_envp **env);
+void	ft_var_append(t_envp *env, char *var, const char *appe);
+void	export_print(t_envp *env);
+char	*ft_envpcat(char *dest, const char *src);
 void	build_export_data(t_data *cmd_list, char *container);
 
-void	ft_unset(t_data *data, t_env **env);
+void	ft_unset(t_data *data, t_envp **env);
 
 void	ft_exit(t_data *data);
 
-void	git_dollar(char *str, t_env *env);
-void	ft_echo(t_data *data, t_env *env);
+void	git_dollar(char *str, t_envp *env);
+void	ft_echo(t_data *data, t_envp *env);
 void	echo_print(char *str);
 
-void	ft_env(t_env *env);
+void	ft_envp(t_envp *env);
 
 void	ft_pwd(void);
 

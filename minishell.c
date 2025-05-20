@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/20 15:24:23 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:27:18 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,24 +161,24 @@ void print_data(t_data *inlist)
 			printf("  {%s},", inlist->cmd[i++]);
 		printf("\n");
 		i = 0;
-		printf("\tt_files.infile :");
-		while (inlist->files.infile && inlist->files.infile[i])
-			printf(" {%s},", inlist->files.infile[i++]);
+		printf("\tt_file.infile :");
+		while (inlist->file.infile && inlist->file.infile[i])
+			printf(" {%s},", inlist->file.infile[i++]);
 		printf("\n");
 		i = 0;
-		printf("\tt_files.i_type :");
+		printf("\tt_file.i_type :");
 		while (inlist->file.infile && inlist->file.infile[i])
 			printf(" {%d},", inlist->file.i_type[i++]);
 		printf("\n");
 		i = 0;
-		printf("\tt_files.outfile :");
-		while (inlist->files.outfile && inlist->files.outfile[i])
-			printf(" {%s},", inlist->files.outfile[i++]);
+		printf("\tt_file.outfile :");
+		while (inlist->file.outfile && inlist->file.outfile[i])
+			printf(" {%s},", inlist->file.outfile[i++]);
 		printf("\n");
 		i = 0;
-		printf("\tt_files.o_types :");
-		while (inlist->files.outfile && inlist->files.outfile[i])
-			printf(" {%d},", inlist->files.o_type[i++]);
+		printf("\tt_file.o_types :");
+		while (inlist->file.outfile && inlist->file.outfile[i])
+			printf(" {%d},", inlist->file.o_type[i++]);
 		printf("\n");
 		printf("}\tt_data");
 		printf("\n==============================\n");
