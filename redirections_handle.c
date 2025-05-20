@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_handle.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:07:45 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/15 23:34:37 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:33:30 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void	stor_redirections(int *arr, char **strs, t_files *file)
+void	stor_redirections(int *arr, char **strs, t_file *file)
 {
 	int	j;
 	int	p;
@@ -44,7 +44,7 @@ void	stor_redirections(int *arr, char **strs, t_files *file)
 	}
 }
 
-void	make_a_file(int incount, int outcount, t_files *file)
+void	make_a_file(int incount, int outcount, t_file *file)
 {
 	file->infile = safe_alloc((incount + 1) * sizeof(char *), 0);
 	file->outfile = safe_alloc((outcount + 1) * sizeof(char *), 0);
@@ -82,7 +82,7 @@ void	count_in_out(int *in, int *out, int *arr, char **strs)
 		exit (2);
 }
 
-void	handle_redirections(int *arr, char **strs, t_files *file, int *mode)
+void	handle_redirections(int *arr, char **strs, t_file *file, int *mode)
 {
 	int	incount;
 	int	outcount;

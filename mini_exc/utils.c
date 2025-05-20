@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "mini_shell.h"
 
 t_offs *offs(void)
 {
@@ -58,15 +58,15 @@ void	redirect(t_data *cmd)
 	int	(index);
 
 	index = 0;
-	while (cmd->files.infile && cmd->files.infile[index])
+	while (cmd->file.infile && cmd->file.infile[index])
 	{
-		odup(cmd->files.infile[index], 0, 1, &offs()->redirected_fd);
+		odup(cmd->file.infile[index], 0, 1, &offs()->redirected_fd);
 		index++;
 	}
 	index = 0;
-	while (cmd->files.outfile && cmd->files.outfile[index])
+	while (cmd->file.outfile && cmd->file.outfile[index])
 	{
-		odup(cmd->files.outfile[index], cmd->files.o_type[index], 0, &offs()->redirected_fd);
+		odup(cmd->file.outfile[index], cmd->file.o_type[index], 0, &offs()->redirected_fd);
 		index++;
 	}
 }

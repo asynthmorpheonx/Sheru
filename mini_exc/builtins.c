@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "mini_shell.h"
 // // export PATH+=:/new/path PATH=VALUE
 
 //export AH=+LA = "+LA"

@@ -1,5 +1,5 @@
 
-#include "minishell.h"
+#include "mini_shell.h"
 
 // t_var *var()
 // {

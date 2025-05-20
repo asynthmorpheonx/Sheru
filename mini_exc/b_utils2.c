@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "mini_shell.h"
 
 int	ft_varcmp(char *s1, char *s2)
 {

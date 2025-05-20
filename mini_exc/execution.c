@@ -6,11 +6,11 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/05/20 11:52:17 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:34:57 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "mini_shell.h"
 
 int	builtin_check(char *cmd)
 {
@@ -69,10 +69,9 @@ void	cmd_hand(t_data *cmd, t_env *env)
 	}
 }
 
-void execute_commands(t_data *cmd, t_env *ev) //beggining
+void execute_commands(t_data *cmd, t_env *env) //beggining
 {
 	printf("############################## EXECUTION STARTED #################################\n");
-	t_env	*env;
 	t_data *tmp;
 
 	offs()->redir = -1;
@@ -80,13 +79,12 @@ void execute_commands(t_data *cmd, t_env *ev) //beggining
 	offs()->out_backup = dup(STDOUT_FILENO);
 	if (!cmd)
 		return ;
-	env = env_to_list(ev);
 	tmp = cmd;
 	if (tmp->next)
 		cmd_hand(tmp, env);
 	else
 	{
-		if (cmd->files.infile || cmd->files.outfile)
+		if (cmd->file.infile || cmd->file.outfile)
 			redirect(cmd);
 		if (builtin_check(tmp->cmd[0]))
 			ft_ceue(tmp, env);

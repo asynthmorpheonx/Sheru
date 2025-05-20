@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "mini_shell.h"
 
 char *word(char *str)
 {

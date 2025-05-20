@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "mini_shell.h"
 
 //#############
 //
@@ -31,8 +31,8 @@ void ft_exec(t_data *cmd, t_env *env)
 
 void child_proc(t_data *cmd, t_env *env)
 {
-	 // performs dup2 for in/out files
-	if (cmd->files.infile || cmd->files.outfile)
+	 // performs dup2 for in/out file
+	if (cmd->file.infile || cmd->file.outfile)
 		redirect(cmd);
 	if (builtin_check(cmd->cmd[0]) && cmd->next) // run builtin in child if it's part of a pipeline
 	{
@@ -69,6 +69,7 @@ void parent_proc(t_data *cmd)
 void execute_pipeline(t_data *cmd, t_env *env)
 {
 	pid_t pid;
+	int	status;
 
 	offs()->prev_fds[0] = -1;
 	offs()->prev_fds[1] = -1;
@@ -83,7 +84,7 @@ void execute_pipeline(t_data *cmd, t_env *env)
 		child_proc(cmd, env);
 	else
 	{
-		waitpid(pid, &cmd->status, 0);
+		waitpid(pid, &status, 0);
 		parent_proc(cmd);
 	}
 }

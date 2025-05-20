@@ -1,6 +1,6 @@
 {
-	"files.associations": {
+	"file.associations": {
 		"readline.h": "c",
-		"minishell.h": "c"
+		"mini_shell.h": "c"
 	}
 }

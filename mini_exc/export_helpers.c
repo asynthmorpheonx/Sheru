@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "mini_shell.h"
 
 int	check_char(char c)
 {

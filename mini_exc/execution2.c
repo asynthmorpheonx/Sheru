@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "mini_shell.h"
 int envcount(t_env *current)
 {
     int count;

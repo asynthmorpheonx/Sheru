@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/20 15:27:18 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/05/20 15:30:49 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ void ult_exit(void)
 	exit(EXIT_FAILURE);
 }
 
-t_envp **envp(void)
+t_env **envp(void)
 {
-	static t_envp *pp;
+	static t_env *pp;
 
 	return (&pp);
 }
@@ -201,7 +201,7 @@ int key_len(char *str, int pos)
 // it return the value if the key is exist, or a "\0" if there no key that match that.
 char *key_value(char *key)
 {
-	t_envp *pp;
+	t_env *pp;
 	char *tmp;
 	int i;
 

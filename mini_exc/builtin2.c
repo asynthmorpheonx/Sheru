@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "mini_shell.h"
 
 void	git_dollar(char *str, t_env *env)
 {
