@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/20 14:57:47 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:09:40 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,13 @@ char *safe_join(char *s1, char *s2)
 {
 	char *pp;
 
-	pp = ft_gnl_strjoin(s1, s2);
+	pp = ft_strjoin(s1, s2);
 	if (!pp)
 	{
 		clear_container();
 		exit(EXIT_FAILURE);
 	}
+	delete_one(s1);
 	g_lst_addback(g_new_garbage(pp));
 	return (pp);
 }
@@ -283,11 +284,10 @@ void extend_key(int *index, int *start, char *value, int end)
 	extnd = ifs_split(value);
 	if (!extnd)
 		return ;
-	if (*extnd && extnd[1] && is_ifs(*value))
+	if (*start && is_ifs(*value))
 		len = lenght_both(extnd, util()->s);
 	else
 		len = lenght_both(extnd, util()->s) - 1;
-	printf("len %d\n", len);
 	dup = safe_alloc((len + 1) * sizeof(char *), 0);
 	a_dup = safe_alloc(len * sizeof(int), 0);
 	if (!dup || !a_dup)
@@ -319,9 +319,8 @@ void extend_key(int *index, int *start, char *value, int end)
 		dup[i++] = extnd[j++];
 		a_dup[i - 1] = WORD;
 	}
-	if (i)
-		u = ft_strlen(dup[i - 1]);
-	if (!ft_isalpha(util()->s[*index][end]))
+	u = ft_strlen(dup[i - 1]);
+	if (util()->s[*index][end] && !ft_isalpha(util()->s[*index][end]))
 		dup[i - 1] = safe_join(dup[i - 1], util()->s[*index] + end);
 	*index = i - 1;
 	*start = u;
@@ -432,19 +431,32 @@ void expansion_data(int i, int j, int to, int sto)
 	}
 }
 
+void	clean_lst(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str && str[i])
+	{
+		delete_one(str[i]);
+		i++;
+	}
+}
+
 void reset_data_box(void)
 {
 	t_data *next;
 
 	if (*box())
 	{
+		next = *box();
+		clean_lst((*box())->cmd);
 		while (*box())
 		{
 			next = (*box())->next;
 			delete_one(*box());
 			*box() = next;
 		}
-		*box() = NULL;
 	}
 }
 
@@ -455,21 +467,10 @@ void reset_util_box(void)
 	util()->t = 0;
 }
 
-void print_tokens(void)
-{
-	int i;
-
-	i = 0;
-	while (util()->s[i])
-	{
-		printf("====> %s it's token id %d\n", util()->s[i], util()->a[i]);
-		i++;
-	}
-}
-
 // it's start the lexure
 void begin_lexing(char *line)
 {
+	reset_data_box();
 	if (!token_count(line))
 		return;
 	util()->s = spliting_based_token(line);
@@ -477,11 +478,10 @@ void begin_lexing(char *line)
 	{
 		expansion_data(0, 0, 1, 1);
 		handle_quote();
-		reset_data_box();
 		if (!stor_in_list(util()->s, util()->a, box()))
 			return;
 		reset_util_box();
-		// print_data(*box());
+		print_data(*box());
 	}
 }
 
@@ -530,10 +530,10 @@ char	*creat_prompt(void)
 	if (str && *os)
 	{
 		str = ft_gnl_strjoin(str, os);
-		str = ft_gnl_strjoin(str, "@sheru]—\n└─$");
+		str = ft_gnl_strjoin(str, "@sheru]—\n└─$ ");
 	}
 	else if (str)
-		str = ft_gnl_strjoin(str, "sheru]—\n└─$");
+		str = ft_gnl_strjoin(str, "sheru]—\n└─$ ");
 	return (str);
 }
 
