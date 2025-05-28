@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/20 14:32:27 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/28 19:22:32 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,10 @@
 # define SET 1
 
 # define USR "USER"
-# define OS "DESKTOP_SESSION"
 # define SESSIO "SESSION_MANAGER"
+# define WD "PWD"
 
-typedef struct s_quote
-{
-	char	**strs;
-	bool	**bitmaks;
-}	t_quote;
+typedef unsigned char mask;
 
 typedef enum e_token
 {
@@ -55,8 +51,10 @@ typedef struct s_ferror
 typedef struct s_utils
 {
 	char	**s;
+	bool	**mask;
 	int		*a;
 	int		t;
+	int		herdoc;
 }	t_utils;
 
 typedef struct s_files
@@ -96,11 +94,6 @@ t_envp	*last_env(t_envp *lst);
 void	add_to_envp(t_envp **lst, t_envp *tmp);
 void	make_env(char **env, t_envp **lst, int i, int j);
 
-size_t	size_quot(char *str);
-void	remove_quote(size_t len, char **str, int i, int j);
-void	handle_quote(void);
-int		skip_quots(char *line, int *i);
-
 t_data	**box(void);
 void	ult_exit(void);
 t_envp	**envp(void);
@@ -131,6 +124,9 @@ char	*key_value(char *key);
 int		key_len(char *str, int pos);
 
 bool	**ambiguous_ptr(void);
+
+void	remove_quote(char *str, bool *mask, int len);
+void	handle_quote(void);
 
 bool	is_ifs(int c);
 char	**ifs_split(char const *s);

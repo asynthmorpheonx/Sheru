@@ -6,81 +6,57 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:03:20 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/06 22:06:15 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/28 19:22:43 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-// it returns count of byts but the closed quotes execluded.
-size_t	size_quot(char *str)
+void	remove_quote(char *str, bool *mask, int len)
 {
-	size_t	i;
-	size_t	k;
-	int		j;
+	int	i;
+	int	qu;
+	int	fapp;
 
 	i = 0;
-	j = -1;
-	k = 0;
+	qu = -1;
 	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '"')
+		if ((str[i] == '"' || str[i] == '\'') && (!mask || (mask && !mask[i])))
 		{
-			if (j == -1)
-				j = i;
-			else if (j >= 0 && str[j] == str[i])
+			if (qu == -1)
 			{
-				j = -1;
-				k += 2;
+				qu = str[i];
+				fapp = i;
+			}
+			else
+			{
+				ft_memmove(str + i, str + i + 1, len - i);
+				ft_memmove(mask + i, mask + i + 1, len - i);
+				ft_memmove(str + fapp, str + fapp + 1, len - fapp);
+				ft_memmove(mask + fapp, mask + fapp + 1, len - fapp);
+				qu = -1;
+				i -= 2;
 			}
 		}
 		i++;
 	}
-	return (i - k);
 }
 
-// this function the something that i cant explain.
-void	remove_quote(size_t len, char **str, int i, int j)
-{
-	char	*ptr;
-	int		q;
-
-	q = -1;
-	ptr = safe_alloc((len + 1) * sizeof(char), 0);
-	if (!ptr)
-		return ;
-	while ((*str)[i])
-	{
-		if ((*str)[i] == '\'' || (*str)[i] == '"')
-		{
-			if (q == -1 || (*str)[q] == (*str)[i])
-			{
-				if (q == -1)
-					q = i;
-				else
-					q = -1;
-				i++;
-				continue ;
-			}
-		}
-		ptr[j++] = (*str)[i++];
-	}
-	delete_one(*str);
-	*str = ptr;
-}
-
-//this function recreate the string data for handling quote
 void	handle_quote(void)
 {
-	int		i;
-	size_t	len;
+	int	i;
+	char *str;
 
+	str = NULL;
 	i = 0;
 	while (util()->s[i])
 	{
-		len = size_quot(util()->s[i]);
-		if (util()->a[i] == WORD && ft_strlen(util()->s[i]) != len)
-			remove_quote(len, &util()->s[i], 0, 0);
+		if (util()->a[i] == WORD)
+		{
+			str = util()->s[i];
+			remove_quote(str, util()->mask[i], ft_strlen(str));
+		}
 		i++;
 	}
 }

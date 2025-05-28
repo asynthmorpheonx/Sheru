@@ -6,18 +6,11 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/23 18:09:40 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/28 18:59:38 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-
-t_quote	*mask_set(void)
-{
-	static t_quote	box;
-
-	return (&box);
-}
 
 t_data **box(void)
 {
@@ -263,17 +256,44 @@ int lenght_both(char **s1, char **s2)
 	return (len);
 }
 
+bool	*mask_joining(bool *o_mask, char *pre, char *suff)
+{
+	bool	*new_mask;
+	int		index;
+	int		i;
+
+	i = 0;
+	index = ft_strlen(pre);
+	new_mask = safe_alloc(ft_strlen(suff) + index, 0);
+	if (!new_mask)
+		return (NULL);
+	while (i < index)
+	{
+		new_mask[i] = o_mask[i];
+		i++;
+	}
+	i = 0;
+	while (suff[i])
+	{
+		new_mask[i + index] = true;
+		i++;
+	}
+	delete_one(o_mask);
+	return (new_mask);
+}
+
 // it extend the util().s and update the the array
 void extend_key(int *index, int *start, char *value, int end)
 {
-	int i;
-	int j;
-	int u;
-	int len;
-	char *tmp;
-	char **extnd;
-	char **dup;
-	int *a_dup;
+	int		i;
+	int		j;
+	int		u;
+	int		len;
+	char	*tmp;
+	char	**extnd;
+	char	**dup;
+	bool	**mask;
+	int		*a_dup;
 
 	i = 0;
 	j = 0;
@@ -290,6 +310,7 @@ void extend_key(int *index, int *start, char *value, int end)
 		len = lenght_both(extnd, util()->s) - 1;
 	dup = safe_alloc((len + 1) * sizeof(char *), 0);
 	a_dup = safe_alloc(len * sizeof(int), 0);
+	mask = safe_alloc(len * sizeof(bool *), 0);
 	if (!dup || !a_dup)
 	{
 		if (tmp)
@@ -300,24 +321,33 @@ void extend_key(int *index, int *start, char *value, int end)
 	{
 		dup[i] = util()->s[i];
 		a_dup[i] = util()->a[i];
+		mask[i] = util()->mask[i];
 		i++;
 	}
 	if (tmp && !is_ifs(*value))
 	{
-		dup[i++] = safe_join(tmp, extnd[j]);
-		a_dup[i - 1] = WORD;
+		mask[i] = mask_joining(util()->mask[i], tmp, extnd[j]);
+		dup[i] = safe_join(tmp, extnd[j]);
+		a_dup[i] = WORD;
 		j++;
+		i++;
 	}
 	else if (tmp)
 	{
 		g_lst_addback(g_new_garbage(tmp));
+		mask[i] = safe_alloc(ft_strlen(tmp), 0);
+		ft_memset(mask[i], true, ft_strlen(tmp));
 		dup[i++] = tmp;
 		a_dup[i - 1] = WORD;
 	}
 	while (extnd[j])
 	{
-		dup[i++] = extnd[j++];
-		a_dup[i - 1] = WORD;
+		dup[i] = extnd[j];
+		a_dup[i] = WORD;
+		mask[i] = safe_alloc(ft_strlen(extnd[j]), 0);
+		ft_memset(mask[i], true, ft_strlen(extnd[j]));
+		i++;
+		j++;
 	}
 	u = ft_strlen(dup[i - 1]);
 	if (util()->s[*index][end] && !ft_isalpha(util()->s[*index][end]))
@@ -328,25 +358,38 @@ void extend_key(int *index, int *start, char *value, int end)
 	{
 		dup[i] = util()->s[i - j + 1];
 		a_dup[i] = util()->a[i - j + 1];
+		mask[i] = util()->mask[i - j + 1];
 		i++;
 	}
 	util()->s = dup;
 	util()->a = a_dup;
+	util()->mask = mask;
 }
 
 void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
 {
 	char	*dup;
+	bool	*mask;
 	int		var;
 
 	dup = NULL;
+	mask = NULL;
 	if (*strt)
+	{
 		dup = ft_substr(util()->s[*ind], 0, *strt);
+		mask = mask_joining(util()->mask[*ind], dup, value);
+	}
+	else
+	{
+		mask = safe_alloc(ft_strlen(value), 2);
+		ft_memset(mask, true, ft_strlen(value));
+	}
 	dup = ft_gnl_strjoin(dup, value);
 	var = ft_strlen(dup);
 	dup = safe_join(dup, util()->s[*ind] + k_len);
 	delete_one(util()->s[*ind]);
 	util()->s[*ind] = dup;
+	util()->mask[*ind] = mask;
 	if (*value)
 		*strt = ft_strlen(value);
 }
@@ -408,7 +451,7 @@ void expansion_data(int i, int j, int to, int sto)
 		j = 0;
 		to = 1;
 		sto = 1;
-		while (util()->s[i] && util()->s[i][j] && util()->a[i] == WORD)
+		while (util()->s[i] && util()->s[i][j] && util()->a[i] > 4)
 		{
 			fetch_setter(RESET, 0, 0);
 			if (util()->s[i][j] == '\'' && to)
@@ -464,7 +507,32 @@ void reset_util_box(void)
 {
 	delete_one(util()->s);
 	delete_one(util()->a);
+	delete_one(util()->mask);
+	util()->herdoc = 0;
 	util()->t = 0;
+}
+
+bool	creat_mask(void)
+{
+	bool	**mask;
+	int		i;
+	
+	i = 0;
+	mask = safe_alloc(util()->t * sizeof(bool *), 0);
+	if (!mask)
+		return (false);
+	while (util()->s[i])
+	{
+		if (util()->a[i] == WORD)
+		{
+			mask[i] = safe_alloc(ft_strlen(util()->s[i]), 0);
+			if (!mask[i])
+				ult_exit();
+		}
+		i++;
+	}
+	util()->mask = mask;
+	return (true);
 }
 
 // it's start the lexure
@@ -476,6 +544,13 @@ void begin_lexing(char *line)
 	util()->s = spliting_based_token(line);
 	if (tokenize() && syntax_check())
 	{
+		if (util()->herdoc > 16)
+		{
+			ft_putendl_fd("maximum here-document count exceeded", 2);
+			clear_container();
+			exit(2);
+		}
+		creat_mask();
 		expansion_data(0, 0, 1, 1);
 		handle_quote();
 		if (!stor_in_list(util()->s, util()->a, box()))
@@ -513,27 +588,20 @@ char	*creat_prompt(void)
 {
 	char	*str;
 	char	*user;
-	char	*os;
 	char	*session;
 
 	user = key_value(USR);
-	os = key_value(OS);
 	session = export_session();
-	str = ft_strjoin("┌─[", user);
-	if (str && *session)
+	str = NULL;
+	if (!str && *session && *user)
 	{
 		if (*user)
-			str = ft_gnl_strjoin(str, "@");
-		str = ft_gnl_strjoin(str, session);
-		str = ft_gnl_strjoin(str, "]——[");
+			str = ft_strjoin(user, "@");
+		if (*session)
+			str = ft_gnl_strjoin(str, session);
+		str = ft_gnl_strjoin(str, ":~$ ");
 	}
-	if (str && *os)
-	{
-		str = ft_gnl_strjoin(str, os);
-		str = ft_gnl_strjoin(str, "@sheru]—\n└─$ ");
-	}
-	else if (str)
-		str = ft_gnl_strjoin(str, "sheru]—\n└─$ ");
+	g_lst_addback(g_new_garbage(str));
 	return (str);
 }
 
@@ -555,10 +623,9 @@ int main(int ac, char **av, char **env)
 		if (!line)
 		{
 			write(1, "exit\n", 5);
-			return (free(prompt), clear_container(), 0);
+			return (clear_container(), 0);
 		}
 		add_history(line);
 		begin_lexing(line);
 	}
-	return (0);
 }
