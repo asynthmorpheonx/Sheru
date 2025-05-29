@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:21:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 22:01:32 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 23:35:29 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,91 +37,114 @@ void fetch_setter(bool mode, int i, bool is_full)
 	}
 }
 
+int	join_preffix(int end, t_exp *ptr)
+{
+	int	i;
+
+	i = 0;
+	while (i < end)
+	{
+		ptr->du[i] = util()->s[i];
+		ptr->tokn[i] = util()->a[i];
+		ptr->mask[i] = util()->mask[i];
+		i++;
+	}
+	return (i);
+}
+
+void	handle_if_begin_with_ifs(int start, t_exp *ubox, char *value)
+{
+	char	*tmp;
+	
+	tmp = NULL;
+	if (start)
+		tmp = ft_substr(util()->s[ubox->i], 0, start);
+	if (!tmp)
+		ult_exit();
+	if (start && !is_ifs(*value))
+	{
+		ubox->du[ubox->i] = safe_join(tmp, ubox->extend[ubox->j]);
+		ubox->mask[ubox->i] = handle_masking(ubox->du[ubox->i],
+			start, ft_strlen(value));
+		ubox->tokn[ubox->i] = WORD;
+		ubox->i++;
+		ubox->j++;
+	}
+	else if (start)
+	{
+		g_lst_addback(g_new_garbage(tmp));
+		ubox->mask[ubox->i] = safe_alloc(ft_strlen(tmp), 0);
+		ft_memset(ubox->mask[ubox->i], true, ft_strlen(tmp));
+		ubox->du[ubox->i] = tmp;
+		ubox->tokn[ubox->i] = WORD;
+		ubox->i++;
+	}
+}
+
+void	add_extended(t_exp *ubox)
+{
+	while (ubox->extend[ubox->j])
+	{
+		ubox->du[ubox->i] = ubox->extend[ubox->j];
+		ubox->tokn[ubox->i] = WORD;
+		ubox->mask[ubox->i] = safe_alloc(ft_strlen(ubox->extend[ubox->j]), 0);
+		ft_memset(ubox->mask[ubox->i], true, ft_strlen(ubox->extend[ubox->j]));
+		ubox->i++;
+		ubox->j++;
+	}
+}
+
+void	add_suffix(t_exp *ubox)
+{
+	while (ubox->i < ubox->len)
+	{
+		ubox->du[ubox->i] = util()->s[ubox->i - ubox->j + 1];
+		ubox->tokn[ubox->i] = util()->a[ubox->i - ubox->j + 1];
+		ubox->mask[ubox->i] = util()->mask[ubox->i - ubox->j + 1];
+		ubox->i++;
+	}
+}
+
+void	expansion_util(int *ind, t_exp *ubox, int end, int tmp)
+{
+	if (util()->s[*ind][end] && !ft_isalpha(util()->s[*ind][end]))
+	{
+		ubox->du[ubox->i - 1] = safe_join(ubox->du[ubox->i - 1], util()->s[*ind] + end);
+		ubox->mask[ubox->i - 1] = handle_masking(ubox->du[ubox->i - 1], 0, tmp);
+	}
+	*ind = ubox->i - 1;
+	add_suffix(ubox);
+	util()->s = ubox->du;
+	util()->a = ubox->tokn;
+	util()->mask = ubox->mask;
+}
+
 // it extend the util().s and update the the array
 static void extend_key(int *index, int *start, char *value, int end)
 {
-	int		i;
-	int		j;
-	int		u;
-	int		len;
-	char	*tmp;
-	char	**extnd;
-	char	**dup;
-	bool	**mask;
-	int		*a_dup;
+	t_exp	u_box;
+	int		tmp;
 
-	i = 0;
-	j = 0;
-	u = 0;
-	tmp = NULL;
-	if (*start)
-		tmp = ft_substr(util()->s[*index], 0, *start);
-	extnd = ifs_split(value);
-	if (!extnd)
+	u_box.i = 0;
+	u_box.j = 0;
+	u_box.extend = ifs_split(value);
+	if (!u_box.extend)
 		ult_exit() ;
 	if (*start && is_ifs(*value))
-		len = lenght_both(extnd, util()->s);
+		u_box.len = lenght_both(u_box.extend, util()->s);
 	else
-		len = lenght_both(extnd, util()->s) - 1;
-	dup = safe_alloc((len + 1) * sizeof(char *), 0);
-	a_dup = safe_alloc(len * sizeof(int), 0);
-	mask = safe_alloc(len * sizeof(bool *), 0);
-	if (!dup || !a_dup)
-	{
-		if (tmp)
-			free(tmp);
+		u_box.len = lenght_both(u_box.extend, util()->s) - 1;
+	u_box.du = safe_alloc((u_box.len + 1) * sizeof(char *), 0);
+	u_box.tokn = safe_alloc(u_box.len * sizeof(int), 0);
+	u_box.mask = safe_alloc(u_box.len * sizeof(bool *), 0);
+	if (!u_box.du || !u_box.tokn)
 		ult_exit();
-	}
-	while (i < *index)
-	{
-		dup[i] = util()->s[i];
-		a_dup[i] = util()->a[i];
-		mask[i] = util()->mask[i];
-		i++;
-	}
-	if (tmp && !is_ifs(*value))
-	{
-		dup[i] = safe_join(tmp, extnd[j]);
-		mask[i] = handle_masking(dup[i], *start, ft_strlen(value));
-		a_dup[i] = WORD;
-		j++;
-		i++;
-	}
-	else if (tmp)
-	{
-		g_lst_addback(g_new_garbage(tmp));
-		mask[i] = safe_alloc(ft_strlen(tmp), 0);
-		ft_memset(mask[i], true, ft_strlen(tmp));
-		dup[i++] = tmp;
-		a_dup[i - 1] = WORD;
-	}
-	while (extnd[j])
-	{
-		dup[i] = extnd[j];
-		a_dup[i] = WORD;
-		mask[i] = safe_alloc(ft_strlen(extnd[j]), 0);
-		ft_memset(mask[i], true, ft_strlen(extnd[j]));
-		i++;
-		j++;
-	}
-	u = ft_strlen(dup[i - 1]);
-	if (util()->s[*index][end] && !ft_isalpha(util()->s[*index][end]))
-	{
-		dup[i - 1] = safe_join(dup[i - 1], util()->s[*index] + end);
-		mask[i - 1] = handle_masking(dup[i - 1], 0, u);
-	}
-	*index = i - 1;
-	*start = u;
-	while (i < len)
-	{
-		dup[i] = util()->s[i - j + 1];
-		a_dup[i] = util()->a[i - j + 1];
-		mask[i] = util()->mask[i - j + 1];
-		i++;
-	}
-	util()->s = dup;
-	util()->a = a_dup;
-	util()->mask = mask;
+	u_box.i = join_preffix(*index, &u_box);
+	handle_if_begin_with_ifs(*start, &u_box, value);
+	add_extended(&u_box);
+	tmp = ft_strlen(u_box.du[u_box.i - 1]);
+	expansion_util(index, &u_box, end, tmp);
+	*start = tmp;
 }
 
 static void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
@@ -211,7 +234,7 @@ void expansion_data(int i, int j, int to, int sto)
 				switch_toggles(&sto);
 			else if (util()->s[i][j] == '"' && sto)
 				switch_toggles(&to);
-			else if ((!i || (i && util()->a[i - 1] != HERDOC)) && util()->s[i][j] == '$' && sto)
+			else if ((!i || (i && util()->a[i - 1] != 4)) && util()->s[i][j] == '$' && sto)
 			{
 				fetch_setter(SET, i, false);
 				if (to)

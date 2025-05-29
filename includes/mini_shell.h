@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 22:03:52 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 22:44:10 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,17 @@
 # define USR "USER"
 # define SESSIO "SESSION_MANAGER"
 # define WD "PWD"
+
+typedef struct s_exp
+{
+	char	**du;
+	char	**extend;
+	int		*tokn;
+	bool	**mask;
+	int		len;
+	int		i;
+	int		j;
+}	t_exp;
 
 typedef struct s_quoter
 {

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 22:04:58 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 22:09:59 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,6 @@ t_data **box(void)
 	static t_data *pp;
 
 	return (&pp);
-}
-
-bool **ambiguous_ptr(void)
-{
-	static bool *ptr;
-
-	return (&ptr);
 }
 
 bool is_ifs(int c)
@@ -59,7 +52,6 @@ t_envp **envp(void)
 	return (&pp);
 }
 
-//
 t_ferror *fetcher(void)
 {
 	static t_ferror pp;
@@ -95,10 +87,7 @@ char *safe_substr(char *str, unsigned int start, size_t len)
 	{
 		pp = ft_substr(str, start, len);
 		if (!pp)
-		{
-			clear_container();
-			exit(EXIT_FAILURE);
-		}
+			ult_exit();
 		g_lst_addback(g_new_garbage(pp));
 		return (pp);
 	}
@@ -111,10 +100,7 @@ char *safe_join(char *s1, char *s2)
 
 	pp = ft_strjoin(s1, s2);
 	if (!pp)
-	{
-		clear_container();
-		exit(EXIT_FAILURE);
-	}
+		ult_exit();
 	delete_one(s1);
 	g_lst_addback(g_new_garbage(pp));
 	return (pp);
@@ -181,7 +167,6 @@ void print_data(t_data *inlist)
 	}
 }
 
-// hadi azbi hia li kat7sb 
 int key_len(char *str, int pos)
 {
 	int i;
