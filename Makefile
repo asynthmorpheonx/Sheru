@@ -1,6 +1,6 @@
 SRC= heap_controller/g_container.c heap_controller/managment_utils.c minishell.c make_nd_store_env.c\
 	quote_utils.c store_data_process.c redirections_handle.c tokenize_utils.c handle_cmd_flage.c\
-	advanced_split.c prompt_gen.c expansion_handle.c
+	advanced_split.c prompt_gen.c expansion_handle.c mask_creation.c
 OBJ= $(SRC:%.c=%.o)
 NAME= minishell
 LIBS= libs/libft.a libs/libftprintf.a

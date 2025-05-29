@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 18:26:17 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 22:03:52 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,9 @@ bool	*mask_joining(bool *o_mask, char *pre, char *suff);
 bool	creat_mask(void);
 char *safe_join(char *s1, char *s2);
 int lenght_both(char **s1, char **s2);
+
+bool	*handle_masking(char *str, int start, int len);
+bool	*mask_joining(bool *o_mask, char *pre, char *suff);
 
 
 #endif

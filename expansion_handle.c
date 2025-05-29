@@ -6,28 +6,11 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:21:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 22:00:23 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 22:01:32 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-
-static bool	*handle_masking(char *str, int start, int len)
-{
-	bool	*mask;
-	int		i;
-
-	i = start;
-	mask = safe_alloc(ft_strlen(str), 0);
-	if (!mask)
-		ult_exit();
-	while (str[i] && i - start < len)
-	{
-		mask[i] = true;
-		i++;
-	}
-	return (mask);
-}
 
 void switch_toggles(int *toggle)
 {

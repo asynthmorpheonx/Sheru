@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 18:27:32 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 22:04:58 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,32 +231,6 @@ int lenght_both(char **s1, char **s2)
 	return (len);
 }
 
-bool	*mask_joining(bool *o_mask, char *pre, char *suff)
-{
-	bool	*new_mask;
-	int		index;
-	int		i;
-
-	i = 0;
-	index = ft_strlen(pre);
-	new_mask = safe_alloc(ft_strlen(suff) + index, 0);
-	if (!new_mask)
-		return (NULL);
-	while (i < index)
-	{
-		new_mask[i] = o_mask[i];
-		i++;
-	}
-	i = 0;
-	while (suff[i])
-	{
-		new_mask[i + index] = true;
-		i++;
-	}
-	delete_one(o_mask);
-	return (new_mask);
-}
-
 void	clean_lst(char **str)
 {
 	int	i;
@@ -293,29 +267,6 @@ void reset_util_box(void)
 	delete_one(util()->mask);
 	util()->herdoc = 0;
 	util()->t = 0;
-}
-
-bool	creat_mask(void)
-{
-	bool	**mask;
-	int		i;
-	
-	i = 0;
-	mask = safe_alloc(util()->t * sizeof(bool *), 0);
-	if (!mask)
-		ult_exit();
-	while (util()->s[i])
-	{
-		if (util()->a[i] == WORD)
-		{
-			mask[i] = safe_alloc(ft_strlen(util()->s[i]), 0);
-			if (!mask[i])
-				ult_exit();
-		}
-		i++;
-	}
-	util()->mask = mask;
-	return (true);
 }
 
 // it's start the lexure
