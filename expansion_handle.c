@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:21:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 23:35:29 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 23:47:18 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,27 +56,27 @@ void	handle_if_begin_with_ifs(int start, t_exp *ubox, char *value)
 {
 	char	*tmp;
 	
-	tmp = NULL;
 	if (start)
+	{
 		tmp = ft_substr(util()->s[ubox->i], 0, start);
-	if (!tmp)
-		ult_exit();
-	if (start && !is_ifs(*value))
-	{
-		ubox->du[ubox->i] = safe_join(tmp, ubox->extend[ubox->j]);
-		ubox->mask[ubox->i] = handle_masking(ubox->du[ubox->i],
-			start, ft_strlen(value));
-		ubox->tokn[ubox->i] = WORD;
-		ubox->i++;
-		ubox->j++;
-	}
-	else if (start)
-	{
-		g_lst_addback(g_new_garbage(tmp));
-		ubox->mask[ubox->i] = safe_alloc(ft_strlen(tmp), 0);
-		ft_memset(ubox->mask[ubox->i], true, ft_strlen(tmp));
-		ubox->du[ubox->i] = tmp;
-		ubox->tokn[ubox->i] = WORD;
+		if (!tmp)
+			ult_exit();
+		if (!is_ifs(*value))
+		{
+			ubox->du[ubox->i] = safe_join(tmp, ubox->extend[ubox->j]);
+			ubox->mask[ubox->i] = handle_masking(ubox->du[ubox->i],
+				start, ft_strlen(value));
+			ubox->tokn[ubox->i] = WORD;
+			ubox->j++;
+		}
+		else
+		{
+			g_lst_addback(g_new_garbage(tmp));
+			ubox->mask[ubox->i] = safe_alloc(ft_strlen(tmp), 0);
+			ft_memset(ubox->mask[ubox->i], true, ft_strlen(tmp));
+			ubox->du[ubox->i] = tmp;
+			ubox->tokn[ubox->i] = WORD;
+		}
 		ubox->i++;
 	}
 }
@@ -92,7 +92,8 @@ void	add_extended(t_exp *ubox)
 		ubox->i++;
 		ubox->j++;
 	}
-}
+}	
+
 
 void	add_suffix(t_exp *ubox)
 {
