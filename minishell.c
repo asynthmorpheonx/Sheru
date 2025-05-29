@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/28 18:59:38 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 16:25:30 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,6 +366,21 @@ void extend_key(int *index, int *start, char *value, int end)
 	util()->mask = mask;
 }
 
+bool	*handle_masking(char *str, int start, int len)
+{
+	bool	*mask;
+
+	mask = safe_alloc(ft_strlen(str), 0);
+	if (!mask)
+		ult_exit();
+	while (str[start] && start <= len)
+	{
+		mask[start] = true;
+		start++;
+	}
+	return (mask);
+}
+
 void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
 {
 	char	*dup;
@@ -375,21 +390,14 @@ void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
 	dup = NULL;
 	mask = NULL;
 	if (*strt)
-	{
 		dup = ft_substr(util()->s[*ind], 0, *strt);
-		mask = mask_joining(util()->mask[*ind], dup, value);
-	}
-	else
-	{
-		mask = safe_alloc(ft_strlen(value), 2);
-		ft_memset(mask, true, ft_strlen(value));
-	}
 	dup = ft_gnl_strjoin(dup, value);
 	var = ft_strlen(dup);
 	dup = safe_join(dup, util()->s[*ind] + k_len);
 	delete_one(util()->s[*ind]);
+	delete_one(util()->mask[*ind]);
 	util()->s[*ind] = dup;
-	util()->mask[*ind] = mask;
+	util()->mask[*ind] = handle_masking(dup, *strt, ft_strlen(value));
 	if (*value)
 		*strt = ft_strlen(value);
 }
@@ -520,7 +528,7 @@ bool	creat_mask(void)
 	i = 0;
 	mask = safe_alloc(util()->t * sizeof(bool *), 0);
 	if (!mask)
-		return (false);
+		ult_exit();
 	while (util()->s[i])
 	{
 		if (util()->a[i] == WORD)

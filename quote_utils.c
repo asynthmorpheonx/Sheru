@@ -6,38 +6,49 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:03:20 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/28 19:22:43 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 16:26:14 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
+void	remove_quote_helper(t_quoter *box, int *len, int *ind, int *qu)
+{
+	ft_memmove(box->s + box->sap, box->s + box->sap + 1, *len - box->sap);
+	if (box->m)
+		ft_memmove(box->m + box->sap, box->m + box->sap + 1, *len - box->sap - 1);
+	(*len)--;
+	ft_memmove(box->s + box->fap, box->s + box->fap + 1, *len - box->fap);
+	if (box->m)
+		ft_memmove(box->m + box->fap, box->m + box->fap + 1, *len - box->fap - 1);
+	(*len)--;
+	(*ind) -= 2;
+	(*qu) = -1;
+}
+
 void	remove_quote(char *str, bool *mask, int len)
 {
-	int	i;
-	int	qu;
-	int	fapp;
+	t_quoter	box;
+	int			i;
+	int			qu;
 
 	i = 0;
 	qu = -1;
+	box.m = mask;
+	box.s = str;
 	while (str[i])
 	{
-		if ((str[i] == '"' || str[i] == '\'') && (!mask || (mask && !mask[i])))
+		if ((str[i] == '"' || str[i] == '\'')
+			&& (!mask || (mask && !mask[i])))
 		{
+			box.sap = i;
 			if (qu == -1)
 			{
 				qu = str[i];
-				fapp = i;
+				box.fap = i;
 			}
-			else
-			{
-				ft_memmove(str + i, str + i + 1, len - i);
-				ft_memmove(mask + i, mask + i + 1, len - i);
-				ft_memmove(str + fapp, str + fapp + 1, len - fapp);
-				ft_memmove(mask + fapp, mask + fapp + 1, len - fapp);
-				qu = -1;
-				i -= 2;
-			}
+			else if (qu == str[i])
+				remove_quote_helper(&box, &len, &i, &qu);
 		}
 		i++;
 	}

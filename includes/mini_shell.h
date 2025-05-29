@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/28 19:22:32 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 15:51:58 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,13 @@
 # define SESSIO "SESSION_MANAGER"
 # define WD "PWD"
 
-typedef unsigned char mask;
+typedef struct s_quoter
+{
+	char	*s;
+	bool	*m;
+	int		fap;
+	int		sap;
+}	t_quoter;
 
 typedef enum e_token
 {
