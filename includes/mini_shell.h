@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 15:51:58 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 18:26:17 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,5 +136,14 @@ void	handle_quote(void);
 
 bool	is_ifs(int c);
 char	**ifs_split(char const *s);
+
+t_ferror *fetcher(void);
+char	*creat_prompt(void);
+void expansion_data(int i, int j, int to, int sto);
+bool	*mask_joining(bool *o_mask, char *pre, char *suff);
+bool	creat_mask(void);
+char *safe_join(char *s1, char *s2);
+int lenght_both(char **s1, char **s2);
+
 
 #endif
