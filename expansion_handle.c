@@ -6,11 +6,28 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:21:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 18:27:38 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/29 22:00:23 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
+
+static bool	*handle_masking(char *str, int start, int len)
+{
+	bool	*mask;
+	int		i;
+
+	i = start;
+	mask = safe_alloc(ft_strlen(str), 0);
+	if (!mask)
+		ult_exit();
+	while (str[i] && i - start < len)
+	{
+		mask[i] = true;
+		i++;
+	}
+	return (mask);
+}
 
 void switch_toggles(int *toggle)
 {
@@ -58,7 +75,7 @@ static void extend_key(int *index, int *start, char *value, int end)
 		tmp = ft_substr(util()->s[*index], 0, *start);
 	extnd = ifs_split(value);
 	if (!extnd)
-		return ;
+		ult_exit() ;
 	if (*start && is_ifs(*value))
 		len = lenght_both(extnd, util()->s);
 	else
@@ -81,8 +98,8 @@ static void extend_key(int *index, int *start, char *value, int end)
 	}
 	if (tmp && !is_ifs(*value))
 	{
-		mask[i] = mask_joining(util()->mask[i], tmp, extnd[j]);
 		dup[i] = safe_join(tmp, extnd[j]);
+		mask[i] = handle_masking(dup[i], *start, ft_strlen(value));
 		a_dup[i] = WORD;
 		j++;
 		i++;
@@ -106,7 +123,10 @@ static void extend_key(int *index, int *start, char *value, int end)
 	}
 	u = ft_strlen(dup[i - 1]);
 	if (util()->s[*index][end] && !ft_isalpha(util()->s[*index][end]))
+	{
 		dup[i - 1] = safe_join(dup[i - 1], util()->s[*index] + end);
+		mask[i - 1] = handle_masking(dup[i - 1], 0, u);
+	}
 	*index = i - 1;
 	*start = u;
 	while (i < len)
@@ -121,29 +141,16 @@ static void extend_key(int *index, int *start, char *value, int end)
 	util()->mask = mask;
 }
 
-static bool	*handle_masking(char *str, int start, int len)
-{
-	bool	*mask;
-
-	mask = safe_alloc(ft_strlen(str), 0);
-	if (!mask)
-		ult_exit();
-	while (str[start] && start <= len)
-	{
-		mask[start] = true;
-		start++;
-	}
-	return (mask);
-}
-
 static void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
 {
 	char	*dup;
 	bool	*mask;
 	int		var;
+	int		len;
 
 	dup = NULL;
 	mask = NULL;
+	len = ft_strlen(value);
 	if (*strt)
 		dup = ft_substr(util()->s[*ind], 0, *strt);
 	dup = ft_gnl_strjoin(dup, value);
@@ -152,9 +159,9 @@ static void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
 	delete_one(util()->s[*ind]);
 	delete_one(util()->mask[*ind]);
 	util()->s[*ind] = dup;
-	util()->mask[*ind] = handle_masking(dup, *strt, ft_strlen(value));
+	util()->mask[*ind] = handle_masking(dup, *strt, len);
 	if (*value)
-		*strt = ft_strlen(value);
+		*strt = len;
 }
 
 static bool	check_value(char *str)
