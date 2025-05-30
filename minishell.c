@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 23:42:40 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/31 00:52:09 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,9 +235,15 @@ void reset_data_box(void)
 	if (*box())
 	{
 		next = *box();
-		clean_lst((*box())->cmd);
 		while (*box())
 		{
+			clean_lst((*box())->cmd);
+			if ((*box())->file.infile)
+				delete_one((*box())->file.i_type);
+			clean_lst((*box())->file.infile);
+			if ((*box())->file.outfile)
+				delete_one((*box())->file.o_type);
+			clean_lst((*box())->file.outfile);
 			next = (*box())->next;
 			delete_one(*box());
 			*box() = next;
@@ -252,6 +258,136 @@ void reset_util_box(void)
 	delete_one(util()->mask);
 	util()->herdoc = 0;
 	util()->t = 0;
+}
+
+void	expand_herdoc_data(char *str, int fd)
+{
+	int		i;
+	int		len;
+	char	*tmp;
+
+	i = 0;
+	tmp = NULL;
+	while (str[i])
+	{
+		if (str[i] == '$')
+		{
+			tmp = key_value(str + i + 1);
+			len = key_len(str + i, 0);
+			if (*tmp)
+				write(fd, tmp, ft_strlen(tmp));
+			i += len;
+		}
+		else
+		{
+			write(fd, &str[i], 1);
+			i++;
+		}
+	}
+}
+
+void	here_doc_util(char *input, int fd)
+{
+	if (util()->herdoc_exp)
+		expand_herdoc_data(input, fd);
+	else if (*input)
+		write(fd, input, ft_strlen(input));
+	write(fd, "\n", 1);
+}
+
+void	safe_pipe(int *fds)
+{
+	if (pipe(fds) == -1)
+	{
+		perror("pipe");
+		ult_exit();
+	}
+}
+
+char	*here_doc_reader(char *str, bool mode)
+{
+	char	*input;
+	int		fds[2];
+
+	input = NULL;
+	if (mode)
+		safe_pipe(fds);
+	while (1)
+	{
+		input = readline("> ");
+		if (!input || (*input
+			&& !ft_strncmp(input, str, ft_strlen(input))))
+			break ;
+		if (mode)
+			here_doc_util(input, fds[1]);
+		if (util()->herdoc_exp)
+			free(input);
+	}
+	if (mode)
+		close(fds[1]);
+	if (mode)
+		return (ft_itoa(fds[0]));
+	return (NULL);
+}
+
+void	herdoc_job(void)
+{
+	int		i;
+	char	*str;
+	t_data	*tmp;
+
+	i = 0;
+	tmp = *box();
+	while (tmp)
+	{
+		while (tmp->file.infile && tmp->file.infile[i])
+		{
+			if (tmp->file.i_type[i] == HERDOC && tmp->file.infile[i + 1])
+				here_doc_reader(tmp->file.infile[i], false);
+			else if (tmp->file.i_type[i] == HERDOC)
+			{
+				str = here_doc_reader(tmp->file.infile[i], true);
+				delete_one(tmp->file.infile[i]);
+				tmp->file.infile[i] = str;
+				g_lst_addback(g_new_garbage(str));
+			}
+			i++;
+		}
+		i = 0;
+		tmp = tmp->next;
+	}
+}
+
+void	read_herdoc()
+{
+	char	line[7000];
+	t_data	*tmp;
+	int		fds;
+	int		i;
+	int		j = 1;
+
+	i = 0;
+	tmp = *box();
+	while (tmp)
+	{
+		for (int i = 0; tmp->file.infile && tmp->file.infile[i + 1]; i++);
+		if (tmp->file.i_type[i] == HERDOC)
+		{
+			fds = ft_atoi(tmp->file.infile[i]);
+			printf("------------------heredoc nbr:%d--------------------\n", j);
+			int returned = 1;
+			while (returned != 0)
+			{
+				returned = read(fds, line, 6999);
+				line[returned] = '\0';
+				write(1, line , returned);
+			}
+		}
+			printf("\n-------------------------------------------------\n");
+	}
+		tmp = tmp->next;
+		i = 0;
+		j++;
 }
 
 // it's start the lexure
@@ -274,9 +410,12 @@ void begin_lexing(char *line)
 		handle_quote();
 		if (!stor_in_list(util()->s, util()->a, box()))
 			return;
-		reset_util_box();
-		// TODO: HANDLE OPENING HERDOCS
+		if (util()->herdoc)
+			herdoc_job();
 		print_data(*box());
+		if (util()->herdoc)
+			read_herdoc();
+		reset_util_box();
 	}
 }
 

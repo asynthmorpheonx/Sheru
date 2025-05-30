@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:03:20 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 16:26:14 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/30 18:45:40 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,9 @@ void	remove_quote(char *str, bool *mask, int len)
 
 void	handle_quote(void)
 {
-	int	i;
-	char *str;
+	int		i;
+	char	*str;
+	size_t	olen;
 
 	str = NULL;
 	i = 0;
@@ -66,7 +67,10 @@ void	handle_quote(void)
 		if (util()->a[i] == WORD)
 		{
 			str = util()->s[i];
-			remove_quote(str, util()->mask[i], ft_strlen(str));
+			olen = ft_strlen(str);
+			remove_quote(str, util()->mask[i], olen);
+			if (i && util()->a[i - 1] == HERDOC && olen == ft_strlen(str))
+				util()->herdoc_exp = true;
 		}
 		i++;
 	}

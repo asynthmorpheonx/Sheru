@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 22:44:10 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/30 18:41:01 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_utils
 	int		*a;
 	int		t;
 	int		herdoc;
+	bool	herdoc_exp;
 }	t_utils;
 
 typedef struct s_files
@@ -159,5 +160,6 @@ int lenght_both(char **s1, char **s2);
 bool	*handle_masking(char *str, int start, int len);
 bool	*mask_joining(bool *o_mask, char *pre, char *suff);
 
+void fetch_setter(bool mode, int i, bool is_full);
 
 #endif
