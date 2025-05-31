@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/31 00:52:09 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/31 16:59:27 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,7 +270,7 @@ void	expand_herdoc_data(char *str, int fd)
 	tmp = NULL;
 	while (str[i])
 	{
-		if (str[i] == '$')
+		if (str[i] == '$' && str[i + 1])
 		{
 			tmp = key_value(str + i + 1);
 			len = key_len(str + i, 0);
@@ -376,18 +376,15 @@ void	read_herdoc()
 			fds = ft_atoi(tmp->file.infile[i]);
 			printf("------------------heredoc nbr:%d--------------------\n", j);
 			int returned = 1;
-			while (returned != 0)
-			{
 				returned = read(fds, line, 6999);
 				line[returned] = '\0';
 				write(1, line , returned);
-			}
 		}
-			printf("\n-------------------------------------------------\n");
-	}
+			printf("-------------------------------------------------\n");
 		tmp = tmp->next;
 		i = 0;
 		j++;
+	}
 }
 
 // it's start the lexure
@@ -413,8 +410,6 @@ void begin_lexing(char *line)
 		if (util()->herdoc)
 			herdoc_job();
 		print_data(*box());
-		if (util()->herdoc)
-			read_herdoc();
 		reset_util_box();
 	}
 }
