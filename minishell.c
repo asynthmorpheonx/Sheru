@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/31 16:59:27 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/01 18:27:08 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,37 @@ t_data **box(void)
 	static t_data *pp;
 
 	return (&pp);
+}
+
+char	*exit_code(void)
+{
+	static char	exit_status[4];
+
+	return (exit_status);
+}
+
+void	code_setter(int	new_code)
+{
+	int	i;
+
+	i = 0;
+	if (!new_code)
+	{
+		exit_code()[0] = 48;
+		exit_code()[1] = '\0';
+	}
+	else if (new_code> 255)
+		code_setter(new_code % 256);
+	else
+	{
+		while (new_code)
+		{
+			exit_code()[i] = new_code % 10 + '0';
+			i++;
+			new_code /= 10;
+		}
+		exit_code()[i] = '\0';
+	}
 }
 
 bool is_ifs(int c)
@@ -186,6 +217,8 @@ char *key_value(char *key)
 
 	if (key[0] == '$' || !key[0])
 		return ("");
+	else if (key[0] == '?')
+		return (exit_code());
 	i = key_len(key, 0);
 	pp = *envp();
 	tmp = ft_substr(key, 0, i);
@@ -426,6 +459,7 @@ int main(int ac, char **av, char **env)
 	prompt = creat_prompt();
 	if (!prompt)
 		ult_exit();
+	code_setter(0);
 	while (1)
 	{
 		line = readline(prompt);

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/30 18:41:01 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/01 17:43:19 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,6 @@ void	cmd_flag_handle(char **strs, int *arr, t_data *node, int *mode);
 char	*key_value(char *key);
 int		key_len(char *str, int pos);
 
-bool	**ambiguous_ptr(void);
 
 void	remove_quote(char *str, bool *mask, int len);
 void	handle_quote(void);
