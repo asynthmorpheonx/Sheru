@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/01 18:27:08 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/02 17:41:43 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,22 +31,19 @@ void	code_setter(int	new_code)
 	int	i;
 
 	i = 0;
-	if (!new_code)
-	{
-		exit_code()[0] = 48;
-		exit_code()[1] = '\0';
-	}
-	else if (new_code> 255)
-		code_setter(new_code % 256);
+	new_code = (new_code % 256 + 256) % 256;
+	if (new_code < 9)
+		i = 0;
+	else if (new_code < 99)
+		i = 1;
 	else
+		i = 2;
+	exit_code()[i + 1] = '\0';
+	while (new_code)
 	{
-		while (new_code)
-		{
-			exit_code()[i] = new_code % 10 + '0';
-			i++;
-			new_code /= 10;
-		}
-		exit_code()[i] = '\0';
+		exit_code()[i] = new_code % 10 + '0';
+		i--;
+		new_code /= 10;
 	}
 }
 
@@ -348,8 +345,7 @@ char	*here_doc_reader(char *str, bool mode)
 	while (1)
 	{
 		input = readline("> ");
-		if (!input || (*input
-			&& !ft_strncmp(input, str, ft_strlen(input))))
+		if (!input || (*input && !ft_memcmp(input, str, ft_strlen(input) + 1)))
 			break ;
 		if (mode)
 			here_doc_util(input, fds[1]);
@@ -459,7 +455,7 @@ int main(int ac, char **av, char **env)
 	prompt = creat_prompt();
 	if (!prompt)
 		ult_exit();
-	code_setter(0);
+	code_setter(-1);
 	while (1)
 	{
 		line = readline(prompt);
