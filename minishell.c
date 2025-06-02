@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/02 17:51:54 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:40:32 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@ t_data **box(void)
 
 	return (&pp);
 }
+
+t_prstat	*process_status(void)
+{
+	static t_prstat	var;
+
+	return (&var);
+}
+
 
 char	*exit_code(void)
 {
@@ -40,11 +48,16 @@ void	code_setter(int	new_code)
 	else
 		i = 2;
 	exit_code()[i + 1] = '\0';
-	while (new_code)
+	if (!new_code)
+		exit_code()[0] = 48;
+	else
 	{
-		exit_code()[i] = new_code % 10 + '0';
-		i--;
-		new_code /= 10;
+		while (new_code)
+		{
+			exit_code()[i] = new_code % 10 + '0';
+			i--;
+			new_code /= 10;
+		}		
 	}
 }
 
@@ -284,9 +297,12 @@ void reset_data_box(void)
 
 void reset_util_box(void)
 {
-	delete_one(util()->s);
-	delete_one(util()->a);
-	delete_one(util()->mask);
+	if (util()->s)
+		delete_one(util()->s);
+	if (util()->a)
+		delete_one(util()->a);
+	if (util()->mask)
+		delete_one(util()->mask);
 	util()->herdoc = 0;
 	util()->t = 0;
 }
@@ -335,6 +351,12 @@ void	safe_pipe(int *fds)
 	}
 }
 
+void	close_herdoc_ports(int *fds)
+{
+	close(fds[0]);
+	close(fds[1]);
+}
+
 char	*here_doc_reader(char *str, bool mode)
 {
 	char	*input;
@@ -343,11 +365,14 @@ char	*here_doc_reader(char *str, bool mode)
 	input = NULL;
 	if (mode)
 		safe_pipe(fds);
+	*process_status() = HERDOC_READ;
 	while (1)
 	{
 		input = readline("> ");
+		if (*process_status() == INTERRUPTED)
+			return(free(input), close_herdoc_ports(fds), NULL);
 		if (!input || (*input && !ft_memcmp(input, str, ft_strlen(input) + 1)))
-			break ;
+			break;
 		if (mode)
 			here_doc_util(input, fds[1]);
 		if (util()->herdoc_exp)
@@ -355,7 +380,7 @@ char	*here_doc_reader(char *str, bool mode)
 	}
 	if (mode)
 		close(fds[1]);
-	if (mode)
+	if (mode && *process_status() != INTERRUPTED)
 		return (ft_itoa(fds[0]));
 	return (NULL);
 }
@@ -377,6 +402,8 @@ void	herdoc_job(void)
 			else if (tmp->file.i_type[i] == HERDOC)
 			{
 				str = here_doc_reader(tmp->file.infile[i], true);
+				if (!str)
+					return ;
 				delete_one(tmp->file.infile[i]);
 				tmp->file.infile[i] = str;
 				g_lst_addback(g_new_garbage(str));
@@ -439,8 +466,27 @@ void begin_lexing(char *line)
 			return;
 		if (util()->herdoc)
 			herdoc_job();
-		print_data(*box());
+		if (*process_status() != INTERRUPTED)
+			print_data(*box());
 		reset_util_box();
+	}
+	
+}
+
+void	interupt_handle(int	sig_num)
+{
+	if (sig_num == SIGINT && *process_status() != INTERRUPTED)
+	{
+		if (*process_status() == HERDOC_READ)
+		{
+			*process_status() = INTERRUPTED;
+			rl_done = 1;
+		}
+		else
+			write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 }
 
@@ -452,13 +498,15 @@ int main(int ac, char **av, char **env)
 	line = NULL;
 	(void)ac;
 	(void)av;
+	signal(SIGINT, interupt_handle);
 	make_env(env, envp(), 0, 0);
 	prompt = creat_prompt();
 	if (!prompt)
 		ult_exit();
-	code_setter(-1);
+	code_setter(0);
 	while (1)
 	{
+		*process_status() = SCANIN;
 		line = readline(prompt);
 		if (!line)
 		{

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/01 17:43:19 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/02 23:15:50 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@
 # include <readline/history.h>
 # include <heap_controller.h>
 # include <stdbool.h>
+# include <sys/wait.h>
 # include <stdlib.h>
+# include <signal.h>
+#include <sys/ioctl.h>
 
 # define AMBIGUOUS_REDIRECT -1
 # define RESET 0
@@ -28,6 +31,12 @@
 # define USR "USER"
 # define SESSIO "SESSION_MANAGER"
 # define WD "PWD"
+
+typedef char t_prstat;
+
+# define SCANIN 0b1001010
+# define HERDOC_READ 0b1011001
+# define INTERRUPTED 0b1110010
 
 typedef struct s_exp
 {
@@ -47,6 +56,7 @@ typedef struct s_quoter
 	int		fap;
 	int		sap;
 }	t_quoter;
+
 
 typedef enum e_token
 {
