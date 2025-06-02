@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/02 17:41:43 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/02 17:51:54 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ char	*exit_code(void)
 	return (exit_status);
 }
 
+// this fn takes the paramter and storing int the $? as string it handles the overflow like the bash did
 void	code_setter(int	new_code)
 {
 	int	i;
