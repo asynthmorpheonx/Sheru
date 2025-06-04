@@ -1,8 +1,10 @@
 #include "mini_shell.h"
-int envcount(t_env *current)
+int envcount(t_env *env)
 {
     int count;
+	t_env *current;
 
+	current = env;
     count = 0;
     while (current)
     {
@@ -11,38 +13,37 @@ int envcount(t_env *current)
     }
     return (count);
 }
-void    catcpy(char *tmp, char *str, t_env *current)
+void catcpy(char *tmp, t_env *current)
 {
     ft_strcpy(tmp, current->key);
-    ft_strcat(tmp, str);
-    ft_strcat(tmp, current->value);
+    ft_strcat(tmp, "=");
+    ft_strcat(tmp, current->value ? current->value : "");  // Prevent crash
 }
 
-char    **env_to_array(t_env *env)
+
+char    **env_to_array(t_env **env)
 {
     t_env   *current;
 
     char    **(arr), *(tmp);
     int     (count), (i);
-    current = env;
+    current = *env;
     count = envcount(current);
     arr = (char **)safe_alloc(sizeof(char *) * (count + 1), 0);
-    if (!arr)
-        return (NULL);
     i = 0;
-    current = env;
+    current = *env;
     while (current)
     {
-        if (!(tmp  = (char *)safe_alloc(ft_strlen(current->key) + ft_strlen(current->value) + 2, 0 )))
-            {
-				tmp = ft_free_array(arr);
-				return(NULL);
-			}
-        catcpy(tmp, "=", current);
+		if (!(tmp  = safe_alloc(ft_strlen(current->key) + ft_strlen(current->value) + 2, 0 )))
+		{
+			ft_free_array(arr);
+			return(NULL);
+		}
+        catcpy(tmp, current);
         arr[i++] = tmp;
         current = current->next;
     }
-    arr[i] = NULL;  // NULL-terminate the array
+    arr[i] = NULL;
     return (arr);
 }
 
@@ -57,34 +58,39 @@ char	*ft_cat(char *path, char *cmd)
 		return (NULL);
 	i = 0;
 	u = 0;
-	while(path[u])
+	while (path[u])
 		buff[i++] = path[u++];
 	buff[i++] = '/';
 	u = 0;
-	while(cmd[u])
+	while (cmd[u])
 		buff[i++] = cmd[u++];
 	buff[i] = '\0';
 	return (buff);
 }
 
-char	*get_path(char *cmd)
+char	*get_path(char *cmd, int *error_status)
 {
 	int	i;
 	
 	char **(path_buf), *(cmd_path), *(path_copy);
-	cmd_path = getenv("PATH");
+	cmd_path = key_value("PATH");
 	path_buf = ft_split(cmd_path, ':');
 	i = 0;
 	while(path_buf[i])
 	{
 		path_copy = ft_cat(path_buf[i], cmd);
-		if (access(path_copy, X_OK) == 0)
+		if (!access(path_copy, F_OK))
 		{
-			path_buf[0] = ft_free_array(path_buf);
-			return (path_copy);
+			ft_free_array(path_buf);
+			if (!access(path_copy, X_OK))
+				return (path_copy);
+			*error_status = 2;
+			return (NULL);
 		}
 		free(path_copy);
 		i++;
 	}
-	return (ft_free_array(path_buf));
+	ft_free_array(path_buf);
+	*error_status = 1;
+	return (NULL);
 }

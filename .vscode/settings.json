@@ -6,6 +6,8 @@
 		"history.h": "c"
 	},
 	"files.associations": {
-		"readline.h": "c"
+		"readline.h": "c",
+		"mini_shell.h": "c",
+		"cstdlib": "c"
 	}
 }

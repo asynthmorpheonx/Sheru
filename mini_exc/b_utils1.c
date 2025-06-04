@@ -7,14 +7,14 @@ char *word(char *str)
 
 	i = 0;
 	len = 0;
-	while(str[i] && str[i] != '=')
+	while (str[i] && str[i] != '=')
 	{
 		len++;
 		i++;
 	}
 	buf = safe_alloc(len + 1 , 0);
 	i = 0;
-	while(str[i] && str[i] != '=')
+	while (str[i] && str[i] != '=')
 	{
 		buf[i] = str[i];
 		i++;
@@ -65,19 +65,19 @@ char	*ft_envcat(char *dest, const char *src)
 
 	len = ft_strlen(dest) + ft_strlen(src);
 	buf = safe_alloc(sizeof(char) * len + 1, 0);
-	if(!buf)
+	if (!buf)
 		return (NULL);
 	ft_strcpy(buf, dest);
 	ft_strcat(buf, src);
 	return (buf);	
 }
 
-void	ft_var_append(t_env *env, char *var, const char *appe)
+void	ft_var_append(t_env **env, char *var, const char *appe)
 {
 	char	*va;
 	t_env	*tmp;
 
-	tmp = env;
+	tmp = *env;
 	while (tmp)
 	{
 		if (ft_strcmp(tmp->key, var) == 0)
@@ -89,16 +89,19 @@ void	ft_var_append(t_env *env, char *var, const char *appe)
 		}
 		tmp = tmp->next;
 	}
-	set_env_var(&env, var, appe); // if the var not exist we creat it and give it the value appe
+	set_env_var(env, var, appe); // if the var not exist we creat it and give it the value appe
 }
 
-char	*get_home(t_env *env)
+char	*get_home(t_env **env)
 {
-	while(env)
+	t_env	*tmp;
+
+	tmp = *env;
+	while (tmp)
 	{
-		if(ft_strncmp(env->key, "HOME", 3) == 0)
-			return (env->value);
-		env = env->next;
+		if (ft_strncmp(tmp->key, "HOME", 3) == 0)
+			return (tmp->value);
+		tmp = tmp->next;
 	}
 	return (NULL);
 }

@@ -5,16 +5,16 @@ int	ft_varcmp(char *s1, char *s2)
 	int i;
 
 	i = 0;
-	while(s1[i] != '=' && s2[i] != '=')
+	while(s1[i] && (s1[i] != '=' && s2[i] != '='))
 	{
 		if(s1[i] != s2[i])
 			return (s1[i] - s2[i]);
 		i++;
 	}
-	return (s1[i] - s2[i]);
+	return (s1[i - 1] - s2[i - 1]);
 }
 
-void	export_print(t_env *env)
+void	export_print(t_env **env)
 {
 	char	**tenv;
 	t_env	*tmp;
@@ -25,7 +25,7 @@ void	export_print(t_env *env)
 	i = 0;
 	while (tenv[i])
 	{
-		tmp = env;
+		tmp = *env;
 		while (tmp)
 		{
 			check = ft_varcmp(tmp->key, tenv[i]);

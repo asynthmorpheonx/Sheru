@@ -7,7 +7,7 @@
 // 	return (&var);
 // }
 
-char *ft_free_array(char **arr)
+void ft_free_array(char **arr)
 {
 	int	i;
 
@@ -18,7 +18,7 @@ char *ft_free_array(char **arr)
 		i++;
 	}
 	free(arr);
-	return (NULL);
+	arr = NULL;
 }
 
 int count_words(char *flags)
@@ -27,14 +27,14 @@ int count_words(char *flags)
 
 	i = 0;
 	u = 0;
-	while(flags[i])
+	while (flags[i])
 	{
-		if(flags[i] == ' ' || (flags[i] >= 9 && flags[i] <= 13))
+		if (flags[i] == ' ' || (flags[i] >= 9 && flags[i] <= 13))
 			i++;
 		else
 		{
 			u++;
-			while(flags[i] != ' ' && !(flags[i] >= 9 && flags[i] <= 13))
+			while (flags[i] != ' ' && !(flags[i] >= 9 && flags[i] <= 13))
 				i++;
 		}
 	}

@@ -9,9 +9,11 @@ int	check_char(char c)
 
 void print_error(char *msg)
 {
-	printf("export: `%s`: not a valid identifier\n", msg);
-	// handle error | call garbage
-	return ;
+	ft_putstr_fd("export: ", 2);
+	ft_putstr_fd(msg, 2);
+	ft_putstr_fd("not a valid identifier\n", 2);
+	clear_container();
+	exit(EXIT_FAILURE);
 }
 void	check_var(char *container, int *value_start, t_export *data)
 {
@@ -80,7 +82,7 @@ void	build_export_data(t_data *cmd_list, char *container)
 	data = cmd_list->export_data;
 	data->export_check = false;
 	check_var(container, &u, data);
-	if(data->export_check)
+	if (data->export_check)
 		delimiter = '+';
 	else
 		delimiter = '=';

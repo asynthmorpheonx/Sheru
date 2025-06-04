@@ -1,91 +1,181 @@
 #include "mini_shell.h"
 
-//#############
-//
-//fds = [0][1] : [0] to read frpm | [1] to write into
-//
-//#############
-void close_fds(int *fds)
+static int	count_commands(t_data *cmd)
 {
-	if (fds[0] != -1)
-		close(fds[0]);
-	if (fds[1] != -1)
-		close(fds[1]);
+	int	count;
+
+	count = 0;
+	while (cmd)
+	{
+		count++;
+		cmd = cmd->next;
+	}
+	return (count);
 }
 
-void ft_exec(t_data *cmd, t_env *env)
+static void create_pipes(int cmd_count)
 {
-	if (offs()->prev_fds[0] != -1)
+	int	i;
+
+	if (cmd_count <= 1)
+		return ;
+	offs()->pipes = malloc(sizeof(int *) * (cmd_count - 1));
+	if (!offs()->pipes)
+		return ;
+	i = 0;
+	while (i < cmd_count - 1)
 	{
-		dup2(offs()->prev_fds[0], STDIN_FILENO);
-		close_fds(offs()->prev_fds);
+		offs()->pipes[i] = malloc(sizeof(int) * 2);
+		if (!offs()->pipes[i])
+		{
+			while (--i >= 0)
+				free (offs()->pipes[i]);
+			free (offs()->pipes);
+			return ;
+		}
+		if (pipe(offs()->pipes[i]) == -1)
+		{
+			while (i >= 0)
+				free(offs()->pipes[i--]);
+			free(offs()->pipes);
+			err("pipe", 3);
+		}
+		i++;
 	}
-	if (cmd->next)
-	{
-		dup2(offs()->curr_fds[1], STDOUT_FILENO);
-		close(offs()->curr_fds[1]);
-	}
-	execve(get_path(cmd->cmd[0]), cmd->cmd, env_to_array(env));
-	err("execve");
 }
 
-void child_proc(t_data *cmd, t_env *env)
+static void	free_pipes(int **pipes, int pipe_count)
 {
-	 // performs dup2 for in/out file
-	if (cmd->file.infile || cmd->file.outfile)
-		redirect(cmd);
-	if (builtin_check(cmd->cmd[0]) && cmd->next) // run builtin in child if it's part of a pipeline
+	int	i;
+
+	if (!pipes)
+		return ;
+	i = 0;
+	while (i < pipe_count)
 	{
-		// Temporarily redirect stdout to pipe
-		dup2(offs()->curr_fds[1], STDOUT_FILENO);
-		ft_ceue(cmd, env);
-		dup2(offs()->out_backup, STDOUT_FILENO);
-		close(offs()->curr_fds[1]);
-		exit(EXIT_SUCCESS);
+		free(pipes[i]);
+		i++;
 	}
-	else if (builtin_check(cmd->cmd[0]))
-	{
-		ft_ceue(cmd, env);
-		exit(EXIT_SUCCESS); // prevent falling through
-	}
-	else
-		ft_exec(cmd, env);
+	free(pipes);
 }
 
-void parent_proc(t_data *cmd)
+static void	close_pipes(int **pipes, int pipe_count)
 {
-	close_fds(offs()->prev_fds);
+	int	i;
 
-	if (cmd->next) // Always pass pipe fd to next command
+	if (!pipes)
+		return ;
+	i = 0;
+	while (i < pipe_count)
 	{
-		offs()->prev_fds[0] = offs()->curr_fds[0];
-		offs()->prev_fds[1] = offs()->curr_fds[1];
-		close(offs()->curr_fds[1]);
+		close(pipes[i][0]);
+		close(pipes[i][1]);
+		i++;
 	}
-	else
-		close_fds(offs()->curr_fds);
 }
 
-void execute_pipeline(t_data *cmd, t_env *env)
+static void	setup_child_fds(int **pipes, int cmd_index, int cmd_count)
 {
-	pid_t pid;
+	if (cmd_index > 0)
+		dup2(pipes[cmd_index - 1][0], STDIN_FILENO);
+	if (cmd_index < cmd_count - 1)
+		dup2(pipes[cmd_index][1], STDOUT_FILENO);
+	close_pipes(pipes, cmd_count - 1);
+}
+
+static void	child_proc(t_data *cmd, t_env **env, int **pipes, int cmd_index, int cmd_count)
+{
+	char *path;
 	int	status;
 
-	offs()->prev_fds[0] = -1;
-	offs()->prev_fds[1] = -1;
-    offs()->curr_fds[0] = -1;
-    offs()->curr_fds[1] = -1;
-	if (cmd->next && pipe(offs()->curr_fds) == -1)
-		err("pipe");
-	pid = fork();
-	if (pid == -1)
-		err("fork");
-	if (pid == 0)
-		child_proc(cmd, env);
+	status = 0;
+	setup_child_fds(pipes, cmd_index, cmd_count);
+	if (cmd->file.infile || cmd->file.outfile)
+		redirect(cmd);
+	if (builtin_check(cmd->cmd[0]))
+	{
+		ft_ceue(cmd, env);
+		exit(EXIT_SUCCESS);
+	}
 	else
 	{
-		waitpid(pid, &status, 0);
-		parent_proc(cmd);
+		path = get_path(cmd->cmd[0], &status);
+		if (!path)
+		{
+			err(cmd->cmd[0], status);
+		}// when calling container from here or when calling err the container tryes to applye a none valid free
+		else
+			execve(path, cmd->cmd, env_to_array(env));
 	}
 }
+
+void	execute_pipeline(t_data *cmd, t_env **env)
+{
+	int		cmd_count;
+	pid_t	*pids;
+	int		i;
+	int		status;
+
+	cmd_count = count_commands(cmd);
+	create_pipes(cmd_count);
+	pids = malloc(sizeof(pid_t) * cmd_count);
+	if (!pids)
+		err("malloc", 3);
+	i = 0;
+	while (i < cmd_count)
+	{
+		pids[i] = fork();
+		if (pids[i] == -1)
+			err("fork", 3);
+		if (pids[i] == 0)
+			child_proc(cmd, env, offs()->pipes, i, cmd_count);
+		cmd = cmd->next;
+		i++;
+	}
+	close_pipes(offs()->pipes, cmd_count - 1);
+	i = 0;
+	while (i < cmd_count)
+	{
+		waitpid(pids[i], &status, 0);
+		i++;
+	}
+	free_pipes(offs()->pipes, cmd_count - 1);
+	free(pids);
+}
+
+// void	execute_pipeline(t_data *cmd, t_env **env)
+// {   
+// 	pid_t *pids;
+	
+// 	int	 (cmd_count), (i), (status);
+// 	cmd_count = count_commands(cmd);
+// 	pids = malloc(sizeof(pid_t) * cmd_count);
+// 	if (!pids)
+// 		err("malloc", 4);
+// 	create_pipes(cmd_count);
+// 	i = 0;
+// 	while (i < cmd_count)
+// 	{
+// 		pids[i] = fork();
+// 		if (pids[i] == -1)
+// 			err("fork", 3);
+// 		if (pids[i] == 0)
+// 			child_proc(cmd, env, offs()->pipes, i, cmd_count);
+// 		cmd = cmd->next;
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while (i < cmd_count)
+// 	{
+// 		waitpid(pids[i], &status, 0);
+// 		i++;
+// 	}
+// 	printf("===> status is %d\n", status);
+// 	//call the exit code func
+// 	close_pipes(offs()->pipes, cmd_count - 1);
+// 	free_pipes(offs()->pipes, cmd_count - 1);
+// 	free(pids);
+// }
+
+
 

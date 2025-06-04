@@ -7,7 +7,7 @@ OBJ= $(SRC:%.c=%.o)
 NAME= minishell
 LIBS= libs/libft.a libs/libftprintf.a
 CC= cc
-CFLAGS= -Wall -Werror -Wextra -g3
+CFLAGS= -Wall -Werror -Wextra -ggdb
 
 all: $(NAME)
 
@@ -36,4 +36,4 @@ re: fclean all
 
 .PHONY: all re clean fclean
 
-.SECONDARY:
+.SECONDARY: $(OBJ)

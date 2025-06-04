@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/20 15:30:49 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:17:15 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -481,7 +481,8 @@ void begin_lexing(char *line)
 		if (!stor_in_list(util()->s, util()->a, box()))
 			return;
 		reset_util_box();
-		// print_data(*box());
+		print_data(*box());
+		execute_commands(*box());
 	}
 }
 
