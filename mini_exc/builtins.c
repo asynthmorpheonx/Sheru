@@ -35,9 +35,9 @@ void	ft_unset(t_data *data, t_env **env)
 				prev->next = current->next;
 			else 
 				*env = current->next;
-			free(current->key);// use delete one instead
-			free(current->value);// use delete one instead
-			free(current);// use delete one instead
+			delete_one(current->key);// use delete one instead
+			delete_one(current->value);// use delete one instead
+			delete_one(current);// use delete one instead
 			return;
 		}
 		prev = current;

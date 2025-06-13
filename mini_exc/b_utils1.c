@@ -36,7 +36,7 @@ void	set_env_var(t_env **env, const char *key, const char *value)
 	{
 		if ( ft_strcmp(word(current->key), key) == 0)
 		{
-			free(current->value); // maight need to be removed through garbage collector
+			delete_one(current->value); // maight need to be removed through garbage collector
 			current->value = ft_strdup(value);
 			return;
 		}
@@ -83,7 +83,7 @@ void	ft_var_append(t_env **env, char *var, const char *appe)
 		if (ft_strcmp(tmp->key, var) == 0)
 		{
 			va = ft_envcat(tmp->value, appe);
-			free(tmp->value);
+			delete_one(tmp->value);
 			tmp->value = va;
 			return ;
 		}

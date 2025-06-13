@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/03 13:33:25 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/04 15:59:55 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,24 @@ void execute_commands(t_data *cmd) //beggining
 		return ;
 	tmp = cmd;
 	if (tmp->next)
+	{
 		execute_pipeline(tmp, envp());
+
+	}
 	else
 	{
 		if (builtin_check(tmp->cmd[0]))
 		{
 			if (cmd->file.infile || cmd->file.outfile)
+			{
+				printf("herdoc enter redirection\n");	
 				redirect(cmd);
+			}
 			ft_ceue(tmp, envp());
 		}
 		else
 			execute_pipeline(tmp, envp());
+		fprintf(stderr, "here we are %s \n", *cmd->cmd);
 	}
 	close(offs()->in_backup);
 	close(offs()->out_backup);

@@ -536,7 +536,7 @@ char	*creat_prompt(void)
 	else if (str)
 		str = ft_gnl_strjoin(str, "sheru]—\n└─$");
 	return (str);
-}
+}c
 
 int main(int ac, char **av, char **env)
 {

@@ -53,7 +53,7 @@ char	*ft_cat(char *path, char *cmd)
 	
 	int	(len), (i), (u);
 	len = ft_strlen(path) + ft_strlen(cmd);
-	buff = safe_alloc(sizeof(char) * (len + 2), 0);
+	buff = malloc(sizeof(char) * (len + 2));
 	if (!buff)
 		return (NULL);
 	i = 0;
