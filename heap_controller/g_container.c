@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   g_container.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:41:41 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/02 16:15:49 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:14:50 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	delete_one(void *data_ref)
 		prev = lst;
 		lst = lst->next;
 	}
+	free(data_ref);
 }
 
 void	*safe_alloc(size_t byts_count, int mode)

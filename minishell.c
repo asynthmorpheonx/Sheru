@@ -3,21 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/20 15:30:49 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:18:37 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-
-t_quote	*mask_set(void)
-{
-	static t_quote	box;
-
-	return (&box);
-}
 
 t_data **box(void)
 {
@@ -26,11 +19,45 @@ t_data **box(void)
 	return (&pp);
 }
 
-bool **ambiguous_ptr(void)
+t_prstat	*process_status(void)
 {
-	static bool *ptr;
+	static t_prstat	var;
 
-	return (&ptr);
+	return (&var);
+}
+
+char	*exit_code(void)
+{
+	static char	exit_status[4];
+
+	return (exit_status);
+}
+
+// this fn takes the paramter and storing int the $? as string it handles the overflow like the bash did
+void	code_setter(int	new_code)
+{
+	int	i;
+
+	i = 0;
+	new_code = (new_code % 256 + 256) % 256;
+	if (new_code < 9)
+		i = 0;
+	else if (new_code < 99)
+		i = 1;
+	else
+		i = 2;
+	exit_code()[i + 1] = '\0';
+	if (!new_code)
+		exit_code()[0] = 48;
+	else
+	{
+		while (new_code)
+		{
+			exit_code()[i] = new_code % 10 + '0';
+			i--;
+			new_code /= 10;
+		}		
+	}
 }
 
 bool is_ifs(int c)
@@ -66,7 +93,6 @@ t_env **envp(void)
 	return (&pp);
 }
 
-//
 t_ferror *fetcher(void)
 {
 	static t_ferror pp;
@@ -102,10 +128,7 @@ char *safe_substr(char *str, unsigned int start, size_t len)
 	{
 		pp = ft_substr(str, start, len);
 		if (!pp)
-		{
-			clear_container();
-			exit(EXIT_FAILURE);
-		}
+			ult_exit();
 		g_lst_addback(g_new_garbage(pp));
 		return (pp);
 	}
@@ -116,12 +139,10 @@ char *safe_join(char *s1, char *s2)
 {
 	char *pp;
 
-	pp = ft_gnl_strjoin(s1, s2);
+	pp = ft_strjoin(s1, s2);
 	if (!pp)
-	{
-		clear_container();
-		exit(EXIT_FAILURE);
-	}
+		ult_exit();
+	delete_one(s1);
 	g_lst_addback(g_new_garbage(pp));
 	return (pp);
 }
@@ -187,7 +208,6 @@ void print_data(t_data *inlist)
 	}
 }
 
-// hadi azbi hia li kat7sb 
 int key_len(char *str, int pos)
 {
 	int i;
@@ -207,6 +227,8 @@ char *key_value(char *key)
 
 	if (key[0] == '$' || !key[0])
 		return ("");
+	else if (key[0] == '?')
+		return (exit_code());
 	i = key_len(key, 0);
 	pp = *envp();
 	tmp = ft_substr(key, 0, i);
@@ -219,31 +241,6 @@ char *key_value(char *key)
 		pp = pp->next;
 	}
 	return (free(tmp), "");
-}
-
-void switch_toggles(int *toggle)
-{
-	if (*toggle)
-		*toggle = 0;
-	else
-		*toggle = 1;
-}
-
-// it's function that set the fetch struct into store previous token and type expansion(full/normal)
-void fetch_setter(bool mode, int i, bool is_full)
-{
-	if (mode)
-	{
-		if (i && util()->a[i - 1] <= PIPE)
-			fetcher()->flage = true;
-		fetcher()->full_exp = is_full;
-	}
-	else
-	{
-		fetcher()->flage = false;
-		fetcher()->error = false;
-		fetcher()->full_exp = false;
-	}
 }
 
 int lenght_both(char **s1, char **s2)
@@ -262,172 +259,14 @@ int lenght_both(char **s1, char **s2)
 	return (len);
 }
 
-// it extend the util().s and update the the array
-void extend_key(int *index, int *start, char *value, int end)
-{
-	int i;
-	int j;
-	int u;
-	int len;
-	char *tmp;
-	char **extnd;
-	char **dup;
-	int *a_dup;
-
-	i = 0;
-	j = 0;
-	u = 0;
-	tmp = NULL;
-	if (*start)
-		tmp = ft_substr(util()->s[*index], 0, *start);
-	extnd = ifs_split(value);
-	if (!extnd)
-		return ;
-	if (*extnd && extnd[1] && is_ifs(*value))
-		len = lenght_both(extnd, util()->s);
-	else
-		len = lenght_both(extnd, util()->s) - 1;
-	printf("len %d\n", len);
-	dup = safe_alloc((len + 1) * sizeof(char *), 0);
-	a_dup = safe_alloc(len * sizeof(int), 0);
-	if (!dup || !a_dup)
-	{
-		if (tmp)
-			free(tmp);
-		ult_exit();
-	}
-	while (i < *index)
-	{
-		dup[i] = util()->s[i];
-		a_dup[i] = util()->a[i];
-		i++;
-	}
-	if (tmp && !is_ifs(*value))
-	{
-		dup[i++] = safe_join(tmp, extnd[j]);
-		a_dup[i - 1] = WORD;
-		j++;
-	}
-	else if (tmp)
-	{
-		g_lst_addback(g_new_garbage(tmp));
-		dup[i++] = tmp;
-		a_dup[i - 1] = WORD;
-	}
-	while (extnd[j])
-	{
-		dup[i++] = extnd[j++];
-		a_dup[i - 1] = WORD;
-	}
-	if (i)
-		u = ft_strlen(dup[i - 1]);
-	if (!ft_isalpha(util()->s[*index][end]))
-		dup[i - 1] = safe_join(dup[i - 1], util()->s[*index] + end);
-	*index = i - 1;
-	*start = u;
-	while (i < len)
-	{
-		dup[i] = util()->s[i - j + 1];
-		a_dup[i] = util()->a[i - j + 1];
-		i++;
-	}
-	util()->s = dup;
-	util()->a = a_dup;
-}
-
-void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
-{
-	char	*dup;
-	int		var;
-
-	dup = NULL;
-	if (*strt)
-		dup = ft_substr(util()->s[*ind], 0, *strt);
-	dup = ft_gnl_strjoin(dup, value);
-	var = ft_strlen(dup);
-	dup = safe_join(dup, util()->s[*ind] + k_len);
-	delete_one(util()->s[*ind]);
-	util()->s[*ind] = dup;
-	if (*value)
-		*strt = ft_strlen(value);
-}
-
-bool	check_value(char *str)
+void	clean_lst(char **str)
 {
 	int	i;
-	int	toggle;
-	int	count;
 
 	i = 0;
-	toggle = 1;
-	count = 0;
-	if (str && !*str)
-		return (false);
-	while (str[i])
+	while (str && str[i])
 	{
-		if (!is_ifs(str[i]) && toggle)
-		{
-			count++;
-			toggle = 0;
-			if (count >	1)
-				return (false);
-		}
-		else if (is_ifs(str[i]))
-			toggle = 1;
-		i++;
-	}
-	if (!count)
-		return (false);
-	return (true);
-}
-
-// this function expand the key found in util().s[index] and return the index after the expand
-void expand_value(int *index, int *start)
-{
-	char	*dup;
-	char	*value;
-	bool	status;
-	int		i;
-
-	i = key_len(util()->s[*index], *start + 1);
-	dup = NULL;
-	value = key_value(util()->s[*index] + *start + 1);
-	status = check_value(value);
-	if (fetcher()->flage && fetcher()->full_exp && !status)
-		fetcher()->error = true;
-	else if (*value && fetcher()->full_exp && !status)
-		extend_key(index, start, value, i);
-	else
-		replace_key_to_value(index, start, i, value);
-}
-
-// TODO : handle quote removal and empty value of variable
-void expansion_data(int i, int j, int to, int sto)
-{
-	while (util()->s[i])
-	{
-		j = 0;
-		to = 1;
-		sto = 1;
-		while (util()->s[i] && util()->s[i][j] && util()->a[i] == WORD)
-		{
-			fetch_setter(RESET, 0, 0);
-			if (util()->s[i][j] == '\'' && to)
-				switch_toggles(&sto);
-			else if (util()->s[i][j] == '"' && sto)
-				switch_toggles(&to);
-			else if ((!i || (i && util()->a[i - 1] != HERDOC)) && util()->s[i][j] == '$' && sto)
-			{
-				fetch_setter(SET, i, false);
-				if (to)
-					fetch_setter(SET, i, true);
-				expand_value(&i, &j);
-				if (!fetcher()->error)
-					continue;
-				util()->a[i] = -1;
-			}
-			j++;
-		}
+		delete_one(str[i]);
 		i++;
 	}
 }
@@ -438,103 +277,237 @@ void reset_data_box(void)
 
 	if (*box())
 	{
+		next = *box();
 		while (*box())
 		{
+			clean_lst((*box())->cmd);
+			if ((*box())->file.infile)
+				delete_one((*box())->file.i_type);
+			clean_lst((*box())->file.infile);
+			if ((*box())->file.outfile)
+				delete_one((*box())->file.o_type);
+			clean_lst((*box())->file.outfile);
 			next = (*box())->next;
 			delete_one(*box());
 			*box() = next;
 		}
-		*box() = NULL;
 	}
 }
 
 void reset_util_box(void)
 {
-	delete_one(util()->s);
-	delete_one(util()->a);
+	if (util()->s)
+		delete_one(util()->s);
+	if (util()->a)
+		delete_one(util()->a);
+	if (util()->mask)
+		delete_one(util()->mask);
+	util()->herdoc = 0;
+	ft_bzero(util()->ports, 16 * sizeof(int));
 	util()->t = 0;
 }
 
-void print_tokens(void)
+void	expand_herdoc_data(char *str, int fd)
 {
-	int i;
+	int		i;
+	int		len;
+	char	*tmp;
 
 	i = 0;
-	while (util()->s[i])
+	tmp = NULL;
+	while (str[i])
 	{
-		printf("====> %s it's token id %d\n", util()->s[i], util()->a[i]);
+		if (str[i] == '$' && str[i + 1])
+		{
+			tmp = key_value(str + i + 1);
+			len = key_len(str + i, 0);
+			if (*tmp)
+				write(fd, tmp, ft_strlen(tmp));
+			i += len;
+		}
+		else
+		{
+			write(fd, &str[i], 1);
+			i++;
+		}
+	}
+}
+
+void	here_doc_util(char *input, int fd)
+{
+	if (util()->herdoc_exp)
+		expand_herdoc_data(input, fd);
+	else if (*input)
+		write(fd, input, ft_strlen(input));
+	write(fd, "\n", 1);
+}
+
+void	safe_pipe(int *fds)
+{
+	if (pipe(fds) == -1)
+	{
+		perror("pipe");
+		ult_exit();
+	}
+}
+
+void	close_herdoc_ports(void)
+{
+	int	i;
+
+	i = 0;
+	while (util()->ports[i] != 0)
+	{
+		close(util()->ports[i]);
 		i++;
+	}
+}
+
+char	*here_doc_reader(char *str, bool mode, int i)
+{
+	char	*input;
+	int		fds[2];
+
+	input = NULL;
+	if (mode)
+		safe_pipe(fds);
+	*process_status() = HERDOC_READ;
+	while (1)
+	{
+		input = readline("> ");
+		if (*process_status() == INTERRUPTED)
+			break ;
+		if (!input || !ft_memcmp(input, str, ft_strlen(input) + 1))
+			break;
+		if (mode)
+			here_doc_util(input, fds[1]);
+		free(input);
+		input = NULL;
+	}
+	if (mode)
+		close(fds[1]);
+	if (mode)
+	{
+		util()->ports[i] = fds[0];
+		return (ft_itoa(fds[0]));
+	}
+	return (NULL);
+}
+
+void	replace_fd(t_data *node, char *str, int i)
+{
+	delete_one(node->file.infile[i]);
+	node->file.infile[i] = str;
+	g_lst_addback(g_new_garbage(str));
+}
+
+void	herdoc_job(void)
+{
+	int		i;
+	char	*str;
+	t_data	*tmp;
+	int		ind;
+
+	i = 0;
+	ind = 0;
+	tmp = *box();
+	while (tmp)
+	{
+		while (tmp->file.infile && tmp->file.infile[i])
+		{
+			if (tmp->file.i_type[i] == HERDOC && tmp->file.infile[i + 1])
+				here_doc_reader(tmp->file.infile[i], false, ind);
+			else if (tmp->file.i_type[i] == HERDOC)
+			{
+				str = here_doc_reader(tmp->file.infile[i], true, ind);
+				if (str)
+					replace_fd(tmp, str, i);
+				ind++;
+			}
+			if (*process_status() == INTERRUPTED)
+			{
+				return (close_herdoc_ports());
+			}
+			i++;
+		}
+		i = 0;
+		tmp = tmp->next;
+	}
+}
+
+void	read_herdoc()
+{
+	char	line[7000];
+	t_data	*tmp;
+	int		fds;
+	int		i;
+	int		j = 1;
+
+	i = 0;
+	tmp = *box();
+	while (tmp)
+	{
+		for (int i = 0; tmp->file.infile && tmp->file.infile[i + 1]; i++);
+		if (tmp->file.i_type[i] == HERDOC)
+		{
+			fds = ft_atoi(tmp->file.infile[i]);
+			printf("------------------heredoc nbr:%d--------------------\n", j);
+			int returned = 1;
+				returned = read(fds, line, 6999);
+				line[returned] = '\0';
+				write(1, line , returned);
+		}
+			printf("-------------------------------------------------\n");
+		tmp = tmp->next;
+		i = 0;
+		j++;
 	}
 }
 
 // it's start the lexure
 void begin_lexing(char *line)
 {
+	reset_data_box();
 	if (!token_count(line))
 		return;
 	util()->s = spliting_based_token(line);
 	if (tokenize() && syntax_check())
 	{
+		if (util()->herdoc > 16)
+		{
+			ft_putendl_fd("maximum here-document count exceeded", 2);
+			clear_container();
+			exit(2);
+		}
+		creat_mask();
 		expansion_data(0, 0, 1, 1);
 		handle_quote();
-		reset_data_box();
 		if (!stor_in_list(util()->s, util()->a, box()))
 			return;
+		if (util()->herdoc)
+			herdoc_job();
+		if (*process_status() != INTERRUPTED)
+		print_data(*box());
 		reset_util_box();
-		// print_data(*box());
 	}
+	
 }
 
-size_t	session_name_len(char *str)
+void	interupt_handle(int	sig_num)
 {
-	size_t	i;
-
-	i = 0;
-	while (ft_isalnum(str[i]))
-		i++;
-	return (i);
-}
-
-char	*export_session(void)
-{
-	static char	*str;
-	char	*ptr;
-
-	if (!str)
+	if (sig_num == SIGINT && *process_status() != INTERRUPTED)
 	{
-		ptr = key_value(SESSIO);
-		str = safe_substr(ptr, 6, session_name_len(ptr + 6));
+		if (*process_status() == HERDOC_READ)
+		{
+			*process_status() = INTERRUPTED;
+			rl_done = 1;
+		}
+		else
+			write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
-	return (str);
-}
-
-// creat an customize shell prompt just to show the user [USER@SESSION]-[OS@SHELL_NAME]
-char	*creat_prompt(void)
-{
-	char	*str;
-	char	*user;
-	char	*os;
-	char	*session;
-
-	user = key_value(USR);
-	os = key_value(OS);
-	session = export_session();
-	str = ft_strjoin("┌─[", user);
-	if (str && *session)
-	{
-		if (*user)
-			str = ft_gnl_strjoin(str, "@");
-		str = ft_gnl_strjoin(str, session);
-		str = ft_gnl_strjoin(str, "]——[");
-	}
-	if (str && *os)
-	{
-		str = ft_gnl_strjoin(str, os);
-		str = ft_gnl_strjoin(str, "@sheru]—\n└─$");
-	}
-	else if (str)
-		str = ft_gnl_strjoin(str, "sheru]—\n└─$");
-	return (str);
 }
 
 int main(int ac, char **av, char **env)
@@ -545,20 +518,23 @@ int main(int ac, char **av, char **env)
 	line = NULL;
 	(void)ac;
 	(void)av;
+	signal(SIGINT, interupt_handle);
 	make_env(env, envp(), 0, 0);
 	prompt = creat_prompt();
 	if (!prompt)
 		ult_exit();
+	code_setter(0);
 	while (1)
 	{
+		*process_status() = SCANIN;
 		line = readline(prompt);
 		if (!line)
 		{
 			write(1, "exit\n", 5);
-			return (free(prompt), clear_container(), 0);
+			return (clear_container(), 0);
 		}
-		add_history(line);
+		if (line)
+			add_history(line);
 		begin_lexing(line);
 	}
-	return (0);
 }

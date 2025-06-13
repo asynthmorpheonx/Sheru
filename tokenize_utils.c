@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:07:38 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/14 00:09:51 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/26 18:40:35 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,8 @@ bool	tokenize(void)
 	while (i < util()->t)
 	{
 		util()->a[i] = token_value(util()->s[i]);
+		if (util()->a[i] == HERDOC)
+			(util()->herdoc) += 1;
 		i++;
 	}
 	return (true);
