@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/03 00:41:31 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:08:33 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ typedef struct s_quoter
 	int		fap;
 	int		sap;
 }	t_quoter;
-
 
 typedef enum e_token
 {
