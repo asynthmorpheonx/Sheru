@@ -6,11 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/06/02 16:17:15 by hoel-mos         ###   ########.fr       */
-=======
 /*   Updated: 2025/06/13 18:18:37 by mel-mouh         ###   ########.fr       */
->>>>>>> 30b3348014d69044f4ff2e6e98171a34629c1468
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -493,11 +489,6 @@ void begin_lexing(char *line)
 		if (*process_status() != INTERRUPTED)
 		print_data(*box());
 		reset_util_box();
-<<<<<<< HEAD
-		print_data(*box());
-		execute_commands(*box());
-=======
->>>>>>> 30b3348014d69044f4ff2e6e98171a34629c1468
 	}
 	
 }
