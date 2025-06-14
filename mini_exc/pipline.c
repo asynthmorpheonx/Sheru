@@ -53,8 +53,7 @@ void	execute_pipeline(t_data *cmd, int pcount)
 	path = get_path(*cmd->cmd, &status);
 	if (!path)
 	{
-		ft_putstr_fd(cmd->cmd[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
+		err(*cmd->cmd, status);
 		close_pipes(offs()->pipes, pcount);
 		clear_container();
 		exit(status);

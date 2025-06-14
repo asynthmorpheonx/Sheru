@@ -5,14 +5,14 @@ SRC= heap_controller/g_container.c heap_controller/managment_utils.c minishell.c
 	advanced_split.c prompt_gen.c expansion_handle.c mask_creation.c
 OBJ= $(SRC:%.c=%.o)
 NAME= minishell
-LIBS= libs/libft.a libs/libftprintf.a
+LIBS= libs/libft.a
 CC= cc
 CFLAGS= -Wall -Werror -Wextra -ggdb
 
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBS)
-	$(CC) $(OBJ) -Llibs -lft -lftprintf -lreadline -o $(NAME)
+	$(CC) $(OBJ) -Llibs -lft -lreadline -o $(NAME)
 
 %.o: %.c
 	$(CC) -I includes $(CFLAGS) -c $< -o $@
@@ -20,16 +20,13 @@ $(NAME): $(OBJ) $(LIBS)
 $(LIBS):
 	mkdir -p libs
 	make -C libft bonus
-	make -C ft_printf
 
 clean:
 	make -C libft clean
-	make -C ft_printf clean
 	rm -rf $(OBJ)
 
 fclean: clean
 	make -C libft fclean
-	make -C ft_printf fclean
 	rm -rf $(LIBS) libs $(NAME)
 
 re: fclean all

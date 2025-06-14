@@ -68,11 +68,29 @@ char	*ft_cat(char *path, char *cmd)
 	return (buff);
 }
 
+char	*path_already(char *cmd, int *status)
+{
+	if (!access(cmd, F_OK))
+	{
+		if (!access(cmd, X_OK))
+			return (ft_strdup(cmd));
+		else
+		{
+			*status = 126;
+			return (NULL);
+		}
+	}
+	*status = 127;
+	return (NULL);
+}
+
 char	*get_path(char *cmd, int *error_status)
 {
 	int	i;
 	
 	char **(path_buf), *(cmd_path), *(path_copy);
+	if (*cmd == '/' || *cmd == '.' || *cmd == '~')
+		return (ft_strdup(cmd));
 	cmd_path = key_value("PATH");
 	path_buf = ft_split(cmd_path, ':');
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/14 21:02:14 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/14 21:51:16 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,14 @@ int	node_count(void)
 	return (count);
 }
 
-pid_t	*make_pids(void)
+pid_t	*make_pids(int ccount)
 {
 	pid_t	*ptr;
-	int		count;
-
-	count = node_count();
-	ptr = malloc(count * sizeof(pid_t) + 1);
+	
+	ptr = malloc((ccount + 1) * sizeof(pid_t));
 	if (!ptr)
 		ult_exit();
-	ft_bzero(ptr, count * sizeof(pid_t));
+	ft_bzero(ptr, ccount * sizeof(pid_t));
 	return (ptr);
 }
 
@@ -109,9 +107,10 @@ void	exec_non_builtin(t_data *cmd, int ind, pid_t *proc_id, int ccount)
 	proc_id[ind] = fork();
 	if (proc_id[ind] == -1)
 		ult_exit();
-	if (!proc_id[ind])
+	if (proc_id[ind] == 0)
 	{
-		handle_pipes(cmd, ind);
+		if (cmd->next)
+			handle_pipes(cmd, ind);
 		redirect(cmd, false);
 		execute_pipeline(cmd, ccount);
 	}
@@ -171,7 +170,7 @@ void execute_command(t_data *cmd)
 
 	i = 0;
 	ccount = node_count();
-	proc_id = make_pids();
+	proc_id = make_pids(ccount);
 	if (cmd->next)
 		make_pipe(ccount);
 	while (cmd)

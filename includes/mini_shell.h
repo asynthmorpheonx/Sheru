@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/14 20:53:23 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/14 22:28:29 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINI_SHELL_H
 
 # include <libft.h>
-# include <ft_printf.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <heap_controller.h>
