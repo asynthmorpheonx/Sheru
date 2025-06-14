@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/06/03 13:21:40 by hoel-mos         ###   ########.fr       */
+=======
+/*   Updated: 2025/06/13 18:16:53 by mel-mouh         ###   ########.fr       */
+>>>>>>> 30b3348014d69044f4ff2e6e98171a34629c1468
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +23,43 @@
 # include <readline/history.h>
 // # include <heap_controller.h>
 # include <stdbool.h>
+# include <sys/wait.h>
 # include <stdlib.h>
-#include <sys/wait.h>
-#include <fcntl.h>
+# include <signal.h>
+#include <sys/ioctl.h>
 
 # define AMBIGUOUS_REDIRECT -1
 # define RESET 0
 # define SET 1
 
 # define USR "USER"
-# define OS "DESKTOP_SESSION"
 # define SESSIO "SESSION_MANAGER"
+# define WD "PWD"
 
-typedef struct s_quote
+typedef char t_prstat;
+
+# define SCANIN 0b1001010
+# define HERDOC_READ 0b1011001
+# define INTERRUPTED 0b1110010
+
+typedef struct s_exp
 {
-	char	**strs;
-	bool	**bitmaks;
-}	t_quote;
+	char	**du;
+	char	**extend;
+	int		*tokn;
+	bool	**mask;
+	int		len;
+	int		i;
+	int		j;
+}	t_exp;
+
+typedef struct s_quoter
+{
+	char	*s;
+	bool	*m;
+	int		fap;
+	int		sap;
+}	t_quoter;
 
 typedef enum e_token
 {
@@ -79,8 +103,12 @@ typedef struct s_ferror
 typedef struct s_utils
 {
 	char	**s;
+	bool	**mask;
 	int		*a;
 	int		t;
+	int		ports[16];
+	int		herdoc;
+	bool	herdoc_exp;
 }	t_utils;
 
 typedef struct s_file
@@ -121,11 +149,6 @@ t_env	*last_env(t_env *lst);
 void	add_to_envp(t_env **lst, t_env *tmp);
 void	make_env(char **env, t_env **lst, int i, int j);
 
-size_t	size_quot(char *str);
-void	remove_quote(size_t len, char **str, int i, int j);
-void	handle_quote(void);
-int		skip_quots(char *line, int *i);
-
 t_data	**box(void);
 void	ult_exit(void);
 t_env	**envp(void);
@@ -155,7 +178,9 @@ void	cmd_flag_handle(char **strs, int *arr, t_data *node, int *mode);
 char	*key_value(char *key);
 int		key_len(char *str, int pos);
 
-bool	**ambiguous_ptr(void);
+
+void	remove_quote(char *str, bool *mask, int len);
+void	handle_quote(void);
 
 bool	is_ifs(int c);
 char	**ifs_split(char const *s);
@@ -202,5 +227,18 @@ void	ft_env(t_env **env);
 
 void	ft_pwd(void);
 
+
+t_ferror *fetcher(void);
+char	*creat_prompt(void);
+void expansion_data(int i, int j, int to, int sto);
+bool	*mask_joining(bool *o_mask, char *pre, char *suff);
+bool	creat_mask(void);
+char *safe_join(char *s1, char *s2);
+int lenght_both(char **s1, char **s2);
+
+bool	*handle_masking(char *str, int start, int len);
+bool	*mask_joining(bool *o_mask, char *pre, char *suff);
+
+void fetch_setter(bool mode, int i, bool is_full);
 
 #endif

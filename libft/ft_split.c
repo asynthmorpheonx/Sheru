@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 20:46:46 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/21 12:49:07 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2024/11/06 17:07:46 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ char	**ft_split(char const *s, char c)
 	if (s == NULL)
 		return (NULL);
 	words = count_word(s, c);
-	strs = (char **)safe_alloc((words + 1) * (sizeof(char *)), 0);
+	strs = (char **)malloc((words + 1) * (sizeof(char *)));
 	if (strs == NULL)
 		return (NULL);
 	return (filler(strs, c, s));

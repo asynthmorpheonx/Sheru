@@ -6,25 +6,11 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 00:28:53 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/16 21:34:18 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:08:07 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-
-static char	**ft_free(char **strs, int j)
-{
-	int	i;
-
-	i = 0;
-	while (i <= j)
-	{
-		free(strs[i]);
-		i++;
-	}
-	free(strs);
-	return (NULL);
-}
 
 static int	count_word(char const *s)
 {
@@ -64,10 +50,7 @@ static char	**filler(char **strs, char const *s)
 			start = j;
 			while (s[j] && !is_ifs(s[j]))
 				j++;
-			strs[i] = ft_substr((char *)s, start, j - start);
-			printf(" 3 buts li leaked %s\n", strs[i]);
-			if (!strs[i])
-				return (ft_free(strs, i));
+			strs[i] = safe_substr((char *)s, start, j - start);
 			i++;
 		}
 	}
