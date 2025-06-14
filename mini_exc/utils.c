@@ -102,68 +102,74 @@ void	sort_tenv(char **env)
 // }
 
 
-void	odup(char *file, int type, int is_input, int *fd)
+void	odup(t_file *ptr)
 {
-	if (is_input)
-		*fd = open(file, O_RDONLY);
-	else if(type == HERDOC && file + 1)
-		*fd = ft_atoi(file);
-	else if (type == 2)
-		*fd = open(file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	else
-		*fd = open(file, O_CREAT | O_WRONLY | O_APPEND, 0644);
-	if (*fd == -1)
-		perror("open");
-	if (is_input)
-	{
-		dup2(*fd, STDIN_FILENO);
-		offs()->redir = 2;
-	}
-	else
-	{
-		dup2(*fd, STDOUT_FILENO);
-		offs()->redir = 1;
-	}
-	close(*fd);
-}
+	int	i;
+	int	fd;
 
-void	redirect(t_data *cmd)
-{
-	int	(index);
-
-	index = 0;
-	while (cmd->file.infile && cmd->file.infile[index])
+	i = 0;
+	fd = -1;
+	while (ptr->outfile[i])
 	{
-		odup(cmd->file.infile[index], 0, 1, &offs()->redirected_fd);
-		index++;
-	}
-	index = 0;
-	while (cmd->file.outfile && cmd->file.outfile[index])
-	{
-		odup(cmd->file.outfile[index], cmd->file.o_type[index], 0, &offs()->redirected_fd);
-		index++;
+		if (ptr->o_type[i] == APP || ptr->o_type[i] == OUD)
+		{
+			if (ptr->o_type[i] == OUD)
+				fd = open(ptr->outfile[i], O_CREAT | O_TRUNC, 0644);
+			else
+				fd = open(ptr->outfile[i], O_CREAT | O_APPEND, 0644);
+			if (fd == -1)
+				// err();
+			dup2(fd, 0);
+			close(fd);
+		}
+		else if (ptr->i_type[i] == -1)
+			// err();
+		i++;
 	}
 }
 
+void	idup(t_file *ptr)
+{
+	int	i;
+	int	fd;
 
-// void	redirect(t_data *cmd)
-// {
-// 	int	(index);
+	i = 0;
+	fd = -1;
+	while (ptr->infile[i])
+	{
+		if (ptr->i_type[i] == IND)
+		{
+			fd = open(ptr->infile[i], O_RDONLY);
+			// if (fd == -1)
+				// err();
+			dup2(fd, 0);
+			close(fd);
+		}
+		else if (ptr->i_type[i] == HERDOC && !ptr->infile[i + 1])
+		{
+			fd = ft_atoi(ptr->infile[i]);
+			dup2(fd, 0);
+			close(fd);
+		}
+		// else if (ptr->i_type[i] == -1)
+			// err();
+		i++;
+	}
+}
 
-// 	index = 0;
-// 	while (cmd->file.infile && cmd->file.infile[index])
-// 	{
-// 		odup(cmd->file.infile[index], 0, 1, &offs()->redirected_fd);
-// 		index++;
-// 	}
-// 	index = 0;
-// 	while (cmd->file.outfile && cmd->file.outfile[index])
-// 	{
-// 		odup(cmd->file.outfile[index], cmd->file.o_type[index], 0, &offs()->redirected_fd);
-// 		index++;
-// 	}
-// }
+void	redirect(t_data *cmd, bool mode)
+{
+	if (mode)
+	{
+		offs()->in_backup = dup(0);
+		offs()->out_backup = dup(1);
+	}
+	if (cmd->file.infile)
+		idup(&cmd->file);
+	if (cmd->file.outfile)
+		odup(&cmd->file);
 
+}
 
 void err(char *str, int error_status) //check if a function like this already exist
 {

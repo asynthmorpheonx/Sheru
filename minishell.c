@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/13 18:18:37 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:58:56 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -487,7 +487,7 @@ void begin_lexing(char *line)
 		if (util()->herdoc)
 			herdoc_job();
 		if (*process_status() != INTERRUPTED)
-		print_data(*box());
+			execute_command(*box());
 		reset_util_box();
 	}
 	
@@ -533,8 +533,10 @@ int main(int ac, char **av, char **env)
 			write(1, "exit\n", 5);
 			return (clear_container(), 0);
 		}
-		if (line)
+		if (*line)
+		{
 			add_history(line);
-		begin_lexing(line);
+			begin_lexing(line);
+		}
 	}
 }

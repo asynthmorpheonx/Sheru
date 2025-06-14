@@ -84,13 +84,13 @@ char	*get_path(char *cmd, int *error_status)
 			ft_free_array(path_buf);
 			if (!access(path_copy, X_OK))
 				return (path_copy);
-			*error_status = 2;
+			*error_status = 126;
 			return (NULL);
 		}
 		free(path_copy);
 		i++;
 	}
 	ft_free_array(path_buf);
-	*error_status = 1;
+	*error_status = 127;
 	return (NULL);
 }

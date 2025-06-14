@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/13 18:16:53 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/14 20:53:23 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@
 # include <ft_printf.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-// # include <heap_controller.h>
+# include <heap_controller.h>
 # include <stdbool.h>
 # include <sys/wait.h>
 # include <stdlib.h>
 # include <signal.h>
 #include <sys/ioctl.h>
+#include <fcntl.h>
 
 # define AMBIGUOUS_REDIRECT -1
 # define RESET 0
@@ -182,8 +183,6 @@ bool	is_ifs(int c);
 char	**ifs_split(char const *s);
 
 int		builtin_check(char *cmd);
-void 	execute_commands(t_data *data);
-void	execute_pipeline(t_data *cmd, t_env **env);
 void 	ft_free_array(char **arr);
 int 	count_words(char *flags);
 int 	envcount(t_env *env);
@@ -192,7 +191,7 @@ char    **env_to_array(t_env **env);
 char	*ft_cat(char *path, char *cmd);
 char	*get_path(char *cmd, int *error_status);
 void 	err(char *str, int error_status);
-void	redirect(t_data *cmd);
+void	redirect(t_data *cmd, bool mode);
 char 	*word(char *str);
 t_offs	*offs(void);
 void	ft_ceue(t_data *data, t_env **env);
@@ -223,17 +222,23 @@ void	ft_env(t_env **env);
 
 void	ft_pwd(void);
 
+void	code_setter(int	new_code);
 
-t_ferror *fetcher(void);
-char	*creat_prompt(void);
-void expansion_data(int i, int j, int to, int sto);
-bool	*mask_joining(bool *o_mask, char *pre, char *suff);
-bool	creat_mask(void);
-char *safe_join(char *s1, char *s2);
-int lenght_both(char **s1, char **s2);
 
-bool	*handle_masking(char *str, int start, int len);
-bool	*mask_joining(bool *o_mask, char *pre, char *suff);
+t_ferror	*fetcher(void);
+char		*creat_prompt(void);
+void		expansion_data(int i, int j, int to, int sto);
+bool		*mask_joining(bool *o_mask, char *pre, char *suff);
+bool		creat_mask(void);
+char		*safe_join(char *s1, char *s2);
+int			lenght_both(char **s1, char **s2);
+
+bool		*handle_masking(char *str, int start, int len);
+bool		*mask_joining(bool *o_mask, char *pre, char *suff);
+int			node_count(void);
+void		execute_pipeline(t_data *cmd, int pcount);
+void		execute_command(t_data *cmd);
+
 
 void fetch_setter(bool mode, int i, bool is_full);
 
