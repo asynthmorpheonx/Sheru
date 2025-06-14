@@ -100,12 +100,15 @@ static void	child_proc(t_data *cmd, t_env **env, int **pipes, int cmd_index, int
 	else
 	{
 		path = get_path(cmd->cmd[0], &status);
-		if (!path)
+		if (path)
 		{
-			err(cmd->cmd[0], status);
+			execve(path, cmd->cmd, env_to_array(env));
 		}// when calling container from here or when calling err the container tryes to applye a none valid free
 		else
-			execve(path, cmd->cmd, env_to_array(env));
+		{
+			ft_putstr_fd(cmd->cmd[0], 2);
+			ft_putstr_fd(": command not found\n", 2);
+		}
 	}
 }
 
@@ -142,40 +145,6 @@ void	execute_pipeline(t_data *cmd, t_env **env)
 	free_pipes(offs()->pipes, cmd_count - 1);
 	free(pids);
 }
-
-// void	execute_pipeline(t_data *cmd, t_env **env)
-// {   
-// 	pid_t *pids;
-	
-// 	int	 (cmd_count), (i), (status);
-// 	cmd_count = count_commands(cmd);
-// 	pids = malloc(sizeof(pid_t) * cmd_count);
-// 	if (!pids)
-// 		err("malloc", 4);
-// 	create_pipes(cmd_count);
-// 	i = 0;
-// 	while (i < cmd_count)
-// 	{
-// 		pids[i] = fork();
-// 		if (pids[i] == -1)
-// 			err("fork", 3);
-// 		if (pids[i] == 0)
-// 			child_proc(cmd, env, offs()->pipes, i, cmd_count);
-// 		cmd = cmd->next;
-// 		i++;
-// 	}
-// 	i = 0;
-// 	while (i < cmd_count)
-// 	{
-// 		waitpid(pids[i], &status, 0);
-// 		i++;
-// 	}
-// 	printf("===> status is %d\n", status);
-// 	//call the exit code func
-// 	close_pipes(offs()->pipes, cmd_count - 1);
-// 	free_pipes(offs()->pipes, cmd_count - 1);
-// 	free(pids);
-// }
 
 
 

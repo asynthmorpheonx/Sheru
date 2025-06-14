@@ -39,7 +39,10 @@ void	sort_tenv(char **env)
 // 	while (box->file.infile && box->file.infile[i])
 // 	{
 // 		if (box->file.i_type[i] == HERDOC && !box->file.infile[i + 1])
+// 		{
+// 			printf("=====> %s\n", box->file.infile[i]);
 // 			redirected_fd = ft_atoi(box->file.infile[i]);
+// 		}
 // 		else if (box->file.i_type[i] == -1)
 // 		{	
 // 			printf("1\n");
