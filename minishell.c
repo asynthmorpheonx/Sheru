@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/16 20:31:32 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/16 20:37:38 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -321,6 +321,8 @@ void	expand_herdoc_data(char *str, int fd)
 		{
 			tmp = key_value(str + i + 1);
 			len = key_len(str + i, 0);
+			if (str[i + 1] == '?')
+				len++;
 			if (*tmp)
 				write(fd, tmp, ft_strlen(tmp));
 			i += len;
@@ -375,9 +377,8 @@ char	*here_doc_reader(char *str, bool mode, int i)
 	while (1)
 	{
 		input = readline("> ");
-		if (*process_status() == INTERRUPTED)
-			break ;
-		if (!input || !ft_memcmp(input, str, ft_strlen(input) + 1))
+		if (*process_status() == INTERRUPTED
+			|| !input || !ft_memcmp(input, str, ft_strlen(input) + 1))
 			break;
 		if (mode)
 			here_doc_util(input, fds[1]);
