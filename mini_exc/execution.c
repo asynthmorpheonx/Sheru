@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/16 19:04:53 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/16 20:31:45 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	ft_ceue(t_data *data, t_env **env)
 	else if (!ft_strcmp(data->cmd[0], "unset"))
 		ft_unset(data, env);
 	else if (!ft_strcmp(data->cmd[0], "exit"))
-		ft_exit(data);
+		ft_exit();
 	else if (!ft_strcmp(data->cmd[0], "echo"))
 		ft_echo(data);
 	else if (!ft_strcmp(data->cmd[0], "env"))
@@ -62,7 +62,7 @@ int	node_count(void)
 	return (count);
 }
 
-pid_t	*make_pids(int ccount)
+void	make_pids(int ccount)
 {
 	pid_t	*ptr;
 	
@@ -70,7 +70,7 @@ pid_t	*make_pids(int ccount)
 	if (!ptr)
 		ult_exit();
 	ft_bzero(ptr, ccount * sizeof(pid_t));
-	return (ptr);
+	offs()->pids = ptr;
 }
 
 void	handle_pipes(t_data *cmd, int ind)
@@ -92,7 +92,7 @@ void	handle_pipes(t_data *cmd, int ind)
 	}
 }
 
-void	child_exec(t_data *cmd, pid_t *pids)
+void	child_exec(t_data *cmd)
 {
 	int	status;
 
@@ -100,7 +100,8 @@ void	child_exec(t_data *cmd, pid_t *pids)
 	handle_pipes(cmd, executer()->ind);
 	if (!redirect(cmd))
 	{
-		free(pids);
+		free(offs()->pids);
+		close_pipes(offs()->pipes);
 		exit(1);
 	}
 	if (cmd->cmd && !executer()->is_builtin)
@@ -108,13 +109,13 @@ void	child_exec(t_data *cmd, pid_t *pids)
 		status = execute_pipeline(cmd);
 		if (status)
 		{
-			free(pids);
+			free(offs()->pids);
 			exit(status);
 		}			
 	}
 	else if (cmd->cmd)
 		ft_ceue(cmd, envp());
-	free(pids);
+	free(offs()->pids);
 	clear_container();
 	exit(EXIT_SUCCESS);
 }
@@ -148,7 +149,7 @@ static void make_pipe(int c_count)
 	}
 }
 
-void	wait_for_childs(pid_t *proc_id)
+void	wait_for_childs(void)
 {
 	int	i;
 	int	status;
@@ -157,47 +158,72 @@ void	wait_for_childs(pid_t *proc_id)
 	status = 0;
 	while (i < executer()->c_count)
 	{
-		if (proc_id[i])
+		if (offs()->pids[i])
 		{
-			waitpid(proc_id[i], &status, 0);
+			waitpid(offs()->pids[i], &status, 0);
 			code_setter(WEXITSTATUS(status));
 		}
 		i++;
 	}
-	free(proc_id);
+	free(offs()->pids);
 }
 
-bool	safer_fork(pid_t process_id, int ind, pid_t *pids)
+bool	safer_fork(pid_t process_id, int ind, t_data *cmd)
 {
 	if (process_id == -1)
 		ult_exit();
-	if (!process_id)
+	if ((!process_id && !cmd->cmd) || !process_id)
 		return (true);
 	else
-		pids[ind] = process_id;
+		offs()->pids[ind] = process_id;
 	return (false);
+}
+
+void	exec_builtin(t_data *cmd)
+{
+	if (cmd->file.infile || cmd->file.outfile)
+	{
+		offs()->in_backup = dup(0);
+		offs()->out_backup = dup(1);	
+	}
+	redirect(cmd);
+	ft_ceue(cmd, envp());
+	if (offs()->in_backup)
+	{
+		dup2(offs()->in_backup, 0);
+		close(offs()->in_backup);
+	}
+	if (offs()->out_backup)
+	{
+		dup2(offs()->out_backup, 1);
+		close(offs()->out_backup);
+	}
 }
 
 void execute_command(t_data *cmd)
 {
-	pid_t	*proc_id;
-
 	executer()->ind = 0;
 	executer()->c_count = node_count();
 	executer()->is_builtin = false;
-	proc_id = make_pids(executer()->c_count);
-	if (cmd->cmd)
-		executer()->is_builtin = builtin_check(*cmd->cmd);
-	if (cmd->next)
-		make_pipe(executer()->c_count);
+	if (cmd || cmd->next)
+	{
+		make_pids(executer()->c_count);
+		if (cmd->next)
+			make_pipe(executer()->c_count);
+	}
 	while (cmd)
 	{
-		if (safer_fork(fork(), executer()->ind, proc_id))
-			child_exec(cmd, proc_id);
+		if (cmd->cmd)
+			executer()->is_builtin = builtin_check(*cmd->cmd);
+		if (!cmd->next && executer()->is_builtin && !executer()->ind)
+			return (exec_builtin(cmd));
+		if (safer_fork(fork(), executer()->ind, cmd))
+			child_exec(cmd);
 		executer()->ind++;
 		cmd = cmd->next;
 	}
 	if (offs()->pipes)
 		close_pipes(offs()->pipes);
-	wait_for_childs(proc_id);
+	wait_for_childs();
+	close_herdoc_ports();
 }

@@ -7,7 +7,7 @@ void	close_pipes(int **pipes)
 	if (!pipes)
 		return ;
 	i = 0;
-	while (i < executer()->c_count)
+	while (i < executer()->c_count - 1)
 	{
 		close(pipes[i][0]);
 		close(pipes[i][1]);

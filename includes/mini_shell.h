@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/16 18:54:33 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/16 20:32:08 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,24 +77,20 @@ typedef enum e_token
 
 typedef struct s_export
 {
-	bool			export_check;
-	const char		*export_appe;
-	char			*export_var;
-	char			*export_value;
-	// struct s_export	*next;
-} 					t_export;
+	bool		export_check;
+	const char	*export_appe;
+	char		*export_var;
+	char		*export_value;
+}	t_export;
 
 typedef struct s_offs
 {
-	int 			check;
-	int	 			cmd_count;
-	int				redir;
-	int				in_backup;
-	int				out_backup;
-	int				**pipes;
-	char			oldpwd[1024];
-	char			pwd[1024];
-	int				redirected_fd;
+	int		in_backup;
+	int		out_backup;
+	char	oldpwd[1024];
+	char	pwd[1024];
+	int		**pipes;
+	pid_t	*pids;
 }	t_offs;
 
 typedef struct s_ferror
@@ -210,7 +206,7 @@ void		export_print(t_env **env);
 char		*ft_envcat(char *dest, const char *src);
 void		build_export_data(t_data *cmd_list, char *container);
 void		ft_unset(t_data *data, t_env **env);
-void		ft_exit(t_data *data);
+void		ft_exit(void);
 void		ft_echo(t_data *data);
 void		echo_print(char *str);
 void		ft_env(t_env **env);
@@ -237,6 +233,7 @@ bool	redirect(t_data *cmd);
 void	err(char *str, int error_status, bool ex_it);
 
 t_exutil	*executer(void);
+void	close_herdoc_ports(void);
 
 
 #endif

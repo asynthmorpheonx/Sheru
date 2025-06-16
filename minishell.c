@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/16 17:01:13 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/16 20:31:32 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -425,9 +425,7 @@ void	herdoc_job(void)
 				ind++;
 			}
 			if (*process_status() == INTERRUPTED)
-			{
 				return (close_herdoc_ports());
-			}
 			i++;
 		}
 		i = 0;

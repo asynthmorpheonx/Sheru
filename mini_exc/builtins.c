@@ -1,9 +1,4 @@
 	#include "mini_shell.h"
-// // export PATH+=:/new/path PATH=VALUE
-
-//export AH=+LA = "+LA"
-//export AH+=LA = "LALA"
-//export AH=OUI = "OUI"
 
 void	ft_export(t_data *cmd, t_env **env)
 {
@@ -45,19 +40,15 @@ void	ft_unset(t_data *data, t_env **env)
 	}
 }
 
-void	ft_exit(t_data *data)
+void	ft_exit(void)
 {
-	int	code;
-
-	code = ft_atoi(data->cmd[1]);
-	// free all the memory or call the garbage collector to dod so
-	if (!code) // check the exit code if it's valid or not
-		exit(0);
-	exit(code);
+	if (offs()->pipes)
+		close_pipes(offs()->pipes);
+	if (offs()->pids)
+		free(offs()->pids);
+	clear_container();
+	exit(EXIT_SUCCESS);
 }
-
-//absoult path : /home/user/Documents
-//relative path : ../Downloads / ./Downloads
 
 void	ft_cd(t_data *data, t_env **env)
 {
