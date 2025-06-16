@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/14 20:58:56 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/16 17:01:13 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -435,35 +435,6 @@ void	herdoc_job(void)
 	}
 }
 
-void	read_herdoc()
-{
-	char	line[7000];
-	t_data	*tmp;
-	int		fds;
-	int		i;
-	int		j = 1;
-
-	i = 0;
-	tmp = *box();
-	while (tmp)
-	{
-		for (int i = 0; tmp->file.infile && tmp->file.infile[i + 1]; i++);
-		if (tmp->file.i_type[i] == HERDOC)
-		{
-			fds = ft_atoi(tmp->file.infile[i]);
-			printf("------------------heredoc nbr:%d--------------------\n", j);
-			int returned = 1;
-				returned = read(fds, line, 6999);
-				line[returned] = '\0';
-				write(1, line , returned);
-		}
-			printf("-------------------------------------------------\n");
-		tmp = tmp->next;
-		i = 0;
-		j++;
-	}
-}
-
 // it's start the lexure
 void begin_lexing(char *line)
 {
@@ -490,7 +461,6 @@ void begin_lexing(char *line)
 			execute_command(*box());
 		reset_util_box();
 	}
-	
 }
 
 void	interupt_handle(int	sig_num)
@@ -507,6 +477,7 @@ void	interupt_handle(int	sig_num)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
+		code_setter(130);
 	}
 }
 
@@ -515,14 +486,11 @@ int main(int ac, char **av, char **env)
 	char	*line;
 	char	*prompt;
 
-	line = NULL;
 	(void)ac;
 	(void)av;
 	signal(SIGINT, interupt_handle);
 	make_env(env, envp(), 0, 0);
 	prompt = creat_prompt();
-	if (!prompt)
-		ult_exit();
 	code_setter(0);
 	while (1)
 	{

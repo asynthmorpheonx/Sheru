@@ -30,7 +30,7 @@ void	sort_tenv(char **env)
 	}
 }
 
-void	odup(t_file *ptr)
+bool	odup(t_file *ptr)
 {
 	int	i;
 	int	fd;
@@ -45,17 +45,18 @@ void	odup(t_file *ptr)
 			else
 				fd = open(ptr->outfile[i], O_CREAT | O_WRONLY | O_APPEND, 0644);
 			if (fd == -1)
-				err(ptr->outfile[i], 3);
+				return (err(ptr->outfile[i], 3, 0), 0);
 			dup2(fd, 1);
 			close(fd);
 		}
 		else if (ptr->o_type[i] == -1)
-			err(ptr->outfile[i], 4);
+			return (err(ptr->outfile[i], 4, 0), 0);
 		i++;
 	}
+	return (true);
 }
 
-void	idup(t_file *ptr)
+bool	idup(t_file *ptr)
 {
 	int	i;
 	int	fd;
@@ -68,7 +69,7 @@ void	idup(t_file *ptr)
 		{
 			fd = open(ptr->infile[i], O_RDONLY);
 			if (fd == -1)
-				err(ptr->infile[i], 3);
+				return (err(ptr->infile[i], 3, 0), 0);
 			dup2(fd, 0);
 			close(fd);
 		}
@@ -79,25 +80,22 @@ void	idup(t_file *ptr)
 			close(fd);
 		}
 		else if (ptr->i_type[i] == -1)
-			err(ptr->infile[i], 4);
+			return (err(ptr->infile[i], 4, 0), 0);
 		i++;
 	}
+	return (true);
 }
 
-void	redirect(t_data *cmd, bool mode)
+bool	redirect(t_data *cmd)
 {
-	if (mode)
-	{
-		offs()->in_backup = dup(0);
-		offs()->out_backup = dup(1);
-	}
-	if (cmd->file.infile)
-		idup(&cmd->file);
-	if (cmd->file.outfile)
-		odup(&cmd->file);
+	if (cmd->file.infile && !idup(&cmd->file))
+		return (false);
+	if (cmd->file.outfile && !odup(&cmd->file))
+		return (false);
+	return (true);
 }
 
-void err(char *str, int error_status)
+void err(char *str, int error_status, bool ex_it)
 {
 	if (error_status == 4)
 		ft_putstr_fd("sheru: ", 2);
@@ -116,7 +114,6 @@ void err(char *str, int error_status)
 	else if (error_status == 126)
 		ft_putstr_fd(": permission denied\n", 2);
 	clear_container();
-	if (error_status > 100)
-		exit(error_status);
-	exit(EXIT_FAILURE);
+	if (ex_it)
+		exit(EXIT_FAILURE);
 }

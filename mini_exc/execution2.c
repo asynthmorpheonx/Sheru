@@ -90,7 +90,7 @@ char	*get_path(char *cmd, int *error_status)
 	
 	char **(path_buf), *(cmd_path), *(path_copy);
 	if (*cmd == '/' || *cmd == '.' || *cmd == '~')
-		return (ft_strdup(cmd));
+		return (path_already(cmd, error_status));
 	cmd_path = key_value("PATH");
 	path_buf = ft_split(cmd_path, ':');
 	i = 0;

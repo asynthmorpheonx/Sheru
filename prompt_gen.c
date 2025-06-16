@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:19:56 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 18:23:12 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/15 13:40:54 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*creat_prompt(void)
 	user = key_value(USR);
 	session = export_session();
 	str = NULL;
-	if (!str && *session && *user)
+	if (*session && *user)
 	{
 		if (*user)
 			str = ft_strjoin(user, "@");
@@ -54,5 +54,7 @@ char	*creat_prompt(void)
 		str = ft_gnl_strjoin(str, ":~$ ");
 	}
 	g_lst_addback(g_new_garbage(str));
+	if (!str)
+		ult_exit();
 	return (str);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/14 22:28:29 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/16 18:54:33 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,14 @@ typedef char t_prstat;
 # define SCANIN 0b1001010
 # define HERDOC_READ 0b1011001
 # define INTERRUPTED 0b1110010
+
+typedef struct s_exutil
+{
+	int	c_count;
+	int	ind;
+	bool	is_builtin;
+}	t_exutil;
+
 
 typedef struct s_exp
 {
@@ -181,49 +189,36 @@ void	handle_quote(void);
 bool	is_ifs(int c);
 char	**ifs_split(char const *s);
 
-int		builtin_check(char *cmd);
-void 	ft_free_array(char **arr);
-int 	count_words(char *flags);
-int 	envcount(t_env *env);
-void    catcpy(char *tmp, t_env *current);
-char    **env_to_array(t_env **env);
-char	*ft_cat(char *path, char *cmd);
-char	*get_path(char *cmd, int *error_status);
-void 	err(char *str, int error_status);
-void	redirect(t_data *cmd, bool mode);
-char 	*word(char *str);
-t_offs	*offs(void);
-void	ft_ceue(t_data *data, t_env **env);
+int			builtin_check(char *cmd);
+void 		ft_free_array(char **arr);
+int 		count_words(char *flags);
+int 		envcount(t_env *env);
+void   		catcpy(char *tmp, t_env *current);
+char   		**env_to_array(t_env **env);
+char		*ft_cat(char *path, char *cmd);
+char		*get_path(char *cmd, int *error_status);
+char 		*word(char *str);
+t_offs		*offs(void);
+void		ft_ceue(t_data *data, t_env **env);
+void		ft_cd(t_data *data, t_env **env);
+char		*get_home(t_env **env);
+void		set_env_var(t_env **env, const char *key, const char *value);
+void		sort_tenv(char **env);
+void		ft_export(t_data *cmd, t_env **env);
+void		ft_var_append(t_env **env, char *var, const char *appe);
+void		export_print(t_env **env);
+char		*ft_envcat(char *dest, const char *src);
+void		build_export_data(t_data *cmd_list, char *container);
+void		ft_unset(t_data *data, t_env **env);
+void		ft_exit(t_data *data);
+void		ft_echo(t_data *data);
+void		echo_print(char *str);
+void		ft_env(t_env **env);
+void		ft_pwd(void);
+void		code_setter(int	new_code);
 
 
-// ######### BUILTINs ###############################################
-void	ft_cd(t_data *data, t_env **env);
-char	*get_home(t_env **env);
-
-void	set_env_var(t_env **env, const char *key, const char *value);
-void	sort_tenv(char **env);
-
-void	ft_export(t_data *cmd, t_env **env);
-void	ft_var_append(t_env **env, char *var, const char *appe);
-void	export_print(t_env **env);
-char	*ft_envcat(char *dest, const char *src);
-void	build_export_data(t_data *cmd_list, char *container);
-
-void	ft_unset(t_data *data, t_env **env);
-
-void	ft_exit(t_data *data);
-
-// void	git_dollar(char *str, t_env **env);
-void	ft_echo(t_data *data);
-void	echo_print(char *str);
-
-void	ft_env(t_env **env);
-
-void	ft_pwd(void);
-
-void	code_setter(int	new_code);
-
-
+void		fetch_setter(bool mode, int i, bool is_full);
 t_ferror	*fetcher(void);
 char		*creat_prompt(void);
 void		expansion_data(int i, int j, int to, int sto);
@@ -231,14 +226,17 @@ bool		*mask_joining(bool *o_mask, char *pre, char *suff);
 bool		creat_mask(void);
 char		*safe_join(char *s1, char *s2);
 int			lenght_both(char **s1, char **s2);
-
 bool		*handle_masking(char *str, int start, int len);
 bool		*mask_joining(bool *o_mask, char *pre, char *suff);
 int			node_count(void);
-void		execute_pipeline(t_data *cmd, int pcount);
 void		execute_command(t_data *cmd);
 
+void	close_pipes(int **pipes);
+int		execute_pipeline(t_data *cmd);
+bool	redirect(t_data *cmd);
+void	err(char *str, int error_status, bool ex_it);
 
-void fetch_setter(bool mode, int i, bool is_full);
+t_exutil	*executer(void);
+
 
 #endif
