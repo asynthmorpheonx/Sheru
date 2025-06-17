@@ -22,11 +22,7 @@ char *word(char *str)
 	buf[i] = '\0';
 	return (buf);
 }
-//###################################################################
-//
-//                  27 line 
-//
-//###################################################################
+
 void	set_env_var(t_env **env, const char *key, const char *value)
 {
 	t_env *(current), *(prev), *(new_var);

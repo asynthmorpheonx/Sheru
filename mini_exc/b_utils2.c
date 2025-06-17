@@ -40,6 +40,6 @@ void	export_print(t_env **env)
 		}
 		i++;
 	}
-	ft_free_array(tenv);
+	// ft_free_array(tenv, i);
 }
 

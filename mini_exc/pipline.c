@@ -38,3 +38,31 @@ int	execute_pipeline(t_data *cmd)
 	ult_exit();
 	return (0);
 }
+
+void	child_exec(t_data *cmd)
+{
+	int	status;
+
+	status = 0;
+	handle_pipes(cmd, executer()->ind);
+	if (!redirect(cmd))
+	{
+		free(offs()->pids);
+		close_pipes(offs()->pipes);
+		exit(1);
+	}
+	if (cmd->cmd && !executer()->is_builtin)
+	{
+		status = execute_pipeline(cmd);
+		if (status)
+		{
+			free(offs()->pids);
+			exit(status);
+		}			
+	}
+	else if (cmd->cmd)
+		ft_ceue(cmd, envp());
+	free(offs()->pids);
+	clear_container();
+	exit(EXIT_SUCCESS);
+}

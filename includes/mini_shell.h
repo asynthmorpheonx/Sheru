@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/16 20:32:08 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/17 09:33:22 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ typedef char t_prstat;
 
 typedef struct s_exutil
 {
-	int	c_count;
-	int	ind;
+	int		c_count;
+	int		ind;
 	bool	is_builtin;
 }	t_exutil;
 
@@ -233,7 +233,12 @@ bool	redirect(t_data *cmd);
 void	err(char *str, int error_status, bool ex_it);
 
 t_exutil	*executer(void);
-void	close_herdoc_ports(void);
+void		wait_for_childs(void);
+bool		safer_fork(pid_t process_id, int ind, t_data *cmd);
+void		handle_pipes(t_data *cmd, int ind);
+void		make_pids(int ccount);
+void		child_exec(t_data *cmd);
+void		close_herdoc_ports(void);
 
 
 #endif
