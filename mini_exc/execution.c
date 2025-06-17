@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/17 10:04:56 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:54:05 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ int	node_count(void)
 	return (count);
 }
 
-
-
 static void make_pipe(int c_count)
 {
 	int	i;
@@ -68,10 +66,6 @@ static void make_pipe(int c_count)
 	}
 }
 
-
-
-
-
 void	exec_builtin(t_data *cmd)
 {
 	if (cmd->file.infile || cmd->file.outfile)
@@ -85,11 +79,13 @@ void	exec_builtin(t_data *cmd)
 	{
 		dup2(offs()->in_backup, 0);
 		close(offs()->in_backup);
+		offs()->in_backup = 0;
 	}
 	if (offs()->out_backup)
 	{
 		dup2(offs()->out_backup, 1);
 		close(offs()->out_backup);
+		offs()->out_backup = 0;
 	}
 }
 
@@ -109,8 +105,8 @@ void execute_command(t_data *cmd)
 		if (cmd->cmd)
 			executer()->is_builtin = builtin_check(*cmd->cmd);
 		if (!cmd->next && executer()->is_builtin && !executer()->ind)
-			return (exec_builtin(cmd));
-		if (safer_fork(fork(), executer()->ind, cmd))
+			exec_builtin(cmd);
+		else if (safer_fork(fork(), executer()->ind, cmd))
 			child_exec(cmd);
 		executer()->ind++;
 		cmd = cmd->next;

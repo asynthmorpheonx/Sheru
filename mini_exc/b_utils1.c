@@ -30,9 +30,9 @@ void	set_env_var(t_env **env, const char *key, const char *value)
 	prev = NULL;
 	while (current != NULL)
 	{
-		if ( ft_strcmp(word(current->key), key) == 0)
+		if (!ft_strcmp(word(current->key), key))
 		{
-			delete_one(current->value); // maight need to be removed through garbage collector
+			delete_one(current->value);
 			current->value = ft_strdup(value);
 			return;
 		}

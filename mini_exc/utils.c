@@ -112,7 +112,7 @@ void err(char *str, int error_status, bool ex_it)
 	else if (error_status == 127)
 		ft_putstr_fd(": command not found\n", 2);
 	else if (error_status == 126)
-		ft_putstr_fd(": permission denied\n", 2);
+		ft_putstr_fd(": permission denied\n", 2);	
 	clear_container();
 	if (ex_it)
 		exit(EXIT_FAILURE);

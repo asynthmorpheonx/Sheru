@@ -54,16 +54,16 @@ void	ft_cd(t_data *data, t_env **env)
 {
 	char	*path;
 
-	if (getcwd(offs()->oldpwd, sizeof(offs()->oldpwd)) != NULL)
+	if (!getcwd(offs()->oldpwd, sizeof(offs()->oldpwd)))
 		set_env_var(env, "OLDPWD", offs()->oldpwd);
 	else
 		perror("getcwd");
-	if (!data->cmd[1] || data->cmd[1][0] == '\0')
+	if (!data->cmd[1] || !data->cmd[1][0])
 		path = get_home(env);
 	else
 		path = data->cmd[1];
-	if (chdir(path) != 0)
-		perror("cd");
+	if (chdir(path))
+		return (perror(path));
 	if (getcwd(offs()->pwd, sizeof(offs()->pwd)) != NULL)
 		set_env_var(env, "PWD", offs()->pwd);
 	else
