@@ -1,6 +1,0 @@
-{
-	"file.associations": {
-		"readline.h": "c",
-		"mini_shell.h": "c"
-	}
-}

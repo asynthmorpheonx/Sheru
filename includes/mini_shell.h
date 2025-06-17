@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/17 23:34:16 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/17 23:50:30 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,6 @@ char		*get_path(char *cmd, int *error_status);
 char 		*word(char *str);
 t_offs		*offs(void);
 void		ft_ceue(t_data *data, t_env **env);
-// void		ft_cd(t_data *data, t_env **env);
 void		ft_cd(t_data *cmd);
 char		*get_home(t_env **env);
 void		set_env_var(t_env **env, const char *key, const char *value);
