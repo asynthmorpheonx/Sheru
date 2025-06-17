@@ -54,7 +54,7 @@ void	ft_cd(t_data *data, t_env **env)
 {
 	char	*path;
 
-	if (!getcwd(offs()->oldpwd, sizeof(offs()->oldpwd)))
+	if (getcwd(offs()->oldpwd, sizeof(offs()->oldpwd)))
 		set_env_var(env, "OLDPWD", offs()->oldpwd);
 	else
 		perror("getcwd");
