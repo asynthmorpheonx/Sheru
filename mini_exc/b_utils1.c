@@ -83,7 +83,7 @@ void	ft_var_append(t_env **env, char *var, const char *appe)
 		}
 		tmp = tmp->next;
 	}
-	set_env_var(env, var, appe); // if the var not exist we creat it and give it the value appe
+	set_env_var(env, var, appe);
 }
 
 char	*get_home(t_env **env)

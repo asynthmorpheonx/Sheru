@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/17 09:33:22 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/17 23:34:16 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,11 @@ typedef char t_prstat;
 # define SCANIN 0b1001010
 # define HERDOC_READ 0b1011001
 # define INTERRUPTED 0b1110010
+
+# define EAPP 0b10111110
+# define ESET 0b10100110
+# define ENOT 0b00000000
+
 
 typedef struct s_exutil
 {
@@ -87,8 +92,8 @@ typedef struct s_offs
 {
 	int		in_backup;
 	int		out_backup;
-	char	oldpwd[1024];
-	char	pwd[1024];
+	char	oldpwd[4096];
+	char	pwd[4096];
 	int		**pipes;
 	pid_t	*pids;
 }	t_offs;
@@ -196,7 +201,8 @@ char		*get_path(char *cmd, int *error_status);
 char 		*word(char *str);
 t_offs		*offs(void);
 void		ft_ceue(t_data *data, t_env **env);
-void		ft_cd(t_data *data, t_env **env);
+// void		ft_cd(t_data *data, t_env **env);
+void		ft_cd(t_data *cmd);
 char		*get_home(t_env **env);
 void		set_env_var(t_env **env, const char *key, const char *value);
 void		sort_tenv(char **env);
@@ -240,5 +246,7 @@ void		make_pids(int ccount);
 void		child_exec(t_data *cmd);
 void		close_herdoc_ports(void);
 
+// void	ft_export(t_data *cmd);
+void	add_last_env(t_env *new_var);
 
 #endif

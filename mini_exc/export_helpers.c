@@ -76,7 +76,7 @@ void	build_export_data(t_data *cmd_list, char *container)
 {
 	t_export	*data;
 	int			u;
-	
+
 	char *(var), *(value), (delimiter);
 	u = 0;
 	cmd_list->export_data = safe_alloc(sizeof(t_export), 0);
