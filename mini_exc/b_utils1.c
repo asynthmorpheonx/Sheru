@@ -40,8 +40,6 @@ void	set_env_var(t_env **env, const char *key, const char *value)
 		current = current->next;
 	}
 	new_var = safe_alloc(sizeof(t_env), 0);
-	if (!new_var)
-		return ;
 	new_var->key = ft_strdup(key);
 	if (value)
 		new_var->value = ft_strdup(value);

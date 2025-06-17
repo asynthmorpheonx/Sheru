@@ -59,7 +59,7 @@ bool	odup(t_file *ptr)
 bool	idup(t_file *ptr)
 {
 	int	i;
-	int	fd;
+	int	fd; // consider adding the fd to a struct 
 
 	i = 0;
 	fd = -1;

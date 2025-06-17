@@ -1,4 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution2.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/17 10:18:15 by hoel-mos          #+#    #+#             */
+/*   Updated: 2025/06/17 10:18:38 by hoel-mos         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "mini_shell.h"
+
 int envcount(t_env *env)
 {
     int count;
@@ -17,7 +30,7 @@ void catcpy(char *tmp, t_env *current)
 {
     ft_strcpy(tmp, current->key);
     ft_strcat(tmp, "=");
-    ft_strcat(tmp, current->value ? current->value : "");  // Prevent crash
+    ft_strcat(tmp, current->value ? current->value : "");
 }
 
 
