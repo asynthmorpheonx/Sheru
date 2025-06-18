@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/16 20:37:38 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:55:56 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -483,18 +483,16 @@ void	interupt_handle(int	sig_num)
 int main(int ac, char **av, char **env)
 {
 	char	*line;
-	char	*prompt;
 
 	(void)ac;
 	(void)av;
 	signal(SIGINT, interupt_handle);
 	make_env(env, envp(), 0, 0);
-	prompt = creat_prompt();
 	code_setter(0);
 	while (1)
 	{
 		*process_status() = SCANIN;
-		line = readline(prompt);
+		line = readline(creat_prompt());
 		if (!line)
 		{
 			write(1, "exit\n", 5);

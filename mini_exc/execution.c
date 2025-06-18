@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/17 23:30:04 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:42:59 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void execute_command(t_data *cmd)
 		executer()->ind++;
 		cmd = cmd->next;
 	}
-	if (offs()->pipes)
+	if (offs()->pipes )
 		close_pipes(offs()->pipes);
 	wait_for_childs();
 	close_herdoc_ports();

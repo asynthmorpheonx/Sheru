@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 09:28:45 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/17 23:51:22 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:17:06 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_ceue(t_data *data, t_env **env)
 	if (!ft_strcmp(data->cmd[0], "cd"))
 		ft_cd(data);
 	else if (!ft_strcmp(data->cmd[0], "export"))
-		ft_export(data, envp());
+		ft_export(data);
 	else if (!ft_strcmp(data->cmd[0], "unset"))
 		ft_unset(data, env);
 	else if (!ft_strcmp(data->cmd[0], "exit"))

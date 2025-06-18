@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:12:32 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/17 23:35:39 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:11:53 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-
-void	add_last_env(t_env *new_var)
-{
-	t_env	*tmp;
-
-	tmp = *envp();
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new_var;
-}
 
 void	ft_env(t_env **env)
 {
@@ -29,7 +19,7 @@ void	ft_env(t_env **env)
 	tmp = *env;
 	while (tmp)
 	{
-		if (tmp->value)
+		if (tmp->key && tmp->value)
 		{
 			ft_putstr_fd(tmp->key, STDOUT_FILENO);
 			ft_putchar_fd('=', STDOUT_FILENO);

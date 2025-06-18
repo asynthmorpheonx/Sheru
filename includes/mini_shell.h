@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/17 23:50:30 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:13:46 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,19 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 
+typedef char t_prstat;
+
 # define AMBIGUOUS_REDIRECT -1
 # define RESET 0
 # define SET 1
-
 # define USR "USER"
 # define SESSIO "SESSION_MANAGER"
 # define WD "PWD"
-
-typedef char t_prstat;
-
 # define SCANIN 0b1001010
 # define HERDOC_READ 0b1011001
 # define INTERRUPTED 0b1110010
-
-# define EAPP 0b10111110
-# define ESET 0b10100110
+# define EAPP 0b00000010
+# define ESET 0b00000001
 # define ENOT 0b00000000
 
 
@@ -80,19 +77,10 @@ typedef enum e_token
 	WORD
 }	t_token;
 
-typedef struct s_export
-{
-	bool		export_check;
-	const char	*export_appe;
-	char		*export_var;
-	char		*export_value;
-}	t_export;
-
 typedef struct s_offs
 {
 	int		in_backup;
 	int		out_backup;
-	char	oldpwd[4096];
 	char	pwd[4096];
 	int		**pipes;
 	pid_t	*pids;
@@ -135,7 +123,6 @@ typedef	struct s_data
 {
 	char			**cmd;
 	t_file			file;
-	t_export		*export_data;
 	struct s_data	*next;
 }	t_data;
 
@@ -149,11 +136,9 @@ void	fill_with_token(char **buffer, int token_id);
 char	*safe_substr(char *str, unsigned int start, size_t len);
 char	*buffer_filler(char *line, int *i);
 char	**spliting_based_token(char *line);
-
 t_env	*last_env(t_env *lst);
 void	add_to_envp(t_env **lst, t_env *tmp);
 void	make_env(char **env, t_env **lst, int i, int j);
-
 t_data	**box(void);
 void	ult_exit(void);
 t_env	**envp(void);
@@ -205,11 +190,9 @@ void		ft_cd(t_data *cmd);
 char		*get_home(t_env **env);
 void		set_env_var(t_env **env, const char *key, const char *value);
 void		sort_tenv(char **env);
-void		ft_export(t_data *cmd, t_env **env);
 void		ft_var_append(t_env **env, char *var, const char *appe);
 void		export_print(t_env **env);
 char		*ft_envcat(char *dest, const char *src);
-void		build_export_data(t_data *cmd_list, char *container);
 void		ft_unset(t_data *data, t_env **env);
 void		ft_exit(void);
 void		ft_echo(t_data *data);
@@ -218,6 +201,7 @@ void		ft_env(t_env **env);
 void		ft_pwd(void);
 void		code_setter(int	new_code);
 
+char	*ft_keydup(const char *s1);
 
 void		fetch_setter(bool mode, int i, bool is_full);
 t_ferror	*fetcher(void);
@@ -245,7 +229,7 @@ void		make_pids(int ccount);
 void		child_exec(t_data *cmd);
 void		close_herdoc_ports(void);
 
-// void	ft_export(t_data *cmd);
-void	add_last_env(t_env *new_var);
+void	ft_export(t_data *cmd);
+char	*exit_code(void);
 
 #endif

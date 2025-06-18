@@ -33,16 +33,16 @@ void	set_env_var(t_env **env, const char *key, const char *value)
 		if (!ft_strcmp(word(current->key), key))
 		{
 			delete_one(current->value);
-			current->value = ft_strdup(value);
+			current->value = ft_keydup(value);
 			return;
 		}
 		prev = current;
 		current = current->next;
 	}
 	new_var = safe_alloc(sizeof(t_env), 0);
-	new_var->key = ft_strdup(key);
+	new_var->key = ft_keydup(key);
 	if (value)
-		new_var->value = ft_strdup(value);
+		new_var->value = ft_keydup(value);
 	else
 		new_var->value = NULL;
 	new_var->next = NULL;

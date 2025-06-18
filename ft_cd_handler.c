@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:14:56 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/17 22:16:45 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:14:31 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	update_oldwd(char *new_oldwd, t_env *oldwd)
 		if (!oldwd)
 			ult_exit();
 		oldwd->key = "OLDPWD";
-		add_last_env(oldwd);
+		last_env(*envp())->next = oldwd;
 	}
 	oldwd->value = new_oldwd;
 }
@@ -45,7 +45,7 @@ static void	update_pwd(char *new_wd, t_env *tmp)
 	{
 		nwd = safe_alloc(sizeof(t_env), 0);
 		nwd->key = "PWD";
-		add_last_env(nwd);
+		last_env(*envp())->next = nwd;
 	}
 	else if (nwd)
 		update_oldwd(nwd->value, owd);
@@ -62,11 +62,11 @@ void	ft_cd(t_data *cmd)
 	{
 		path = key_value("HOME");
 		if (!*path)
-			return (ft_putendl_fd("cd: HOME not set", 2));
-		path = safe_substr(path, 0, ft_strlen(path));
+			return (code_setter(1),
+			ft_putendl_fd("sheru: cd: HOME not set", 2));
 	}
 	else
-		path = safe_substr(cmd->cmd[1], 0, ft_strlen(cmd->cmd[1]));
+		path = cmd->cmd[1];
 	if (chdir(path))
 		return (perror(cmd->cmd[1]));
 	update_pwd(getcwd(offs()->pwd, 4096), NULL);

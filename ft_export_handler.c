@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_handler.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:21:28 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/17 23:49:55 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:30:40 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,22 +51,5 @@ void	export_print(t_env **env)
 			tmp = tmp->next;
 		}
 		i++;
-	}
-}
-
-void	ft_export(t_data *cmd, t_env **env)
-{
-	t_export	*data;
-
-	if (!cmd->cmd[1])
-		export_print(env);
-	else
-	{
-		build_export_data(cmd, cmd->cmd[1]);
-		data = cmd->export_data;
-		if (data->export_check)
-			ft_var_append(env, data->export_var, data->export_appe);
-		else
-			set_env_var(env, data->export_var, data->export_value);
 	}
 }

@@ -61,8 +61,11 @@ void	child_exec(t_data *cmd)
 		}			
 	}
 	else if (cmd->cmd)
+	{
 		ft_ceue(cmd, envp());
+		close_pipes(offs()->pipes);
+	}
 	free(offs()->pids);
 	clear_container();
-	exit(EXIT_SUCCESS);
+	exit(ft_atoi(exit_code()));
 }

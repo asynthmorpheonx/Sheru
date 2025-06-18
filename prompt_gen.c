@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt_gen.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:19:56 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/15 13:40:54 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:01:55 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,23 +38,26 @@ static char	*export_session(void)
 // creat an customize shell prompt just to show the user [USER@SESSION]-[OS@SHELL_NAME]
 char	*creat_prompt(void)
 {
-	char	*str;
+	static char	*str;
 	char	*user;
 	char	*session;
-
-	user = key_value(USR);
-	session = export_session();
-	str = NULL;
-	if (*session && *user)
-	{
-		if (*user)
-			str = ft_strjoin(user, "@");
-		if (*session)
-			str = ft_gnl_strjoin(str, session);
-		str = ft_gnl_strjoin(str, ":~$ ");
-	}
-	g_lst_addback(g_new_garbage(str));
+	
 	if (!str)
-		ult_exit();
+	{
+		user = key_value(USR);
+		session = export_session();
+		str = NULL;
+		if (*session && *user)
+		{
+			if (*user)
+				str = ft_strjoin(user, "@");
+			if (*session)
+				str = ft_gnl_strjoin(str, session);
+			str = ft_gnl_strjoin(str, ":~$ ");
+		}
+		g_lst_addback(g_new_garbage(str));
+		if (!str)
+			ult_exit();
+	}
 	return (str);
 }
