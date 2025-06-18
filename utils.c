@@ -59,10 +59,9 @@ bool	odup(t_file *ptr)
 bool	idup(t_file *ptr)
 {
 	int	i;
-	int	fd; // consider adding the fd to a struct 
+	int	fd;
 
 	i = 0;
-	fd = -1;
 	while (ptr->infile[i])
 	{
 		if (ptr->i_type[i] == IND)

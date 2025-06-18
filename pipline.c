@@ -32,7 +32,7 @@ int	execute_pipeline(t_data *cmd)
 		clear_container();
 		return (status);
 	}
-	anvp = env_to_array(envp());
+	anvp = env_to_array(*envp());
 	execve(path, cmd->cmd, anvp);
 	perror("sheru");
 	ult_exit();
@@ -46,19 +46,12 @@ void	child_exec(t_data *cmd)
 	status = 0;
 	handle_pipes(cmd, executer()->ind);
 	if (!redirect(cmd))
-	{
-		free(offs()->pids);
-		close_pipes(offs()->pipes);
-		exit(1);
-	}
+		return (free(offs()->pids), close_pipes(offs()->pipes), exit(1));
 	if (cmd->cmd && !executer()->is_builtin)
 	{
 		status = execute_pipeline(cmd);
 		if (status)
-		{
-			free(offs()->pids);
-			exit(status);
-		}			
+			return (free(offs()->pids), exit(status));
 	}
 	else if (cmd->cmd)
 	{

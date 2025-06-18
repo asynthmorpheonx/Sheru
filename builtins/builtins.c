@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:12:32 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/18 17:37:55 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/18 22:12:00 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,20 @@ void	ft_env(t_env **env)
 		}
 		tmp = tmp->next;
 	}
+}
+
+void	ft_pwd(void)
+{
+	char	*path;
+
+	path = getcwd(NULL, 0);
+	if(!path)
+	{
+		clear_container();
+		perror("pwd");
+	}
+	else
+		ft_putstr_fd(path, STDOUT_FILENO);
+	free(path);
+	printf("\n");
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/18 17:36:35 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/18 22:20:24 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,25 +177,17 @@ char	**ifs_split(char const *s);
 
 int			builtin_check(char *cmd);
 void 		ft_free_array(char **arr);
-int 		count_words(char *flags);
 int 		envcount(t_env *env);
 void   		catcpy(char *tmp, t_env *current);
-char   		**env_to_array(t_env **env);
 char		*get_path(char *cmd, int *error_status);
-char 		*word(char *str);
 t_offs		*offs(void);
 void		ft_ceue(t_data *data, t_env **env);
 void		ft_cd(t_data *cmd);
-char		*get_home(t_env **env);
-void		set_env_var(t_env **env, const char *key, const char *value);
 void		sort_tenv(char **env);
-void		ft_var_append(t_env **env, char *var, const char *appe);
 void		export_print(t_env **env);
-char		*ft_envcat(char *dest, const char *src);
 void		ft_unset(t_data *data, t_env **env);
 void		ft_exit(void);
 void		ft_echo(t_data *data);
-// void		echo_print(char *str);
 void		ft_env(t_env **env);
 void		ft_pwd(void);
 void		code_setter(int	new_code);
@@ -231,5 +223,7 @@ void		close_herdoc_ports(void);
 void	ft_export(t_data *cmd);
 char	*exit_code(void);
 char	*path_join(char *path, char *cmd);
+
+char    **env_to_array(t_env *ptr);
 
 #endif

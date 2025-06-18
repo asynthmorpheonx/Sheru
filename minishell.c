@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/18 16:55:56 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/18 23:51:52 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ char	*exit_code(void)
 	return (exit_status);
 }
 
-// this fn takes the paramter and storing int the $? as string it handles the overflow like the bash did
 void	code_setter(int	new_code)
 {
 	int	i;
@@ -113,13 +112,11 @@ int ft_iswhitespace(int c)
 	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-// check the bytes if it's an a an special character
 int ft_ispecial(int c)
 {
 	return (c == '|' || c == '>' || c == '<');
 }
 
-// just calls the regular ft_substr and add it's allocated memory it the linked list
 char *safe_substr(char *str, unsigned int start, size_t len)
 {
 	char *pp;
@@ -147,7 +144,17 @@ char *safe_join(char *s1, char *s2)
 	return (pp);
 }
 
-// checks for the syntex of input tokens
+void	syntax_err_msg(char *err)
+{
+	ft_putstr_fd("sheu: syntax error near unexpected token `", 2);
+	if (err)
+		ft_putstr_fd(err, 2);
+	else
+		ft_putstr_fd("newline", 2);
+	ft_putendl_fd("'", 2);
+	code_setter(1);
+}
+
 bool syntax_check(void)
 {
 	int i;
@@ -155,57 +162,18 @@ bool syntax_check(void)
 	i = 0;
 	while (i < util()->t)
 	{
-		if (util()->a[i] == PIPE && (i + 1 >= util()->t || !i || util()->a[i - 1] != WORD))
-			return (ft_putendl_fd("syntax error", 2), false);
-		else if ((util()->a[i] == IND || util()->a[i] == OUD) && (i + 1 >= util()->t || util()->a[i + 1] != WORD))
-			return (ft_putendl_fd("syntax error", 2), false);
-		else if ((util()->a[i] == APP || util()->a[i] == HERDOC) && (i + 1 >= util()->t || util()->a[i + 1] != WORD))
-			return (ft_putendl_fd("syntax error", 2), false);
+		if (util()->a[i] == PIPE
+			&& (i + 1 >= util()->t || !i || util()->a[i - 1] != WORD))
+			return (syntax_err_msg(util()->s[i + 1]), false);
+		else if ((util()->a[i] == IND || util()->a[i] == OUD)
+			&& (i + 1 >= util()->t || util()->a[i + 1] != WORD))
+			return (syntax_err_msg(util()->s[i + 1]), false);
+		else if ((util()->a[i] == APP || util()->a[i] == HERDOC)
+			&& (i + 1 >= util()->t || util()->a[i + 1] != WORD))
+			return (syntax_err_msg(util()->s[i + 1]), false);
 		i++;
 	}
 	return (true);
-}
-
-void print_data(t_data *inlist)
-{
-	int i;
-	int j;
-
-	j = 0;
-	while (inlist)
-	{
-		i = 0;
-		printf("===============node %d===============\n", j);
-		printf("struct t_data\n{");
-		printf("\t*cmd =");
-		while (inlist->cmd && inlist->cmd[i])
-			printf("  {%s},", inlist->cmd[i++]);
-		printf("\n");
-		i = 0;
-		printf("\tt_file.infile :");
-		while (inlist->file.infile && inlist->file.infile[i])
-			printf(" {%s},", inlist->file.infile[i++]);
-		printf("\n");
-		i = 0;
-		printf("\tt_file.i_type :");
-		while (inlist->file.infile && inlist->file.infile[i])
-			printf(" {%d},", inlist->file.i_type[i++]);
-		printf("\n");
-		i = 0;
-		printf("\tt_file.outfile :");
-		while (inlist->file.outfile && inlist->file.outfile[i])
-			printf(" {%s},", inlist->file.outfile[i++]);
-		printf("\n");
-		i = 0;
-		printf("\tt_file.o_types :");
-		while (inlist->file.outfile && inlist->file.outfile[i])
-			printf(" {%d},", inlist->file.o_type[i++]);
-		printf("\n");
-		printf("}\tt_data");
-		printf("\n==============================\n");
-		inlist = inlist->next;
-		j++;
-	}
 }
 
 int key_len(char *str, int pos)
@@ -218,7 +186,6 @@ int key_len(char *str, int pos)
 	return (i);
 }
 
-// it return the value if the key is exist, or a "\0" if there no key that match that.
 char *key_value(char *key)
 {
 	t_env *pp;
@@ -434,7 +401,6 @@ void	herdoc_job(void)
 	}
 }
 
-// it's start the lexure
 void begin_lexing(char *line)
 {
 	reset_data_box();

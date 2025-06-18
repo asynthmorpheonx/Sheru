@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:18:15 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/18 17:38:50 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/18 22:20:39 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,51 +26,53 @@ int envcount(t_env *env)
     }
     return (count);
 }
+
 void catcpy(char *tmp, t_env *current)
 {
     ft_strcpy(tmp, current->key);
     ft_strcat(tmp, "=");
-    ft_strcat(tmp, current->value ? current->value : "");
+	if (current->value)
+    	ft_strcat(tmp, current->value);
+    else
+		ft_strcat(tmp, "");
 }
 
-
-char    **env_to_array(t_env **env)
+char    **env_to_array(t_env *ptr)
 {
-    t_env   *current;
+	int	i;
+	char	**anvp;
 
-    char    **(arr), *(tmp);
-    int     (count), (i);
-    current = *env;
-    count = envcount(current);
-    arr = (char **)safe_alloc(sizeof(char *) * (count + 1), 0);
-    i = 0;
-    current = *env;
-    while (current)
-    {
-		if (!(tmp  = safe_alloc(ft_strlen(current->key) + ft_strlen(current->value) + 2, 0 )))
-		{
-			ft_free_array(arr);
-			return(NULL);
-		}
-        catcpy(tmp, current);
-        arr[i++] = tmp;
-        current = current->next;
-    }
-    arr[i] = NULL;
-    return (arr);
+	i = 0;
+	anvp = safe_alloc(sizeof(char *)
+		* (envcount(ptr) + 1), 0);
+	if (!anvp)
+		ult_exit();
+	while(ptr)
+	{
+		anvp[i] = safe_alloc(ft_strlen(ptr->key)
+			+ ft_strlen(ptr->value) + 2, 0);
+		if (!anvp[i])
+			ult_exit();
+		catcpy(anvp[i], ptr);
+		i++;
+		ptr = ptr->next;
+	}
+	return (anvp);
 }
 
 char	*path_join(char *path, char *cmd)
 {
 	char	*buff;
+	int		len;
+	int		i;
+	int		u;
 	
-	int	(len), (i), (u);
 	len = ft_strlen(path) + ft_strlen(cmd);
 	buff = malloc(sizeof(char) * (len + 2));
-	if (!buff)
-		return (NULL);
 	i = 0;
 	u = 0;
+	if (!buff)
+		ult_exit();
 	while (path[u])
 		buff[i++] = path[u++];
 	buff[i++] = '/';
@@ -100,7 +102,7 @@ char	*path_already(char *cmd, int *status)
 char	*get_path(char *cmd, int *error_status)
 {
 	int	i;
-	
+
 	char **(path_buf), *(cmd_path), *(path_copy);
 	if (*cmd == '/' || *cmd == '.' || *cmd == '~')
 		return (path_already(cmd, error_status));
@@ -112,11 +114,10 @@ char	*get_path(char *cmd, int *error_status)
 		path_copy = path_join(path_buf[i], cmd);
 		if (!access(path_copy, F_OK))
 		{
-			ft_free_array(path_buf);
 			if (!access(path_copy, X_OK))
-				return (path_copy);
+				return (ft_free_array(path_buf), path_copy);
 			*error_status = 126;
-			return (NULL);
+			return (ft_free_array(path_buf), NULL);
 		}
 		free(path_copy);
 		i++;

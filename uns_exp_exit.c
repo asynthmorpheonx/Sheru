@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:17:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/17 23:36:27 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/18 21:35:12 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_unset(t_data *data, t_env **env)
 	current = *env;
 	while (current)
 	{
-		if (ft_strcmp(word(current->key), data->cmd[1]) == 0)
+		if (!ft_strcmp(current->key, data->cmd[1]))
 		{
 			if (prev)
 				prev->next = current->next;

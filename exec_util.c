@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 23:29:57 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/17 23:30:00 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/18 22:09:21 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,25 +33,6 @@ void ft_free_array(char **arr)
 	arr = NULL;
 }
 
-int count_words(char *flags)
-{
-	int (i), (u);
-
-	i = 0;
-	u = 0;
-	while (flags[i])
-	{
-		if (flags[i] == ' ' || (flags[i] >= 9 && flags[i] <= 13))
-			i++;
-		else
-		{
-			u++;
-			while (flags[i] != ' ' && !(flags[i] >= 9 && flags[i] <= 13))
-				i++;
-		}
-	}
-	return (u);
-}
 void	wait_for_childs(void)
 {
 	int	i;
