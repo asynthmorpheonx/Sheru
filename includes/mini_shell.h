@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/18 17:13:46 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:36:35 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,6 @@ int 		count_words(char *flags);
 int 		envcount(t_env *env);
 void   		catcpy(char *tmp, t_env *current);
 char   		**env_to_array(t_env **env);
-char		*ft_cat(char *path, char *cmd);
 char		*get_path(char *cmd, int *error_status);
 char 		*word(char *str);
 t_offs		*offs(void);
@@ -196,7 +195,7 @@ char		*ft_envcat(char *dest, const char *src);
 void		ft_unset(t_data *data, t_env **env);
 void		ft_exit(void);
 void		ft_echo(t_data *data);
-void		echo_print(char *str);
+// void		echo_print(char *str);
 void		ft_env(t_env **env);
 void		ft_pwd(void);
 void		code_setter(int	new_code);
@@ -231,5 +230,6 @@ void		close_herdoc_ports(void);
 
 void	ft_export(t_data *cmd);
 char	*exit_code(void);
+char	*path_join(char *path, char *cmd);
 
 #endif

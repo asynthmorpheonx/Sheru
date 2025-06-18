@@ -1,71 +1,53 @@
 #include "mini_shell.h"
 
-void	echo_print(char *str) // test the qooute 
+void	echo_print(char **str)
 {
 	int	i;
-	int	len;
 
-	len = ft_strlen(str);
-	i = 0;	
-	if(str[0] == '"' && str[len - 1] == '"') // check how i should deal with one "
-		ft_putstr_fd(str, STDOUT_FILENO);
+	i = 0;
+	while (str[i])
+	{
+		printf("%s", str[i]);
+		if (str[i + 1])
+			printf(" ");
+		i++;
+	}
+}
+
+bool check_n(char *arg)
+{
+	int i;
+
+	if (*arg != '-')
+		return (false);
+	i = 1;
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (false);
+		i++;
+	}
+	if (i == 1 && !arg[i])
+		return (false);
+	return (true);
+}
+
+void	ft_echo(t_data *cmd)
+{
+	bool	mode;
+
+	mode = false;
+	if (cmd->cmd[1])
+		mode = check_n(cmd->cmd[1]);
+	if (mode)
+	{
+		echo_print(cmd->cmd + 2);
+	}
 	else
 	{
-		while(str[i])
-		{
-			if(str[i] == '\\')
-				i++;
-			ft_putchar_fd(str[i], STDOUT_FILENO);
-			i++;
-		}
+		echo_print(cmd->cmd + 1);
+		printf("\n");
 	}
-}
-
-void	check_n(char **buff, int *index, int *check)
-{
-	int (i),	(u);
-	i = 1;
-	while (buff[i])
-	{
-		if (buff[i][0] == '-')
-		{
-			if (buff[i][1] == 'n')
-			{
-				u = 1;
-				while (buff[i][u] == 'n')
-					u++;
-				if (buff[i][u] && buff[i][u] != 'n')
-				{
-					*index = i;
-					return ;
-				}
-				*check = 1;
-			}
-			else
-				return ;
-		}
-		*index = i;
-		i++;
-	}
-	return ;
-}
-
-void	ft_echo(t_data *data)
-{
-	int (i), (check), (u);
-	i = 1;
-	check = 0;
-	check_n(data->cmd, &i, &check);
-	while (data->cmd[i])
-	{
-		u = i + 1;
-		echo_print(data->cmd[i]);
-		if (data->cmd[u])
-			ft_putchar_fd(32, STDOUT_FILENO);
-		i++;
-	}
-	if (!check) //  0-[echo] 1-[-n..]/[txt]
-		ft_putchar_fd('\n', STDOUT_FILENO);
 }
 
 void	ft_pwd(void)

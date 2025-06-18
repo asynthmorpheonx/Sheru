@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:18:15 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/17 10:18:38 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:38:50 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char    **env_to_array(t_env **env)
     return (arr);
 }
 
-char	*ft_cat(char *path, char *cmd)
+char	*path_join(char *path, char *cmd)
 {
 	char	*buff;
 	
@@ -109,7 +109,7 @@ char	*get_path(char *cmd, int *error_status)
 	i = 0;
 	while(path_buf[i])
 	{
-		path_copy = ft_cat(path_buf[i], cmd);
+		path_copy = path_join(path_buf[i], cmd);
 		if (!access(path_copy, F_OK))
 		{
 			ft_free_array(path_buf);
