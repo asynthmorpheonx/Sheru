@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 22:01:09 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 22:05:06 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/19 23:52:52 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ bool	*handle_masking(char *str, int start, int len)
 	int		i;
 
 	i = start;
-	mask = safe_alloc(ft_strlen(str), 0);
+	mask = safe_alloc(ft_strlen(str) + 1, 0);
 	if (!mask)
 		ult_exit();
-	while (str[i] && i - start < len)
+	while (i - start < len)
 	{
 		mask[i] = true;
 		i++;
@@ -68,7 +68,7 @@ bool	creat_mask(void)
 	{
 		if (util()->a[i] == WORD)
 		{
-			mask[i] = safe_alloc(ft_strlen(util()->s[i]), 0);
+			mask[i] = safe_alloc(ft_strlen(util()->s[i]) + 1, 0);
 			if (!mask[i])
 				ult_exit();
 		}

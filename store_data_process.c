@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:16:29 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/14 00:23:52 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/19 23:54:28 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,17 @@ bool	stor_in_list(char **strs, int *arr, t_data **node)
 		tmp = safe_alloc(sizeof(t_data), 0);
 		if (!tmp)
 			return (false);
-		if (i)
+		if (arr[i] == PIPE)
 			i++;
 		while (strs[i] && arr[i] != PIPE)
 		{
 			if (arr[i] == WORD)
 			{
 				if (to)
-					cmd_flag_handle(strs + i, arr + i, tmp, &to);
+				{
+					cmd_flag_handle(strs, arr, tmp, i);
+					to = 0;
+				}
 				i++;
 			}
 			else if (arr[i] < PIPE || arr[i] == HERDOC)

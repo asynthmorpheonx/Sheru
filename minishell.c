@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/19 16:18:38 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/19 23:57:06 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,6 +363,49 @@ void	herdoc_job(void)
 		}
 		i = 0;
 		tmp = tmp->next;
+	}
+}
+
+
+void print_data(t_data *inlist)
+{
+	int i;
+	int j;
+
+	j = 0;
+	while (inlist)
+	{
+		i = 0;
+		printf("===============node %d===============\n", j);
+		printf("struct t_data\n{");
+		printf("\t*cmd =");
+		while (inlist->cmd && inlist->cmd[i])
+			printf("  {%s},", inlist->cmd[i++]);
+		printf("\n");
+		i = 0;
+		printf("\tt_files.infile :");
+		while (inlist->file.infile && inlist->file.infile[i])
+			printf(" {%s},", inlist->file.infile[i++]);
+		printf("\n");
+		i = 0;
+		printf("\tt_files.i_type :");
+		while (inlist->file.infile && inlist->file.infile[i])
+			printf(" {%d},", inlist->file.i_type[i++]);
+		printf("\n");
+		i = 0;
+		printf("\tt_files.outfile :");
+		while (inlist->file.outfile && inlist->file.outfile[i])
+			printf(" {%s},", inlist->file.outfile[i++]);
+		printf("\n");
+		i = 0;
+		printf("\tt_files.o_types :");
+		while (inlist->file.outfile && inlist->file.outfile[i])
+			printf(" {%d},", inlist->file.o_type[i++]);
+		printf("\n");
+		printf("}\tt_data");
+		printf("\n==============================\n");
+		inlist = inlist->next;
+		j++;
 	}
 }
 

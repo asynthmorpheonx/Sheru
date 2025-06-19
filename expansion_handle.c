@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:21:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/19 16:16:21 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/19 23:49:38 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void fetch_setter(bool mode, int i, bool is_full)
 {
 	if (mode)
 	{
-		if (i && util()->a[i - 1] <= PIPE)
+		if (i && util()->a[i - 1] < PIPE)
 			fetcher()->flage = true;
 		fetcher()->full_exp = is_full;
 	}
@@ -156,7 +156,7 @@ static void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
 
 	dup = NULL;
 	mask = NULL;
-	len = ft_strlen(value);
+	len = ft_strlen(value) + 1;
 	if (*strt)
 		dup = ft_substr(util()->s[*ind], 0, *strt);
 	dup = ft_gnl_strjoin(dup, value);
@@ -167,7 +167,7 @@ static void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
 	util()->s[*ind] = dup;
 	util()->mask[*ind] = handle_masking(dup, *strt, len);
 	if (*value)
-		*strt = len;
+		*strt = len - 1;
 }
 
 static bool	check_value(char *str)
