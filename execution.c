@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/18 17:38:30 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/19 20:43:21 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,9 @@ void execute_command(t_data *cmd)
 	executer()->ind = 0;
 	executer()->c_count = node_count();
 	executer()->is_builtin = false;
-	if (cmd || cmd->next)
-	{
-		make_pids(executer()->c_count);
-		if (cmd->next)
+	make_pids(executer()->c_count);
+	if (cmd->next)
 			make_pipe(executer()->c_count);
-	}
 	while (cmd)
 	{
 		if (cmd->cmd)

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 00:28:53 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/23 18:08:07 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/19 16:16:03 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ static char	**filler(char **strs, char const *s)
 	return (strs);
 }
 
-// it's split the char *s by ifs character
 char	**ifs_split(char const *s)
 {
 	char	**strs;

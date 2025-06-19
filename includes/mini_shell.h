@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/18 22:20:24 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/19 16:19:58 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,10 +139,7 @@ char	**spliting_based_token(char *line);
 t_env	*last_env(t_env *lst);
 void	add_to_envp(t_env **lst, t_env *tmp);
 void	make_env(char **env, t_env **lst, int i, int j);
-t_data	**box(void);
 void	ult_exit(void);
-t_env	**envp(void);
-t_utils	*util(void);
 
 int		whichtoken(char *input, int *i);
 int		token_value(char *input);
@@ -195,7 +192,6 @@ void		code_setter(int	new_code);
 char	*ft_keydup(const char *s1);
 
 void		fetch_setter(bool mode, int i, bool is_full);
-t_ferror	*fetcher(void);
 char		*creat_prompt(void);
 void		expansion_data(int i, int j, int to, int sto);
 bool		*mask_joining(bool *o_mask, char *pre, char *suff);
@@ -225,5 +221,12 @@ char	*exit_code(void);
 char	*path_join(char *path, char *cmd);
 
 char    **env_to_array(t_env *ptr);
+
+t_data **box(void);
+t_prstat	*process_status(void);
+t_env **envp(void);
+t_ferror *fetcher(void);
+t_utils *util(void);
+
 
 #endif

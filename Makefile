@@ -1,7 +1,8 @@
 SRC= builtins/builtins.c builtins/ft_cd_handler.c builtins/ft_echo.c builtins/ft_export.c exec_util.c execution2.c\
-	execution.c pipline.c utils2.c utils.c advanced_split.c mask_creation.c redirections_handle.c\
+	execution.c pipline.c utils2.c builtins/utils.c ifs_split.c mask_creation.c redirections_handle.c\
 	expansion_handle.c minishell.c store_data_process.c handle_cmd_flage.c prompt_gen.c tokenize_utils.c quote_utils.c\
-	uns_exp_exit.c make_nd_store_env.c heap_controller/g_container.c  heap_controller/managment_utils.c
+	uns_exp_exit.c make_nd_store_env.c heap_controller/g_container.c  heap_controller/managment_utils.c redirection_utils.c\
+	release_boxs.c
 OBJ= $(SRC:%.c=%.o)
 NAME= minishell
 LIBS= libs/libft.a

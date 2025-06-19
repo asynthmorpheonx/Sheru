@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:21:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/29 23:47:18 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/19 16:16:21 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void switch_toggles(int *toggle)
 		*toggle = 1;
 }
 
-// it's function that set the fetch struct into store previous token and type expansion(full/normal)
 void fetch_setter(bool mode, int i, bool is_full)
 {
 	if (mode)

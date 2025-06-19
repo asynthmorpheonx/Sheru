@@ -14,7 +14,9 @@ void	close_pipes(int **pipes)
 		free(pipes[i]);
 		i++;
 	}
-	free(pipes);		
+	if (executer()->c_count - 1)
+		free(pipes);
+	offs()->pipes = NULL;
 }
 
 int	execute_pipeline(t_data *cmd)
