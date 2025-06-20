@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/19 20:43:21 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/20 16:44:09 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void execute_command(t_data *cmd)
 			make_pipe(executer()->c_count);
 	while (cmd)
 	{
-		if (cmd->cmd)
+		if (cmd->cmd && *cmd->cmd)
 			executer()->is_builtin = builtin_check(*cmd->cmd);
 		if (!cmd->next && executer()->is_builtin && !executer()->ind)
 			exec_builtin(cmd);

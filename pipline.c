@@ -29,7 +29,10 @@ int	execute_pipeline(t_data *cmd)
 	path = get_path(*cmd->cmd, &status);
 	if (!path)
 	{
-		err(*cmd->cmd, status, 0);
+		if (!*cmd->cmd)
+			err(*cmd->cmd, status, 0);
+		else
+			err("''", status, 0);
 		close_pipes(offs()->pipes);
 		clear_container();
 		return (status);
@@ -49,13 +52,13 @@ void	child_exec(t_data *cmd)
 	handle_pipes(cmd, executer()->ind);
 	if (!redirect(cmd))
 		return (free(offs()->pids), close_pipes(offs()->pipes), exit(1));
-	if (cmd->cmd && !executer()->is_builtin)
+	if (cmd->cmd && *cmd->cmd && !executer()->is_builtin)
 	{
 		status = execute_pipeline(cmd);
 		if (status)
 			return (free(offs()->pids), exit(status));
 	}
-	else if (cmd->cmd)
+	else if (cmd->cmd && *cmd->cmd)
 	{
 		ft_ceue(cmd, envp());
 		close_pipes(offs()->pipes);

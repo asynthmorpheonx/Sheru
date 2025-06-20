@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:18:15 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/18 22:20:39 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/20 17:23:34 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,27 +60,22 @@ char    **env_to_array(t_env *ptr)
 	return (anvp);
 }
 
-char	*path_join(char *path, char *cmd)
+char	*path_join(char *path, char *cmd, int *status)
 {
 	char	*buff;
-	int		len;
-	int		i;
-	int		u;
-	
-	len = ft_strlen(path) + ft_strlen(cmd);
-	buff = malloc(sizeof(char) * (len + 2));
-	i = 0;
-	u = 0;
-	if (!buff)
-		ult_exit();
-	while (path[u])
-		buff[i++] = path[u++];
-	buff[i++] = '/';
-	u = 0;
-	while (cmd[u])
-		buff[i++] = cmd[u++];
-	buff[i] = '\0';
-	return (buff);
+
+	buff = ft_strjoin(path, "/");
+	buff = ft_gnl_strjoin(buff, cmd);
+	if (!access(buff, F_OK))
+	{
+		if (!access(buff, X_OK))
+			return (buff);
+		*status = 126;
+	}
+	else
+		*status = 127;
+	free(buff);
+	return(NULL);
 }
 
 char	*path_already(char *cmd, int *status)
@@ -101,28 +96,29 @@ char	*path_already(char *cmd, int *status)
 
 char	*get_path(char *cmd, int *error_status)
 {
-	int	i;
+	int		i;
+	char	*path;
+	char	*path_value;
+	char	**paths;
 
-	char **(path_buf), *(cmd_path), *(path_copy);
-	if (*cmd == '/' || *cmd == '.' || *cmd == '~')
-		return (path_already(cmd, error_status));
-	cmd_path = key_value("PATH");
-	path_buf = ft_split(cmd_path, ':');
 	i = 0;
-	while(path_buf[i])
+	*error_status = 127;
+	path_value = key_value("PATH");
+	if (!*cmd ||
+		(*cmd != '/' && *cmd != '.' && *cmd != '~' && !*path_value))
+		return (NULL);
+	else if (*cmd == '/' || *cmd == '.' || *cmd == '~')
+		return (path_already(cmd, error_status));
+	paths = ft_split(key_value("PATH"), ':');
+	if (!paths)
+		ult_exit();
+	while(paths[i])
 	{
-		path_copy = path_join(path_buf[i], cmd);
-		if (!access(path_copy, F_OK))
-		{
-			if (!access(path_copy, X_OK))
-				return (ft_free_array(path_buf), path_copy);
-			*error_status = 126;
-			return (ft_free_array(path_buf), NULL);
-		}
-		free(path_copy);
+		path = path_join(paths[i], cmd, error_status);
+		if (path)
+			return (ft_free_array(paths), path);
+		free(path);
 		i++;
 	}
-	ft_free_array(path_buf);
-	*error_status = 127;
-	return (NULL);
+	return (ft_free_array(paths), NULL);
 }

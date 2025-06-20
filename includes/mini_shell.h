@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/19 23:35:05 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/20 17:11:34 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,6 @@ void		close_herdoc_ports(void);
 
 void	ft_export(t_data *cmd);
 char	*exit_code(void);
-char	*path_join(char *path, char *cmd);
 
 char    **env_to_array(t_env *ptr);
 
@@ -228,5 +227,8 @@ t_env **envp(void);
 t_ferror *fetcher(void);
 t_utils *util(void);
 
+char	*path_join(char *path, char *cmd, int *status);
+char	*path_already(char *cmd, int *status);
+char	*get_path(char *cmd, int *error_status);
 
 #endif
