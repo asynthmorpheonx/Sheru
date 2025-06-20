@@ -32,7 +32,7 @@ int	execute_pipeline(t_data *cmd)
 		if (!*cmd->cmd)
 			err(*cmd->cmd, status, 0);
 		else
-			err("''", status, 0);
+			err(" ", status, 0);
 		close_pipes(offs()->pipes);
 		clear_container();
 		return (status);
