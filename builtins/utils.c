@@ -33,21 +33,25 @@ void	sort_tenv(char **env)
 void err(char *str, int error_status, bool ex_it)
 {
 	if (error_status == 4)
-		ft_putstr_fd("sheru: ", 2);
+		ft_putendl_fd("sheru: ", 2);
 	if (error_status != 3)
 		ft_putstr_fd(str, 2);
 	if (error_status == 1)
-		ft_putstr_fd(": command not found\n", 2);
+		ft_putendl_fd(": command not found", 2);
 	else if (error_status == 2)
-		ft_putstr_fd(": Permission denied\n", 2);
+		ft_putendl_fd(": Permission denied", 2);
 	else if (error_status == 3)
 		perror(str);
 	else if (error_status == 4)
-		ft_putstr_fd(": ambiguous redirect\n", 2);
+		ft_putendl_fd(": ambiguous redirect", 2);
 	else if (error_status == 127)
-		ft_putstr_fd(": command not found\n", 2);
+		ft_putendl_fd(": command not found", 2);
 	else if (error_status == 126)
-		ft_putstr_fd(": permission denied\n", 2);	
+		ft_putendl_fd(": permission denied", 2);
+	else if (error_status == 5)
+		ft_putendl_fd(": No such file or directory", 2);
+	else if (error_status == 6)
+		ft_putendl_fd(": Is a directory", 2);
 	clear_container();
 	if (ex_it)
 		exit(EXIT_FAILURE);

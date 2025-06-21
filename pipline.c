@@ -29,10 +29,14 @@ int	execute_pipeline(t_data *cmd)
 	path = get_path(*cmd->cmd, &status);
 	if (!path)
 	{
-		if (!*cmd->cmd)
+		if (*cmd->cmd)
 			err(*cmd->cmd, status, 0);
 		else
 			err(" ", status, 0);
+		if (status == 6)
+			status = 126;
+		else if (status == 5)
+			status = 127;
 		close_pipes(offs()->pipes);
 		clear_container();
 		return (status);

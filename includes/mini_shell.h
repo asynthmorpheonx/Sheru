@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/20 17:11:34 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/20 19:29:35 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@
 # include <readline/history.h>
 # include <heap_controller.h>
 # include <stdbool.h>
-# include <sys/wait.h>
 # include <stdlib.h>
 # include <signal.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <sys/ioctl.h>
+# include <sys/stat.h>
 
 typedef char t_prstat;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:18:15 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/20 17:23:34 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/21 16:41:29 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,31 +94,64 @@ char	*path_already(char *cmd, int *status)
 	return (NULL);
 }
 
-char	*get_path(char *cmd, int *error_status)
+bool	check_f_path(char *cmd)
 {
-	int		i;
+	int	i;
+
+	i = 0;
+	while(cmd[i])
+	{
+		if (cmd[i] == '/')
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+char	*check_from_path(char *cmd, int *err_status)
+{
 	char	*path;
-	char	*path_value;
+	int		i;
 	char	**paths;
 
 	i = 0;
-	*error_status = 127;
-	path_value = key_value("PATH");
-	if (!*cmd ||
-		(*cmd != '/' && *cmd != '.' && *cmd != '~' && !*path_value))
-		return (NULL);
-	else if (*cmd == '/' || *cmd == '.' || *cmd == '~')
-		return (path_already(cmd, error_status));
 	paths = ft_split(key_value("PATH"), ':');
 	if (!paths)
 		ult_exit();
 	while(paths[i])
 	{
-		path = path_join(paths[i], cmd, error_status);
+		path = path_join(paths[i], cmd, err_status);
 		if (path)
 			return (ft_free_array(paths), path);
 		free(path);
 		i++;
 	}
 	return (ft_free_array(paths), NULL);
+}
+
+char	*get_path(char *cmd, int *error_status)
+{
+	struct stat	st;
+
+	*error_status = 127;
+	if (!*cmd)
+		return (NULL);
+	if (check_f_path(cmd))
+	{
+		if (access(cmd, F_OK))
+		{
+			*error_status = 5;
+			return (NULL);
+		}
+		if (stat(cmd, &st) == -1)
+			err("stat", 3, 1);
+		if (S_ISDIR(st.st_mode))
+			*error_status = 6;
+		else
+			return (path_already(cmd, error_status));
+	}
+	else
+		return (check_from_path(cmd, error_status));
+	return (NULL);
+	
 }
