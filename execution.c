@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/22 19:46:00 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/22 23:03:16 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,21 +71,21 @@ void	exec_builtin(t_data *cmd)
 
 void	pipe_indexing(void)
 {
-	if (executer()->ind >= 2 && executer()->ind % 2 == 0)
+	if (executer()->ind % 2 == 0)
 	{
 		close(offs()->fpi[0]);
 		close(offs()->fpi[1]);
 		if (pipe(offs()->fpi) == -1)
 			err("pipe", 3, 1);
 	}
-	else if (executer()->ind >= 2)
+	else
 	{
 		close(offs()->spi[0]);
 		close(offs()->spi[1]);
 		pipe(offs()->spi);
-		if (pipe(offs()->fpi) == -1)
+		if (pipe(offs()->spi) == -1)
 			err("pipe", 3, 1);
-	}
+	}		
 }
 
 void execute_command(t_data *cmd)
@@ -97,18 +97,8 @@ void execute_command(t_data *cmd)
 	make_pipe();
 	while (cmd)
 	{
-		if (executer()->ind >= 2 && executer()->ind % 2 == 0)
-		{
-			close(offs()->fpi[0]);
-			close(offs()->fpi[1]);
-			pipe(offs()->fpi);
-		}
-		else if (executer()->ind >= 2)
-		{
-			close(offs()->spi[0]);
-			close(offs()->spi[1]);
-			pipe(offs()->spi);
-		}
+		if (cmd->next)
+			pipe_indexing();
 		if (cmd->cmd && *cmd->cmd)
 			executer()->is_builtin = builtin_check(*cmd->cmd);
 		if (!cmd->next && executer()->is_builtin && !executer()->ind)

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 09:28:45 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/22 19:40:22 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/22 22:53:44 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,33 +48,21 @@ void	handle_pipes(t_data *cmd, int ind)
 	if (ind)
 	{
 		if (ind % 2 == 0)
-		{
 			dup2(offs()->spi[0], 0);
-			close(offs()->spi[0]);
-			close(offs()->spi[1]);
-		}
 		else
-		{
 			dup2(offs()->fpi[0], 0);
-			close(offs()->fpi[0]);
-			close(offs()->fpi[1]);
-		}
 	}
 	if (cmd->next)
 	{
 		if (ind % 2 == 0)
-		{
 			dup2(offs()->fpi[1], 1);
-			close(offs()->fpi[1]);
-			close(offs()->fpi[0]);
-		}
 		else
-		{
 			dup2(offs()->spi[1], 1);
-			close(offs()->spi[1]);
-			close(offs()->spi[0]);
-		}
 	}
+	close(offs()->fpi[1]);
+	close(offs()->fpi[0]);
+	close(offs()->spi[1]);
+	close(offs()->spi[0]);
 }
 
 bool	safer_fork(pid_t process_id, int ind, t_data *cmd)
