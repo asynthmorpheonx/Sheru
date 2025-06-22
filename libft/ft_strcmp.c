@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 20:17:37 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/05/20 15:38:32 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/22 23:19:21 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int ft_strcmp(char *s1, const char *s2)
+int	ft_strcmp(char *s1, const char *s2)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while ((s1[i] != '\0') && s2[i] != '\0')

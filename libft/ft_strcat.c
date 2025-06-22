@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 21:09:42 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/02/27 21:09:43 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/22 23:18:51 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,5 @@ char	*ft_strcat(char *dest, const char *src)
 		i++;
 	}
 	dest[dest_len + i] = '\0';
-	return (dest);	
+	return (dest);
 }
-
