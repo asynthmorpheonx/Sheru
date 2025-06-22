@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:17:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/18 21:35:12 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/22 18:46:12 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 void	ft_exit(void)
 {
-	if (offs()->pipes)
-		close_pipes(offs()->pipes);
+	close_pipes();
 	if (offs()->pids)
 		free(offs()->pids);
 	clear_container();

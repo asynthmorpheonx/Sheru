@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/20 19:29:35 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/22 18:45:14 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ typedef struct s_offs
 	int		in_backup;
 	int		out_backup;
 	char	pwd[4096];
-	int		**pipes;
+	int		fpi[2];
+	int		spi[2];
 	pid_t	*pids;
 }	t_offs;
 
@@ -204,7 +205,7 @@ bool		*mask_joining(bool *o_mask, char *pre, char *suff);
 int			node_count(void);
 void		execute_command(t_data *cmd);
 
-void	close_pipes(int **pipes);
+void	close_pipes(void);
 int		execute_pipeline(t_data *cmd);
 bool	redirect(t_data *cmd);
 void	err(char *str, int error_status, bool ex_it);

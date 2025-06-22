@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 09:28:45 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/18 15:17:06 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/22 19:40:22 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,34 @@ void	make_pids(int ccount)
 
 void	handle_pipes(t_data *cmd, int ind)
 {
-	if (offs()->pipes && *offs()->pipes)
+	if (ind)
 	{
-		if (ind)
+		if (ind % 2 == 0)
 		{
-			dup2(offs()->pipes[ind - 1][0], 0);
-			close(offs()->pipes[ind - 1][0]);
-			close(offs()->pipes[ind - 1][1]);
+			dup2(offs()->spi[0], 0);
+			close(offs()->spi[0]);
+			close(offs()->spi[1]);
 		}
-		if (cmd->next)
+		else
 		{
-			dup2(offs()->pipes[ind][1], 1);
-			close(offs()->pipes[ind][1]);
-			close(offs()->pipes[ind][0]);
+			dup2(offs()->fpi[0], 0);
+			close(offs()->fpi[0]);
+			close(offs()->fpi[1]);
+		}
+	}
+	if (cmd->next)
+	{
+		if (ind % 2 == 0)
+		{
+			dup2(offs()->fpi[1], 1);
+			close(offs()->fpi[1]);
+			close(offs()->fpi[0]);
+		}
+		else
+		{
+			dup2(offs()->spi[1], 1);
+			close(offs()->spi[1]);
+			close(offs()->spi[0]);
 		}
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/20 16:45:42 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/21 16:57:06 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -462,6 +462,7 @@ int main(int ac, char **av, char **env)
 	(void)ac;
 	(void)av;
 	signal(SIGINT, interupt_handle);
+	signal(SIGQUIT, SIG_IGN);
 	make_env(env, envp(), 0, 0);
 	code_setter(0);
 	while (1)

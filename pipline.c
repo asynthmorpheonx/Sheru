@@ -1,22 +1,21 @@
 #include "mini_shell.h"
 
-void	close_pipes(int **pipes)
+void	close_pipes(void)
 {
-	int	i;
-
-	if (!pipes)
-		return ;
-	i = 0;
-	while (i < executer()->c_count - 1)
+	if (offs()->fpi[1] || offs()->fpi[0])
 	{
-		close(pipes[i][0]);
-		close(pipes[i][1]);
-		free(pipes[i]);
-		i++;
+		if (offs()->fpi[1])
+			close(offs()->fpi[1]);
+		if (offs()->fpi[0])
+			close(offs()->fpi[0]);
 	}
-	if (executer()->c_count - 1)
-		free(pipes);
-	offs()->pipes = NULL;
+	if (offs()->spi[1] || offs()->spi[0])
+	{
+		if (offs()->spi[1])
+			close(offs()->spi[1]);
+		if (offs()->spi[0])
+			close(offs()->spi[0]);
+	}
 }
 
 int	execute_pipeline(t_data *cmd)
@@ -37,11 +36,12 @@ int	execute_pipeline(t_data *cmd)
 			status = 126;
 		else if (status == 5)
 			status = 127;
-		close_pipes(offs()->pipes);
+		close_pipes();
 		clear_container();
 		return (status);
 	}
 	anvp = env_to_array(*envp());
+	close_pipes();
 	execve(path, cmd->cmd, anvp);
 	perror("sheru");
 	ult_exit();
@@ -55,7 +55,7 @@ void	child_exec(t_data *cmd)
 	status = 0;
 	handle_pipes(cmd, executer()->ind);
 	if (!redirect(cmd))
-		return (free(offs()->pids), close_pipes(offs()->pipes), exit(1));
+		return (free(offs()->pids), close_pipes(), exit(1));
 	if (cmd->cmd && *cmd->cmd && !executer()->is_builtin)
 	{
 		status = execute_pipeline(cmd);
@@ -65,7 +65,7 @@ void	child_exec(t_data *cmd)
 	else if (cmd->cmd && *cmd->cmd)
 	{
 		ft_ceue(cmd, envp());
-		close_pipes(offs()->pipes);
+		close_pipes();
 	}
 	free(offs()->pids);
 	clear_container();

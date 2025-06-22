@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/20 16:44:09 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/22 19:46:00 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,32 +35,14 @@ int	node_count(void)
 	return (count);
 }
 
-static void make_pipe(int c_count)
+static void make_pipe(void)
 {
-	int	i;
-
-	offs()->pipes = malloc(sizeof(int *) * (c_count - 1));
-	if (!offs()->pipes)
-		ult_exit();
-	i = 0;
-	while (i < c_count - 1)
+	if (pipe(offs()->fpi) == -1 || pipe(offs()->spi) == -1)
 	{
-		offs()->pipes[i] = malloc(sizeof(int) * 2);
-		if (!offs()->pipes[i])
-		{
-			while (--i >= 0)
-				free (offs()->pipes[i]);
-			free (offs()->pipes);
-			return ;
-		}
-		if (pipe(offs()->pipes[i]) == -1)
-		{
-			while (i >= 0)
-				free(offs()->pipes[i--]);
-			free(offs()->pipes);
-			err("pipe", 3, true);
-		}
-		i++;
+		if (offs()->pids)
+			free(offs()->pids);
+		close_pipes();
+		clear_container();
 	}
 }
 
@@ -87,16 +69,46 @@ void	exec_builtin(t_data *cmd)
 	}
 }
 
+void	pipe_indexing(void)
+{
+	if (executer()->ind >= 2 && executer()->ind % 2 == 0)
+	{
+		close(offs()->fpi[0]);
+		close(offs()->fpi[1]);
+		if (pipe(offs()->fpi) == -1)
+			err("pipe", 3, 1);
+	}
+	else if (executer()->ind >= 2)
+	{
+		close(offs()->spi[0]);
+		close(offs()->spi[1]);
+		pipe(offs()->spi);
+		if (pipe(offs()->fpi) == -1)
+			err("pipe", 3, 1);
+	}
+}
+
 void execute_command(t_data *cmd)
 {
 	executer()->ind = 0;
 	executer()->c_count = node_count();
 	executer()->is_builtin = false;
 	make_pids(executer()->c_count);
-	if (cmd->next)
-			make_pipe(executer()->c_count);
+	make_pipe();
 	while (cmd)
 	{
+		if (executer()->ind >= 2 && executer()->ind % 2 == 0)
+		{
+			close(offs()->fpi[0]);
+			close(offs()->fpi[1]);
+			pipe(offs()->fpi);
+		}
+		else if (executer()->ind >= 2)
+		{
+			close(offs()->spi[0]);
+			close(offs()->spi[1]);
+			pipe(offs()->spi);
+		}
 		if (cmd->cmd && *cmd->cmd)
 			executer()->is_builtin = builtin_check(*cmd->cmd);
 		if (!cmd->next && executer()->is_builtin && !executer()->ind)
@@ -106,8 +118,7 @@ void execute_command(t_data *cmd)
 		executer()->ind++;
 		cmd = cmd->next;
 	}
-	if (offs()->pipes)
-		close_pipes(offs()->pipes);
+	close_pipes();
 	wait_for_childs();
 	close_herdoc_ports();
 }
