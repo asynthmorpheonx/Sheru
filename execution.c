@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/22 23:03:16 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/22 23:09:28 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,11 @@ void	pipe_indexing(void)
 		close(offs()->fpi[0]);
 		close(offs()->fpi[1]);
 		if (pipe(offs()->fpi) == -1)
+		{
+			if (offs()->pids)
+				free(offs()->pids);
 			err("pipe", 3, 1);
+		}
 	}
 	else
 	{
@@ -84,7 +88,11 @@ void	pipe_indexing(void)
 		close(offs()->spi[1]);
 		pipe(offs()->spi);
 		if (pipe(offs()->spi) == -1)
+		{
+			if (offs()->pids)
+				free(offs()->pids);
 			err("pipe", 3, 1);
+		}
 	}		
 }
 

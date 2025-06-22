@@ -12,10 +12,10 @@ CFLAGS= -Wall -Werror -Wextra -ggdb
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBS)
-	$(CC) $(OBJ) -Llibs -lft -lreadline -o $(NAME)
+	$(CC) $(OBJ) -O1 -Llibs -lft -lreadline -o $(NAME)
 
 %.o: %.c
-	$(CC) -I includes $(CFLAGS) -c $< -o $@
+	$(CC) -O1 -I includes $(CFLAGS) -c $< -o $@
 
 $(LIBS):
 	mkdir -p libs
