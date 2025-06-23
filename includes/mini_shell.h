@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 16:22:35 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:29:46 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,6 +238,7 @@ void	herdoc_job(void);
 void reset_data_box(void);
 bool syntax_check(void);
 void	init_shlvl(void);
+void	interupt_handle(int	sig_num);
 
 
 #endif

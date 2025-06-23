@@ -3,7 +3,7 @@ SRC= builtins/builtins.c builtins/ft_cd_handler.c builtins/ft_echo.c builtins/ft
 	expansion_handle.c minishell.c store_data_process.c handle_cmd_flage.c prompt_gen.c tokenize_utils.c quote_utils.c\
 	uns_exp_exit.c make_nd_store_env.c heap_controller/g_container.c  heap_controller/managment_utils.c redirection_utils.c\
 	release_boxs.c aditional_utils.c code_handler.c herdoc_reader.c key_parse_utlis.c reset_boxs_utils.c syntax_check.c\
-	init_shlvl.c
+	init_shlvl.c sig_hand.c
 
 OBJ= $(SRC:%.c=%.o)
 NAME= minishell

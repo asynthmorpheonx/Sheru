@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:24:17 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/22 23:30:38 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:30:59 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ void reset_util_box(void)
 		delete_one(util()->a);
 	if (util()->mask)
 		delete_one(util()->mask);
+	if (*util()->ports)
+		ft_bzero(util()->ports, 16 * sizeof(int));
 	util()->herdoc = 0;
-	ft_bzero(util()->ports, 16 * sizeof(int));
 	util()->t = 0;
 }

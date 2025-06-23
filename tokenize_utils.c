@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:07:38 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/26 18:40:35 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:28:19 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	whichtoken(char *input, int *i)
 	else
 		return (WORD);
 }
+
 int	token_value(char *input)
 {
 	if (!ft_strncmp(input, "<<", 3))
@@ -49,7 +50,6 @@ int	token_value(char *input)
 		return (WORD);
 }
 
-//count token in the string
 bool token_count(char *str)
 {
 	int	i;
@@ -76,7 +76,6 @@ bool token_count(char *str)
 	return (true);
 }
 
-// it fills the buffer that is given with and one of the token based on the token_id
 void	fill_with_token(char **buffer, int token_id)
 {
 	if (token_id == PIPE)
@@ -92,7 +91,6 @@ void	fill_with_token(char **buffer, int token_id)
 	g_lst_addback(g_new_garbage(*buffer));
 }
 
-// this function breaks string line (input) into small strings that is tokenized 
 char	*buffer_filler(char *s, int *i)
 {
 	int		j;
@@ -120,7 +118,6 @@ char	*buffer_filler(char *s, int *i)
 	return (str);
 }
 
-// split 
 char	**spliting_based_token(char *line)
 {
 	int		i;
@@ -131,7 +128,7 @@ char	**spliting_based_token(char *line)
 	k = 0;
 	strs = safe_alloc((util()->t + 1) * sizeof(char *), 0);
 	if (!strs)
-		exit (EXIT_FAILURE);
+		ult_exit();
 	while (line[i])
 	{
 		while(ft_iswhitespace(line[i]))
@@ -150,7 +147,6 @@ char	**spliting_based_token(char *line)
 	return (strs);
 }
 
-// it creates an array of integers that contain token ids of the splited input 
 bool	tokenize(void)
 {
 	int	i;

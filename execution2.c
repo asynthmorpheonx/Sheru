@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 10:18:15 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/21 16:41:29 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:36:03 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,8 @@ char	*get_path(char *cmd, int *error_status)
 	struct stat	st;
 
 	*error_status = 127;
-	if (!*cmd)
+	if (!*cmd || !ft_strncmp("..", cmd, 3)
+		|| !ft_strncmp(".", cmd, 2))
 		return (NULL);
 	if (check_f_path(cmd))
 	{
