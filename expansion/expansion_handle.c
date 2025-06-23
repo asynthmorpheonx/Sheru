@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:21:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:02:50 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:13:19 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ void	expansion_util(int *ind, t_exp *ubox, int end, int tmp)
 	if (util()->s[*ind][end]
 		&& !ft_isalpha(util()->s[*ind][end]))
 	{
-		ubox->du[ubox->i - 1] = safe_join(ubox->du[ubox->i - 1], util()->s[*ind] + end);
-		ubox->mask[ubox->i - 1] = handle_masking(ubox->du[ubox->i - 1], 0, tmp);
+		ubox->du[ubox->i - 1] = safe_join(ubox->du[ubox->i - 1],
+				util()->s[*ind] + end);
+		ubox->mask[ubox->i - 1] = handle_masking(ubox->du[ubox->i - 1],
+				0, tmp);
 	}
 	*ind = ubox->i - 1;
 	add_suffix(ubox);
@@ -39,7 +41,7 @@ bool	begin_expand(int *i, int *j, int *to)
 	return (true);
 }
 
-void expansion_data(int i, int j, int to, int sto)
+void	expansion_data(int i, int j, int to, int sto)
 {
 	while (util()->s[i])
 	{
@@ -57,7 +59,7 @@ void expansion_data(int i, int j, int to, int sto)
 				&& util()->s[i][j] == '$' && sto)
 			{
 				if (!begin_expand(&i, &j, &to))
-					continue;
+					continue ;
 			}
 			j++;
 		}

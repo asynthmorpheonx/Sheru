@@ -6,13 +6,13 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:24:00 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:31:14 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:35:19 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void make_pipe(void)
+void	make_pipe(void)
 {
 	if (pipe(offs()->fpi) == -1 || pipe(offs()->spi) == -1)
 	{
@@ -47,5 +47,5 @@ void	pipe_indexing(void)
 				free(offs()->pids);
 			err("pipe", 3, 1);
 		}
-	}		
+	}
 }

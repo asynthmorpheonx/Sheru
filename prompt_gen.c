@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:19:56 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:47:27 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:35:53 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static size_t	session_name_len(char *str)
 static char	*export_session(void)
 {
 	static char	*str;
-	char	*ptr;
+	char		*ptr;
 
 	if (!str)
 	{
@@ -38,9 +38,9 @@ static char	*export_session(void)
 char	*creat_prompt(void)
 {
 	static char	*str;
-	char	*user;
-	char	*session;
-	
+	char		*user;
+	char		*session;
+
 	if (!str)
 	{
 		user = key_value(USR);

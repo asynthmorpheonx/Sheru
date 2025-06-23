@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:22:00 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:21:00 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:20:08 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*exit_code(void)
 	return (exit_status);
 }
 
-void	code_setter(int	new_code)
+void	code_setter(int new_code)
 {
 	int	i;
 
@@ -41,6 +41,6 @@ void	code_setter(int	new_code)
 			exit_code()[i] = new_code % 10 + '0';
 			i--;
 			new_code /= 10;
-		}		
+		}
 	}
 }

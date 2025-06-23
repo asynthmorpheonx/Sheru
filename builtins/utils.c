@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/24 00:00:08 by mel-mouh          #+#    #+#             */
+/*   Updated: 2025/06/24 00:00:40 by mel-mouh         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "mini_shell.h"
 
-t_offs *offs(void)
+t_offs	*offs(void)
 {
-	static t_offs x;
+	static t_offs	x;
 
 	return (&x);
 }
@@ -10,19 +22,20 @@ t_offs *offs(void)
 void	sort_tenv(char **env)
 {
 	char	*tmp;
-	
-	int (i), (u);
+	int		i;
+	int		u;
+
 	i = 0;
 	while (env[i])
 	{
 		u = i + 1;
-		while(env[u])
+		while (env[u])
 		{
 			if (ft_strcmp(env[u], env[i]) < 0)
 			{
 				tmp = env[u];
 				env[u] = env[i];
-				env[i] = tmp; 
+				env[i] = tmp;
 			}
 			u++;
 		}
@@ -30,7 +43,7 @@ void	sort_tenv(char **env)
 	}
 }
 
-void err(char *str, int error_status, bool ex_it)
+void	err(char *str, int error_status, bool ex_it)
 {
 	if (error_status == 4)
 		ft_putendl_fd("sheru: ", 2);

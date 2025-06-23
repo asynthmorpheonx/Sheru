@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 09:28:45 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/22 22:53:44 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:47:51 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	ft_ceue(t_data *data, t_env **env)
 void	make_pids(int ccount)
 {
 	pid_t	*ptr;
-	
+
 	ptr = malloc((ccount) * sizeof(pid_t));
 	if (!ptr)
 		ult_exit();

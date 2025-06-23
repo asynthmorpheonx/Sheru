@@ -6,13 +6,13 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 23:29:57 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:21:05 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:24:07 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_shell.h"
 
-void ult_exit(void)
+void	ult_exit(void)
 {
 	clear_container();
 	exit(EXIT_FAILURE);
@@ -25,12 +25,12 @@ t_exutil	*executer(void)
 	return (&pp);
 }
 
-void ft_free_array(char **arr)
+void	ft_free_array(char **arr)
 {
 	int	i;
 
 	i = 0;
-	while(arr[i] != NULL)
+	while (arr[i] != NULL)
 	{
 		free(arr[i]);
 		i++;

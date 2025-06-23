@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:56:15 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:04:44 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:16:17 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	handle_if_begin_with_ifs(int start, t_exp *ubox, char *value)
 {
 	char	*tmp;
-	
+
 	if (start)
 	{
 		tmp = ft_substr(util()->s[ubox->i], 0, start);
@@ -25,7 +25,7 @@ void	handle_if_begin_with_ifs(int start, t_exp *ubox, char *value)
 		{
 			ubox->du[ubox->i] = safe_join(tmp, ubox->extend[ubox->j]);
 			ubox->mask[ubox->i] = handle_masking(ubox->du[ubox->i],
-				start, ft_strlen(value));
+					start, ft_strlen(value));
 			ubox->tokn[ubox->i] = WORD;
 			ubox->j++;
 		}
@@ -41,7 +41,7 @@ void	handle_if_begin_with_ifs(int start, t_exp *ubox, char *value)
 	}
 }
 
-void extend_key(int *index, int *start, char *value, int end)
+void	extend_key(int *index, int *start, char *value, int end)
 {
 	t_exp	u_box;
 	int		tmp;
@@ -50,7 +50,7 @@ void extend_key(int *index, int *start, char *value, int end)
 	u_box.j = 0;
 	u_box.extend = ifs_split(value);
 	if (!u_box.extend)
-		ult_exit() ;
+		ult_exit();
 	if (*start && is_ifs(*value))
 		u_box.len = lenght_both(u_box.extend, util()->s);
 	else
@@ -86,7 +86,7 @@ void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
 	delete_one(util()->s[*ind]);
 	delete_one(util()->mask[*ind]);
 	util()->s[*ind] = dup;
-	util()->mask[*ind] = handle_masking(dup, *strt, len);
+	(util()->mask)[*ind] = handle_masking(dup, *strt, len);
 	if (*value)
 		*strt = len - 1;
 }
@@ -106,7 +106,7 @@ bool	check_value(char *str)
 		{
 			count++;
 			toggle = 0;
-			if (count >	1)
+			if (count > 1)
 				return (false);
 		}
 		else if (is_ifs(str[i]))
@@ -118,7 +118,7 @@ bool	check_value(char *str)
 	return (true);
 }
 
-void expand_value(int *index, int *start)
+void	expand_value(int *index, int *start)
 {
 	char	*dup;
 	char	*value;

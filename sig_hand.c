@@ -6,13 +6,13 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 16:29:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 16:29:28 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:44:46 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void	interupt_handle(int	sig_num)
+void	interupt_handle(int sig_num)
 {
 	if (sig_num == SIGINT && *process_status() != INTERRUPTED)
 	{

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:21:34 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:49:33 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:18:47 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*path_join(char *path, char *cmd, int *status)
 	else
 		*status = 127;
 	free(buff);
-	return(NULL);
+	return (NULL);
 }
 
 char	*path_already(char *cmd, int *status)
@@ -51,7 +51,7 @@ bool	check_f_path(char *cmd)
 	int	i;
 
 	i = 0;
-	while(cmd[i])
+	while (cmd[i])
 	{
 		if (cmd[i] == '/')
 			return (true);
@@ -70,7 +70,7 @@ char	*check_from_path(char *cmd, int *err_status)
 	paths = ft_split(key_value("PATH"), ':');
 	if (!paths)
 		ult_exit();
-	while(paths[i])
+	while (paths[i])
 	{
 		path = path_join(paths[i], cmd, err_status);
 		if (path)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:14:56 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/18 17:14:31 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:49:25 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	ft_cd(t_data *cmd)
 		path = key_value("HOME");
 		if (!*path)
 			return (code_setter(1),
-			ft_putendl_fd("sheru: cd: HOME not set", 2));
+				ft_putendl_fd("sheru: cd: HOME not set", 2));
 	}
 	else
 		path = cmd->cmd[1];

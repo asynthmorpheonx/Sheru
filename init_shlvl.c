@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 16:22:03 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 16:22:27 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:31:35 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	init_shlvl(void)
 {
 	int		curr_lvl;
 	t_env	*ptr;
-	
+
 	curr_lvl = 1 + check_lvl(key_value("SHLVL"));
 	ptr = *envp();
 	while (ptr)
@@ -41,7 +41,7 @@ void	init_shlvl(void)
 			ptr->value = ft_itoa(curr_lvl);
 			if (!ptr)
 				ult_exit();
-			return (g_lst_addback(g_new_garbage(ptr->value)));			
+			return (g_lst_addback(g_new_garbage(ptr->value)));
 		}
 		ptr = ptr->next;
 	}

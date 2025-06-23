@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:47:35 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:48:01 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:18:12 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	close_pipes(void)
 }
 
 int	execute_pipeline(t_data *cmd)
-{ 
+{
 	char	*path;
 	char	**anvp;
 	int		status;
@@ -56,8 +56,7 @@ int	execute_pipeline(t_data *cmd)
 	close_pipes();
 	execve(path, cmd->cmd, anvp);
 	perror("sheru");
-	ult_exit();
-	return (0);
+	return (ult_exit(), 0);
 }
 
 void	child_exec(t_data *cmd)

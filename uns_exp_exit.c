@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:17:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/22 18:46:12 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:47:25 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ void	ft_unset(t_data *data, t_env **env)
 		{
 			if (prev)
 				prev->next = current->next;
-			else 
+			else
 				*env = current->next;
 			delete_one(current->key);
 			delete_one(current->value);
 			delete_one(current);
-			return;
+			return ;
 		}
 		prev = current;
 		current = current->next;

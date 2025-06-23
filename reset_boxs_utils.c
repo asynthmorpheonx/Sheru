@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:24:17 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 16:30:59 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:43:58 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ void	clean_lst(char **str)
 	}
 }
 
-void reset_data_box(void)
+void	reset_data_box(void)
 {
-	t_data *next;
+	t_data	*next;
 
 	if (*box())
 	{
@@ -47,7 +47,7 @@ void reset_data_box(void)
 	}
 }
 
-void reset_util_box(void)
+void	reset_util_box(void)
 {
 	if (util()->s)
 		delete_one(util()->s);

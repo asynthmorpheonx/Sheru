@@ -3,24 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   redirections_handle.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:07:45 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/20 15:33:30 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:42:02 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void	stor_redirections(int *arr, char **strs, t_file *file)
+void	stor_redirections(int *arr, char **strs, t_file *file, int i)
 {
-	int	j;
-	int	p;
-	int	i;
-
+	int (j), (p);
 	j = 0;
 	p = 0;
-	i = 0;
 	while (strs[i] && arr[i] != PIPE)
 	{
 		if (arr[i] == APP || arr[i] == OUD)
@@ -91,6 +87,6 @@ void	handle_redirections(int *arr, char **strs, t_file *file, int *mode)
 	outcount = 0;
 	count_in_out(&incount, &outcount, arr, strs);
 	make_a_file(incount, outcount, file);
-	stor_redirections(arr, strs, file);
+	stor_redirections(arr, strs, file, 0);
 	*mode = 0;
 }

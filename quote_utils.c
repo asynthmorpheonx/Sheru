@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:03:20 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:47:23 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:36:24 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,13 @@ void	remove_quote_helper(t_quoter *box, int *len, int *ind, int *qu)
 {
 	ft_memmove(box->s + box->sap, box->s + box->sap + 1, *len - box->sap);
 	if (box->m)
-		ft_memmove(box->m + box->sap, box->m + box->sap + 1, *len - box->sap - 1);
+		ft_memmove(box->m + box->sap, box->m + box->sap + 1,
+			*len - box->sap - 1);
 	(*len)--;
 	ft_memmove(box->s + box->fap, box->s + box->fap + 1, *len - box->fap);
 	if (box->m)
-		ft_memmove(box->m + box->fap, box->m + box->fap + 1, *len - box->fap - 1);
+		ft_memmove(box->m + box->fap, box->m + box->fap + 1,
+			*len - box->fap - 1);
 	(*len)--;
 	(*ind) -= 2;
 	(*qu) = -1;

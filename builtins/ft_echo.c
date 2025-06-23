@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:39:34 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/18 21:39:55 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:49:57 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ static void	echo_print(char **str)
 	}
 }
 
-static bool check_n(char *arg)
+static bool	check_n(char *arg)
 {
-	int i;
+	int	i;
 
 	if (*arg != '-')
 		return (false);

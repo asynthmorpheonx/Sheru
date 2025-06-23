@@ -6,16 +6,16 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:27:22 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/22 23:30:29 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:33:00 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-int lenght_both(char **s1, char **s2)
+int	lenght_both(char **s1, char **s2)
 {
-	int i;
-	int len;
+	int	i;
+	int	len;
 
 	i = 0;
 	while (s1 && s1[i])
@@ -28,9 +28,9 @@ int lenght_both(char **s1, char **s2)
 	return (len);
 }
 
-int key_len(char *str, int pos)
+int	key_len(char *str, int pos)
 {
-	int i;
+	int	i;
 
 	i = pos + 1;
 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
@@ -38,11 +38,11 @@ int key_len(char *str, int pos)
 	return (i);
 }
 
-char *key_value(char *key)
+char	*key_value(char *key)
 {
-	t_env *pp;
-	char *tmp;
-	int i;
+	t_env	*pp;
+	char	*tmp;
+	int		i;
 
 	if (key[0] == '$' || !key[0])
 		return ("");

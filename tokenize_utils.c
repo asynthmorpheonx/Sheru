@@ -6,13 +6,13 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:07:38 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:37:05 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:45:46 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-bool token_count(char *str)
+bool	token_count(char *str)
 {
 	int	i;
 	int	tcount;
@@ -72,7 +72,7 @@ char	*buffer_filler(char *s, int *i)
 			if (q == -1)
 				q = *i;
 			else if (q >= 0 && s[*i] == s[q])
-				q = -1;			
+				q = -1;
 		}
 		(*i)++;
 	}
@@ -93,7 +93,7 @@ char	**spliting_based_token(char *line)
 		ult_exit();
 	while (line[i])
 	{
-		while(ft_iswhitespace(line[i]))
+		while (ft_iswhitespace(line[i]))
 			i++;
 		if (line[i] == '|' || line[i] == '>' || line[i] == '<')
 		{

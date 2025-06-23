@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:26:43 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 16:07:41 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:45:05 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	syntax_err_msg(char *err)
 	code_setter(2);
 }
 
-bool syntax_check(void)
+bool	syntax_check(void)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < util()->t)

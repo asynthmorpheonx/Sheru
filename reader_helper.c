@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:32:45 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:32:53 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:27:27 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 void	replace_fd(t_data *node, char *str, int i)
 {
-	delete_one(node->file.infile[i]);
-	node->file.infile[i] = str;
-	g_lst_addback(g_new_garbage(str));
+	if (str)
+	{
+		delete_one(node->file.infile[i]);
+		node->file.infile[i] = str;
+		g_lst_addback(g_new_garbage(str));
+	}
 }
 
 void	here_doc_util(char *input, int fd)

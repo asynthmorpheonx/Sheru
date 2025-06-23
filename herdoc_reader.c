@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:25:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:32:37 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:30:28 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,15 @@ char	*here_doc_reader(char *str, bool mode, int i)
 		input = readline("> ");
 		if (*process_status() == INTERRUPTED
 			|| !input || !ft_memcmp(input, str, ft_strlen(input) + 1))
-			break;
+			break ;
 		if (mode)
 			here_doc_util(input, fds[1]);
 		free(input);
 		input = NULL;
 	}
 	if (mode)
-		close(fds[1]);
-	if (mode)
 	{
+		close(fds[1]);
 		util()->ports[i] = fds[0];
 		return (ft_itoa(fds[0]));
 	}
@@ -73,31 +72,28 @@ char	*here_doc_reader(char *str, bool mode, int i)
 void	herdoc_job(void)
 {
 	int		i;
-	char	*str;
 	t_data	*tmp;
 	int		ind;
 
-	i = 0;
 	ind = 0;
 	tmp = *box();
 	while (tmp)
 	{
+		i = 0;
 		while (tmp->file.infile && tmp->file.infile[i])
 		{
 			if (tmp->file.i_type[i] == HERDOC && tmp->file.infile[i + 1])
 				here_doc_reader(tmp->file.infile[i], false, ind);
 			else if (tmp->file.i_type[i] == HERDOC)
 			{
-				str = here_doc_reader(tmp->file.infile[i], true, ind);
-				if (str)
-					replace_fd(tmp, str, i);
+				replace_fd(tmp,
+					here_doc_reader(tmp->file.infile[i], true, ind), i);
 				ind++;
 			}
 			if (*process_status() == INTERRUPTED)
 				return (close_herdoc_ports());
 			i++;
 		}
-		i = 0;
 		tmp = tmp->next;
 	}
 }

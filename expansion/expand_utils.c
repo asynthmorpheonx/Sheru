@@ -6,13 +6,13 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:54:42 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:03:03 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:14:24 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void switch_toggles(int *toggle)
+void	switch_toggles(int *toggle)
 {
 	if (*toggle)
 		*toggle = 0;
@@ -20,7 +20,7 @@ void switch_toggles(int *toggle)
 		*toggle = 1;
 }
 
-void fetch_setter(bool mode, int i, bool is_full)
+void	fetch_setter(bool mode, int i, bool is_full)
 {
 	if (mode)
 	{
@@ -62,7 +62,7 @@ void	add_extended(t_exp *ubox)
 		ubox->i++;
 		ubox->j++;
 	}
-}	
+}
 
 void	add_suffix(t_exp *ubox)
 {

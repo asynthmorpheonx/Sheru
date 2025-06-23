@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:18:25 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/19 23:56:12 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:25:09 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	cmd_filler(char **strs, int *arr, char **buffer, int i)
 	j = 0;
 	while (strs[i] && arr[i] != PIPE)
 	{
-		if (arr[i] == IND || arr[i] == OUD 
+		if (arr[i] == IND || arr[i] == OUD
 			|| arr[i] == APP || arr[i] == HERDOC)
 			i++;
 		else if (*strs[i] || (!*strs[i] && !*util()->mask[i]))

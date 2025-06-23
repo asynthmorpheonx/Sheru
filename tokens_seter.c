@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:34:36 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:35:33 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:47:03 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ int	whichtoken(char *input, int *i)
 	if (!ft_strncmp(input + *i, "<<", 2))
 	{
 		(*i) += 1;
-		return(HERDOC);
+		return (HERDOC);
 	}
 	else if (!ft_strncmp(input + *i, ">>", 2))
 	{
 		(*i) += 1;
-		return (APP);	
-	}	
+		return (APP);
+	}
 	else if (input[*i] == '|')
 		return (PIPE);
 	else if (input[*i] == '<')
@@ -37,9 +37,9 @@ int	whichtoken(char *input, int *i)
 int	token_value(char *input)
 {
 	if (!ft_strncmp(input, "<<", 3))
-		return(HERDOC);
+		return (HERDOC);
 	else if (!ft_strncmp(input, ">>", 3))
-		return (APP);	
+		return (APP);
 	else if (!ft_strncmp(input, "|", 2))
 		return (PIPE);
 	else if (!ft_strncmp(input, "<", 2))

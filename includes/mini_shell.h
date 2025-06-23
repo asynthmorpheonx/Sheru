@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:08:30 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:40:54 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ char	*buffer_filler(char *s, int *i);
 char	**spliting_based_token(char *line);
 bool	tokenize(void);
 
-void	stor_redirections(int *arr, char **strs, t_file *file);
+void	stor_redirections(int *arr, char **strs, t_file *file, int i);
 void	make_a_file(int incount, int outcount, t_file *file);
 void	count_in_out(int *in, int *out, int *arr, char **strs);
 void	handle_redirections(int *arr, char **strs, t_file *file, int *mode);

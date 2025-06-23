@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:12:32 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/18 22:12:00 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:48:56 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_env(t_env **env)
 {
-	t_env *tmp;
+	t_env	*tmp;
 
 	tmp = *env;
 	while (tmp)
@@ -35,7 +35,7 @@ void	ft_pwd(void)
 	char	*path;
 
 	path = getcwd(NULL, 0);
-	if(!path)
+	if (!path)
 	{
 		clear_container();
 		perror("pwd");

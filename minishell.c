@@ -6,17 +6,17 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 16:29:23 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:34:52 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void begin_lexing(char *line)
+void	begin_lexing(char *line)
 {
 	reset_data_box();
 	if (!token_count(line))
-		return;
+		return ;
 	util()->s = spliting_based_token(line);
 	if (tokenize() && syntax_check())
 	{
@@ -30,7 +30,7 @@ void begin_lexing(char *line)
 		expansion_data(0, 0, 1, 1);
 		handle_quote();
 		if (!stor_in_list(util()->s, util()->a, box()))
-			return;
+			return ;
 		if (util()->herdoc)
 			herdoc_job();
 		if (*process_status() != INTERRUPTED)
@@ -39,7 +39,7 @@ void begin_lexing(char *line)
 	}
 }
 
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
 	char	*line;
 

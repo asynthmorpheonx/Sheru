@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 22:01:09 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/19 23:52:52 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:34:02 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ bool	creat_mask(void)
 {
 	bool	**mask;
 	int		i;
-	
+
 	i = 0;
 	mask = safe_alloc(util()->t * sizeof(bool *), 0);
 	if (!mask)

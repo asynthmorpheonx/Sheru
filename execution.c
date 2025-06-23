@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/23 22:23:52 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:24:51 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ int	builtin_check(char *cmd)
 
 int	node_count(void)
 {
-	int	count;
-	t_data *tmp;
+	int		count;
+	t_data	*tmp;
 
 	count = 0;
 	tmp = *box();
@@ -40,7 +40,7 @@ void	exec_builtin(t_data *cmd)
 	if (cmd->file.infile || cmd->file.outfile)
 	{
 		offs()->in_backup = dup(0);
-		offs()->out_backup = dup(1);	
+		offs()->out_backup = dup(1);
 	}
 	redirect(cmd);
 	ft_ceue(cmd, envp());
@@ -58,7 +58,7 @@ void	exec_builtin(t_data *cmd)
 	}
 }
 
-void execute_command(t_data *cmd)
+void	execute_command(t_data *cmd)
 {
 	executer()->ind = 0;
 	executer()->c_count = node_count();
