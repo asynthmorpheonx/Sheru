@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:26:43 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/22 23:30:54 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:07:41 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	syntax_err_msg(char *err)
 	else
 		ft_putstr_fd("newline", 2);
 	ft_putendl_fd("'", 2);
-	code_setter(1);
+	code_setter(2);
 }
 
 bool syntax_check(void)

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/22 23:28:54 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:22:16 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	interupt_handle(int	sig_num)
 	}
 }
 
+
 int main(int ac, char **av, char **env)
 {
 	char	*line;
@@ -67,6 +68,7 @@ int main(int ac, char **av, char **env)
 	signal(SIGQUIT, SIG_IGN);
 	make_env(env, envp(), 0, 0);
 	code_setter(0);
+	init_shlvl();
 	while (1)
 	{
 		*process_status() = SCANIN;
