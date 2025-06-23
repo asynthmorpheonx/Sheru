@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:03:20 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/05/30 18:45:40 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 22:47:23 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	handle_quote(void)
 	}
 }
 
-//it skips till '\0' or whitespace or it counter another token
 int	skip_quots(char *line, int *i)
 {
 	int	j;

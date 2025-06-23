@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt_gen.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:19:56 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/18 17:01:55 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/23 22:47:27 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ static char	*export_session(void)
 	return (str);
 }
 
-// creat an customize shell prompt just to show the user [USER@SESSION]-[OS@SHELL_NAME]
 char	*creat_prompt(void)
 {
 	static char	*str;

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:16:29 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/19 23:54:28 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 22:46:20 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,22 @@ void	store_in_tdata(t_data **node, t_data *tmp)
 		last_node(*node)->next = tmp;
 }
 
-// it store the char **strs in linked-list.
+void	store_word_nd_redirs(int *i, t_data	*tmp, int *to, int *bo)
+{
+	if (util()->a[*i] == WORD)
+	{
+		if (*to && (*to)--)
+			cmd_flag_handle(util()->s, util()->a, tmp, *i);
+		(*i)++;
+	}
+	else if (util()->a[*i] < PIPE || util()->a[*i] == HERDOC)
+	{
+		if (*bo)
+			handle_redirections(util()->a + *i, util()->s + *i, &tmp->file, bo);
+		(*i) += 2;
+	}
+}
+
 bool	stor_in_list(char **strs, int *arr, t_data **node)
 {
 	int		i;
@@ -46,23 +61,7 @@ bool	stor_in_list(char **strs, int *arr, t_data **node)
 		if (arr[i] == PIPE)
 			i++;
 		while (strs[i] && arr[i] != PIPE)
-		{
-			if (arr[i] == WORD)
-			{
-				if (to)
-				{
-					cmd_flag_handle(strs, arr, tmp, i);
-					to = 0;
-				}
-				i++;
-			}
-			else if (arr[i] < PIPE || arr[i] == HERDOC)
-			{
-				if (bo)
-					handle_redirections(arr + i, strs + i, &tmp->file, &bo);
-				i += 2;
-			}
-		}
+			store_word_nd_redirs(&i, tmp, &to, &bo);
 		store_in_tdata(node, tmp);
 	}
 	return (true);

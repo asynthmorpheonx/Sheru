@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   child_exec.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/23 22:47:35 by mel-mouh          #+#    #+#             */
+/*   Updated: 2025/06/23 22:48:01 by mel-mouh         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "mini_shell.h"
 
 void	close_pipes(void)
@@ -19,7 +31,7 @@ void	close_pipes(void)
 }
 
 int	execute_pipeline(t_data *cmd)
-{
+{ 
 	char	*path;
 	char	**anvp;
 	int		status;
