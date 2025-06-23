@@ -1,55 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expansion_handle.c                                 :+:      :+:    :+:   */
+/*   extend_fns.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/29 18:21:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:31:52 by mel-mouh         ###   ########.fr       */
+/*   Created: 2025/06/23 22:56:15 by mel-mouh          #+#    #+#             */
+/*   Updated: 2025/06/23 23:04:44 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
-
-void switch_toggles(int *toggle)
-{
-	if (*toggle)
-		*toggle = 0;
-	else
-		*toggle = 1;
-}
-
-void fetch_setter(bool mode, int i, bool is_full)
-{
-	if (mode)
-	{
-		if (i && util()->a[i - 1] < PIPE)
-			fetcher()->flage = true;
-		fetcher()->full_exp = is_full;
-	}
-	else
-	{
-		fetcher()->flage = false;
-		fetcher()->error = false;
-		fetcher()->full_exp = false;
-	}
-}
-
-int	join_preffix(int end, t_exp *ptr)
-{
-	int	i;
-
-	i = 0;
-	while (i < end)
-	{
-		ptr->du[i] = util()->s[i];
-		ptr->tokn[i] = util()->a[i];
-		ptr->mask[i] = util()->mask[i];
-		i++;
-	}
-	return (i);
-}
 
 void	handle_if_begin_with_ifs(int start, t_exp *ubox, char *value)
 {
@@ -80,47 +41,7 @@ void	handle_if_begin_with_ifs(int start, t_exp *ubox, char *value)
 	}
 }
 
-void	add_extended(t_exp *ubox)
-{
-	while (ubox->extend[ubox->j])
-	{
-		ubox->du[ubox->i] = ubox->extend[ubox->j];
-		ubox->tokn[ubox->i] = WORD;
-		ubox->mask[ubox->i] = safe_alloc(ft_strlen(ubox->extend[ubox->j]), 0);
-		ft_memset(ubox->mask[ubox->i], true, ft_strlen(ubox->extend[ubox->j]));
-		ubox->i++;
-		ubox->j++;
-	}
-}	
-
-
-void	add_suffix(t_exp *ubox)
-{
-	while (ubox->i < ubox->len)
-	{
-		ubox->du[ubox->i] = util()->s[ubox->i - ubox->j + 1];
-		ubox->tokn[ubox->i] = util()->a[ubox->i - ubox->j + 1];
-		ubox->mask[ubox->i] = util()->mask[ubox->i - ubox->j + 1];
-		ubox->i++;
-	}
-}
-
-void	expansion_util(int *ind, t_exp *ubox, int end, int tmp)
-{
-	if (util()->s[*ind][end]
-		&& !ft_isalpha(util()->s[*ind][end]))
-	{
-		ubox->du[ubox->i - 1] = safe_join(ubox->du[ubox->i - 1], util()->s[*ind] + end);
-		ubox->mask[ubox->i - 1] = handle_masking(ubox->du[ubox->i - 1], 0, tmp);
-	}
-	*ind = ubox->i - 1;
-	add_suffix(ubox);
-	util()->s = ubox->du;
-	util()->a = ubox->tokn;
-	util()->mask = ubox->mask;
-}
-
-static void extend_key(int *index, int *start, char *value, int end)
+void extend_key(int *index, int *start, char *value, int end)
 {
 	t_exp	u_box;
 	int		tmp;
@@ -147,7 +68,7 @@ static void extend_key(int *index, int *start, char *value, int end)
 	*start = tmp;
 }
 
-static void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
+void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
 {
 	char	*dup;
 	bool	*mask;
@@ -170,7 +91,7 @@ static void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
 		*strt = len - 1;
 }
 
-static bool	check_value(char *str)
+bool	check_value(char *str)
 {
 	int	i;
 	int	toggle;
@@ -179,8 +100,6 @@ static bool	check_value(char *str)
 	i = 0;
 	toggle = 1;
 	count = 0;
-	if (str && !*str)
-		return (false);
 	while (str[i])
 	{
 		if (!is_ifs(str[i]) && toggle)
@@ -199,7 +118,7 @@ static bool	check_value(char *str)
 	return (true);
 }
 
-static void expand_value(int *index, int *start)
+void expand_value(int *index, int *start)
 {
 	char	*dup;
 	char	*value;
@@ -216,42 +135,4 @@ static void expand_value(int *index, int *start)
 		extend_key(index, start, value, i);
 	else
 		replace_key_to_value(index, start, i, value);
-}
-
-bool	begin_expand(int *i, int *j, int *to)
-{
-	fetch_setter(SET, *i, false);
-	if (*to)
-		fetch_setter(SET, *i, true);
-	expand_value(i, j);
-	if (!fetcher()->error)
-		return (false);
-	util()->a[*i] = -1;
-	return (true);
-}
-
-void expansion_data(int i, int j, int to, int sto)
-{
-	while (util()->s[i])
-	{
-		j = 0;
-		to = 1;
-		sto = 1;
-		while (util()->s[i] && util()->s[i][j] && util()->a[i] > 4)
-		{
-			fetch_setter(RESET, 0, 0);
-			if (util()->s[i][j] == '\'' && to)
-				switch_toggles(&sto);
-			else if (util()->s[i][j] == '"' && sto)
-				switch_toggles(&to);
-			else if ((!i || (i && util()->a[i - 1] != 4))
-				&& util()->s[i][j] == '$' && sto)
-			{
-				if (!begin_expand(&i, &j, &to))
-					continue;
-			}
-			j++;
-		}
-		i++;
-	}
 }

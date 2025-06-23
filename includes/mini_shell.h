@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 22:33:55 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 23:08:30 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,5 +248,18 @@ void	here_doc_util(char *input, int fd);
 void	safe_pipe(int *fds);
 void	close_herdoc_ports(void);
 void	expand_herdoc_data(char *str, int fd);
+
+void	handle_if_begin_with_ifs(int start, t_exp *ubox, char *value);
+void extend_key(int *index, int *start, char *value, int end);
+void	replace_key_to_value(int *ind, int *strt, int k_len, char *value);
+bool	check_value(char *str);
+void expand_value(int *index, int *start);
+
+void switch_toggles(int *toggle);
+int	join_preffix(int end, t_exp *ptr);
+void	add_extended(t_exp *ubox);
+void	add_suffix(t_exp *ubox);
+
+void	expansion_util(int *ind, t_exp *ubox, int end, int tmp);
 
 #endif
