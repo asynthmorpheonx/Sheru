@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 00:23:00 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 00:27:34 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,11 +168,13 @@ char		*buffer_filler(char *line, int *i);
 char		**spliting_based_token(char *line);
 char		*buffer_filler(char *s, int *i);
 char		**spliting_based_token(char *line);
-char		*key_value(char *key);void		remove_quote(char *str, bool *mask, int len);
+char		*key_value(char *key);
+void		remove_quote(char *str, bool *mask, int len);
 char		*get_path(char *cmd, int *error_status);
 char		*ft_keydup(const char *s1);
 char		*creat_prompt(void);
-char		*safe_join(char *s1, char *s2);void		execute_command(t_data *cmd);
+char		*safe_join(char *s1, char *s2);
+void		execute_command(t_data *cmd);
 char		*exit_code(void);
 char		**env_to_array(t_env *ptr);
 char		*path_join(char *path, char *cmd, int *status);
@@ -188,10 +190,13 @@ void		stor_redirections(int *arr, char **strs, t_file *file, int i);
 void		make_a_file(int incount, int outcount, t_file *file);
 void		count_in_out(int *in, int *out, int *arr, char **strs);
 void		handle_redirections(int *arr, char **strs, t_file *file, int *mode);
-void		store_in_tdata(t_data **node, t_data *tmp);void		cmd_filler(char **strs, int *arr, char **buffer, int i);
+void		store_in_tdata(t_data **node, t_data *tmp);
+void		cmd_filler(char **strs, int *arr, char **buffer, int i);
 void		cmd_flag_handle(char **strs, int *arr, t_data *node, int i);
 void		handle_quote(void);
-char		**ifs_split(char const *s);void		ft_free_array(char **arr);void		catcpy(char *tmp, t_env *current);
+char		**ifs_split(char const *s);
+void		ft_free_array(char **arr);
+void		catcpy(char *tmp, t_env *current);
 void		ft_ceue(t_data *data, t_env **env);
 void		ft_cd(t_data *cmd);
 void		sort_tenv(char **env);
@@ -204,7 +209,8 @@ void		ft_pwd(void);
 void		code_setter(int new_code);
 void		fetch_setter(bool mode, int i, bool is_full);
 void		expansion_data(int i, int j, int to, int sto);
-void		close_pipes(void);void		err(char *str, int error_status, bool ex_it);
+void		close_pipes(void);
+void		err(char *str, int error_status, bool ex_it);
 void		wait_for_childs(void);
 void		handle_pipes(t_data *cmd, int ind);
 void		make_pids(int ccount);
@@ -227,7 +233,8 @@ void		handle_if_begin_with_ifs(int start, t_exp *ubox, char *value);
 void		extend_key(int *index, int *start, char *value, int end);
 void		replace_key_to_value(int *ind, int *strt, int k_len, char *value);
 void		expand_value(int *index, int *start);
-void		switch_toggles(int *toggle);void		add_extended(t_exp *ubox);
+void		switch_toggles(int *toggle);
+void		add_extended(t_exp *ubox);
 void		add_suffix(t_exp *ubox);
 void		expansion_util(int *ind, t_exp *ubox, int end, int tmp);
 void		build_data(char **args);

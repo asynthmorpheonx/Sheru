@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:21:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 00:25:43 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 00:27:49 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ bool	begin_expand(int *i, int *j, int *to)
 		expand_value(i, j);
 		if (!fetcher()->error)
 			return (false);
-		util()->a[*i] = -1;		
+		util()->a[*i] = -1;
 	}
 	return (true);
 }
