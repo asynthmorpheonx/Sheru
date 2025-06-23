@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:40:54 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 00:07:10 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <sys/ioctl.h>
 # include <sys/stat.h>
 
-typedef char t_prstat;
+typedef char	t_prstat;
 
 # define AMBIGUOUS_REDIRECT -1
 # define RESET 0
@@ -40,14 +40,12 @@ typedef char t_prstat;
 # define ESET 0b00000001
 # define ENOT 0b00000000
 
-
 typedef struct s_exutil
 {
 	int		c_count;
 	int		ind;
 	bool	is_builtin;
 }	t_exutil;
-
 
 typedef struct s_exp
 {
@@ -121,63 +119,54 @@ typedef struct s_envp
 	struct s_envp	*next;
 }	t_env;
 
-typedef	struct s_data
+typedef struct s_data
 {
 	char			**cmd;
 	t_file			file;
 	struct s_data	*next;
 }	t_data;
 
-void	begin_lexing(char *line);
-int		whichtoken(char *input, int *i);
-int		ft_iswhitespace(int c);
-int		ft_ispecial(int c);
-int		skip_quots(char *line, int *i);
-bool	token_count(char *str);
-void	fill_with_token(char **buffer, int token_id);
-char	*safe_substr(char *str, unsigned int start, size_t len);
-char	*buffer_filler(char *line, int *i);
-char	**spliting_based_token(char *line);
-t_env	*last_env(t_env *lst);
-void	add_to_envp(t_env **lst, t_env *tmp);
-void	make_env(char **env, t_env **lst, int i, int j);
-void	ult_exit(void);
-
-int		whichtoken(char *input, int *i);
-int		token_value(char *input);
-bool	token_count(char *str);
-void	fill_with_token(char **buffer, int token_id);
-char	*buffer_filler(char *s, int *i);
-char	**spliting_based_token(char *line);
-bool	tokenize(void);
-
-void	stor_redirections(int *arr, char **strs, t_file *file, int i);
-void	make_a_file(int incount, int outcount, t_file *file);
-void	count_in_out(int *in, int *out, int *arr, char **strs);
-void	handle_redirections(int *arr, char **strs, t_file *file, int *mode);
-
-t_data	*last_node(t_data *lst);
-void	store_in_tdata(t_data **node, t_data *tmp);
-bool	stor_in_list(char **strs, int *arr, t_data **node);
-
-int		cmd_count(char **strs, int *arr, int i);
-void	cmd_filler(char **strs, int *arr, char **buffer, int i);
-void	cmd_flag_handle(char **strs, int *arr, t_data *node, int i);
-
-char	*key_value(char *key);
-int		key_len(char *str, int pos);
-
-
-void	remove_quote(char *str, bool *mask, int len);
-void	handle_quote(void);
-
-bool	is_ifs(int c);
-char	**ifs_split(char const *s);
-
+void		begin_lexing(char *line);
+int			whichtoken(char *input, int *i);
+int			ft_iswhitespace(int c);
+int			ft_ispecial(int c);
+int			skip_quots(char *line, int *i);
+bool		token_count(char *str);
+void		fill_with_token(char **buffer, int token_id);
+char		*safe_substr(char *str, unsigned int start, size_t len);
+char		*buffer_filler(char *line, int *i);
+char		**spliting_based_token(char *line);
+t_env		*last_env(t_env *lst);
+void		add_to_envp(t_env **lst, t_env *tmp);
+void		make_env(char **env, t_env **lst, int i, int j);
+void		ult_exit(void);
+int			whichtoken(char *input, int *i);
+int			token_value(char *input);
+bool		token_count(char *str);
+void		fill_with_token(char **buffer, int token_id);
+char		*buffer_filler(char *s, int *i);
+char		**spliting_based_token(char *line);
+bool		tokenize(void);
+void		stor_redirections(int *arr, char **strs, t_file *file, int i);
+void		make_a_file(int incount, int outcount, t_file *file);
+void		count_in_out(int *in, int *out, int *arr, char **strs);
+void		handle_redirections(int *arr, char **strs, t_file *file, int *mode);
+t_data		*last_node(t_data *lst);
+void		store_in_tdata(t_data **node, t_data *tmp);
+bool		stor_in_list(char **strs, int *arr, t_data **node);
+int			cmd_count(char **strs, int *arr, int i);
+void		cmd_filler(char **strs, int *arr, char **buffer, int i);
+void		cmd_flag_handle(char **strs, int *arr, t_data *node, int i);
+char		*key_value(char *key);
+int			key_len(char *str, int pos);
+void		remove_quote(char *str, bool *mask, int len);
+void		handle_quote(void);
+bool		is_ifs(int c);
+char		**ifs_split(char const *s);
 int			builtin_check(char *cmd);
-void 		ft_free_array(char **arr);
-int 		envcount(t_env *env);
-void   		catcpy(char *tmp, t_env *current);
+void		ft_free_array(char **arr);
+int			envcount(t_env *env);
+void		catcpy(char *tmp, t_env *current);
 char		*get_path(char *cmd, int *error_status);
 t_offs		*offs(void);
 void		ft_ceue(t_data *data, t_env **env);
@@ -189,10 +178,8 @@ void		ft_exit(void);
 void		ft_echo(t_data *data);
 void		ft_env(t_env **env);
 void		ft_pwd(void);
-void		code_setter(int	new_code);
-
-char	*ft_keydup(const char *s1);
-
+void		code_setter(int new_code);
+char		*ft_keydup(const char *s1);
 void		fetch_setter(bool mode, int i, bool is_full);
 char		*creat_prompt(void);
 void		expansion_data(int i, int j, int to, int sto);
@@ -204,12 +191,10 @@ bool		*handle_masking(char *str, int start, int len);
 bool		*mask_joining(bool *o_mask, char *pre, char *suff);
 int			node_count(void);
 void		execute_command(t_data *cmd);
-
-void	close_pipes(void);
-int		execute_pipeline(t_data *cmd);
-bool	redirect(t_data *cmd);
-void	err(char *str, int error_status, bool ex_it);
-
+void		close_pipes(void);
+int			execute_pipeline(t_data *cmd);
+bool		redirect(t_data *cmd);
+void		err(char *str, int error_status, bool ex_it);
 t_exutil	*executer(void);
 void		wait_for_childs(void);
 bool		safer_fork(pid_t process_id, int ind, t_data *cmd);
@@ -217,49 +202,39 @@ void		handle_pipes(t_data *cmd, int ind);
 void		make_pids(int ccount);
 void		child_exec(t_data *cmd);
 void		close_herdoc_ports(void);
-
-void	ft_export(t_data *cmd);
-char	*exit_code(void);
-
-char    **env_to_array(t_env *ptr);
-
-t_data **box(void);
+void		ft_export(t_data *cmd);
+char		*exit_code(void);
+char		**env_to_array(t_env *ptr);
+t_data		**box(void);
 t_prstat	*process_status(void);
-t_env **envp(void);
-t_ferror *fetcher(void);
-t_utils *util(void);
-
-char	*path_join(char *path, char *cmd, int *status);
-char	*path_already(char *cmd, int *status);
-char	*get_path(char *cmd, int *error_status);
-
-void	reset_util_box(void);
-void	herdoc_job(void);
-void reset_data_box(void);
-bool syntax_check(void);
-void	init_shlvl(void);
-void	interupt_handle(int	sig_num);
-
-void make_pipe(void);
-void	pipe_indexing(void);
-
-void	replace_fd(t_data *node, char *str, int i);
-void	here_doc_util(char *input, int fd);
-void	safe_pipe(int *fds);
-void	close_herdoc_ports(void);
-void	expand_herdoc_data(char *str, int fd);
-
-void	handle_if_begin_with_ifs(int start, t_exp *ubox, char *value);
-void extend_key(int *index, int *start, char *value, int end);
-void	replace_key_to_value(int *ind, int *strt, int k_len, char *value);
-bool	check_value(char *str);
-void expand_value(int *index, int *start);
-
-void switch_toggles(int *toggle);
-int	join_preffix(int end, t_exp *ptr);
-void	add_extended(t_exp *ubox);
-void	add_suffix(t_exp *ubox);
-
-void	expansion_util(int *ind, t_exp *ubox, int end, int tmp);
+t_env		**envp(void);
+t_ferror	*fetcher(void);
+t_utils		*util(void);
+char		*path_join(char *path, char *cmd, int *status);
+char		*path_already(char *cmd, int *status);
+char		*get_path(char *cmd, int *error_status);
+void		reset_util_box(void);
+void		herdoc_job(void);
+void		reset_data_box(void);
+bool		syntax_check(void);
+void		init_shlvl(void);
+void		interupt_handle(int sig_num);
+void		make_pipe(void);
+void		pipe_indexing(void);
+void		replace_fd(t_data *node, char *str, int i);
+void		here_doc_util(char *input, int fd);
+void		safe_pipe(int *fds);
+void		close_herdoc_ports(void);
+void		expand_herdoc_data(char *str, int fd);
+void		handle_if_begin_with_ifs(int start, t_exp *ubox, char *value);
+void		extend_key(int *index, int *start, char *value, int end);
+void		replace_key_to_value(int *ind, int *strt, int k_len, char *value);
+bool		check_value(char *str);
+void		expand_value(int *index, int *start);
+void		switch_toggles(int *toggle);
+int			join_preffix(int end, t_exp *ptr);
+void		add_extended(t_exp *ubox);
+void		add_suffix(t_exp *ubox);
+void		expansion_util(int *ind, t_exp *ubox, int end, int tmp);
 
 #endif
