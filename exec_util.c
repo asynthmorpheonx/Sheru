@@ -6,11 +6,17 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 23:29:57 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/19 20:42:41 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 22:21:05 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini_shell.h"
+
+void ult_exit(void)
+{
+	clear_container();
+	exit(EXIT_FAILURE);
+}
 
 t_exutil	*executer(void)
 {

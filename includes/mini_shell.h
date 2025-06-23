@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 16:29:46 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 22:33:55 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,5 +240,13 @@ bool syntax_check(void);
 void	init_shlvl(void);
 void	interupt_handle(int	sig_num);
 
+void make_pipe(void);
+void	pipe_indexing(void);
+
+void	replace_fd(t_data *node, char *str, int i);
+void	here_doc_util(char *input, int fd);
+void	safe_pipe(int *fds);
+void	close_herdoc_ports(void);
+void	expand_herdoc_data(char *str, int fd);
 
 #endif

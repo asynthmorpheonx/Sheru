@@ -6,19 +6,12 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:23:10 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/22 23:23:48 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 22:20:55 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void ult_exit(void)
-{
-	clear_container();
-	exit(EXIT_FAILURE);
-}
-
-// checks the bytes if it's an white space
 int ft_iswhitespace(int c)
 {
 	return (c == ' ' || (c >= 9 && c <= 13));

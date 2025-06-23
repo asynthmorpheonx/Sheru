@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/23 16:43:57 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 22:23:52 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,6 @@ int	node_count(void)
 	return (count);
 }
 
-static void make_pipe(void)
-{
-	if (pipe(offs()->fpi) == -1 || pipe(offs()->spi) == -1)
-	{
-		if (offs()->pids)
-			free(offs()->pids);
-		close_pipes();
-		err("pipe", 3, 1);
-	}
-}
-
 void	exec_builtin(t_data *cmd)
 {
 	if (cmd->file.infile || cmd->file.outfile)
@@ -67,33 +56,6 @@ void	exec_builtin(t_data *cmd)
 		close(offs()->out_backup);
 		offs()->out_backup = 0;
 	}
-}
-
-void	pipe_indexing(void)
-{
-	if (executer()->ind % 2 == 0)
-	{
-		close(offs()->fpi[0]);
-		close(offs()->fpi[1]);
-		if (pipe(offs()->fpi) == -1)
-		{
-			if (offs()->pids)
-				free(offs()->pids);
-			err("pipe", 3, 1);
-		}
-	}
-	else
-	{
-		close(offs()->spi[0]);
-		close(offs()->spi[1]);
-		pipe(offs()->spi);
-		if (pipe(offs()->spi) == -1)
-		{
-			if (offs()->pids)
-				free(offs()->pids);
-			err("pipe", 3, 1);
-		}
-	}		
 }
 
 void execute_command(t_data *cmd)

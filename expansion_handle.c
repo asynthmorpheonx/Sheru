@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:21:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/19 23:49:38 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 22:31:52 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,8 @@ void	add_suffix(t_exp *ubox)
 
 void	expansion_util(int *ind, t_exp *ubox, int end, int tmp)
 {
-	if (util()->s[*ind][end] && !ft_isalpha(util()->s[*ind][end]))
+	if (util()->s[*ind][end]
+		&& !ft_isalpha(util()->s[*ind][end]))
 	{
 		ubox->du[ubox->i - 1] = safe_join(ubox->du[ubox->i - 1], util()->s[*ind] + end);
 		ubox->mask[ubox->i - 1] = handle_masking(ubox->du[ubox->i - 1], 0, tmp);
@@ -119,7 +120,6 @@ void	expansion_util(int *ind, t_exp *ubox, int end, int tmp)
 	util()->mask = ubox->mask;
 }
 
-// it extend the util().s and update the the array
 static void extend_key(int *index, int *start, char *value, int end)
 {
 	t_exp	u_box;
@@ -199,7 +199,6 @@ static bool	check_value(char *str)
 	return (true);
 }
 
-// this function expand the key found in util().s[index] and return the index after the expand
 static void expand_value(int *index, int *start)
 {
 	char	*dup;
@@ -219,7 +218,18 @@ static void expand_value(int *index, int *start)
 		replace_key_to_value(index, start, i, value);
 }
 
-// TODO : handle quote removal and empty value of variable
+bool	begin_expand(int *i, int *j, int *to)
+{
+	fetch_setter(SET, *i, false);
+	if (*to)
+		fetch_setter(SET, *i, true);
+	expand_value(i, j);
+	if (!fetcher()->error)
+		return (false);
+	util()->a[*i] = -1;
+	return (true);
+}
+
 void expansion_data(int i, int j, int to, int sto)
 {
 	while (util()->s[i])
@@ -234,15 +244,11 @@ void expansion_data(int i, int j, int to, int sto)
 				switch_toggles(&sto);
 			else if (util()->s[i][j] == '"' && sto)
 				switch_toggles(&to);
-			else if ((!i || (i && util()->a[i - 1] != 4)) && util()->s[i][j] == '$' && sto)
+			else if ((!i || (i && util()->a[i - 1] != 4))
+				&& util()->s[i][j] == '$' && sto)
 			{
-				fetch_setter(SET, i, false);
-				if (to)
-					fetch_setter(SET, i, true);
-				expand_value(&i, &j);
-				if (!fetcher()->error)
+				if (!begin_expand(&i, &j, &to))
 					continue;
-				util()->a[i] = -1;
 			}
 			j++;
 		}
