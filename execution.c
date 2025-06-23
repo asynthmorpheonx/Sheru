@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/22 23:09:28 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:43:57 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void make_pipe(void)
 		if (offs()->pids)
 			free(offs()->pids);
 		close_pipes();
-		clear_container();
+		err("pipe", 3, 1);
 	}
 }
 
