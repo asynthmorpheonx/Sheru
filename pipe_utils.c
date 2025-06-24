@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:24:00 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:35:19 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 20:23:16 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	pipe_indexing(void)
 	{
 		close(offs()->spi[0]);
 		close(offs()->spi[1]);
-		pipe(offs()->spi);
 		if (pipe(offs()->spi) == -1)
 		{
 			if (offs()->pids)

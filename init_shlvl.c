@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 16:22:03 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:31:35 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 20:12:29 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ void	init_shlvl(void)
 	int		curr_lvl;
 	t_env	*ptr;
 
-	curr_lvl = 1 + check_lvl(key_value("SHLVL"));
 	ptr = *envp();
+	curr_lvl = 1;
+	if (ptr)
+		curr_lvl = 1 + check_lvl(key_value("SHLVL"));
 	while (ptr)
 	{
 		if (!ft_strncmp(ptr->key, "SHLVL", 6))
@@ -45,9 +47,9 @@ void	init_shlvl(void)
 		}
 		ptr = ptr->next;
 	}
-	ptr = last_env(*envp());
-	ptr->next = safe_alloc(sizeof(t_env), 0);
-	ptr->next->key = safe_substr("SHLVL", 0, 5);
-	ptr->next->value = ft_itoa(curr_lvl);
-	g_lst_addback(g_new_garbage(ptr->next->value));
+	ptr = safe_alloc(sizeof(t_env), 0);
+	ptr->key = safe_substr("SHLVL", 0, 5);
+	ptr->value = ft_itoa(curr_lvl);
+	add_to_envp(envp(), ptr);
+	g_lst_addback(g_new_garbage(ptr->value));
 }

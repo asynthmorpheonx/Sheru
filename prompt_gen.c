@@ -6,11 +6,22 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:19:56 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:35:53 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 20:35:03 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
+
+static char	*prompt_expansion(char *key)
+{
+	char	*str;
+	char	*dup;
+
+	str = getenv(key);
+	if (str)
+		dup = safe_substr(str, 0, ft_strlen(str));
+	return (str);
+}
 
 static size_t	session_name_len(char *str)
 {
@@ -24,14 +35,13 @@ static size_t	session_name_len(char *str)
 
 static char	*export_session(void)
 {
-	static char	*str;
+	char		*str;
 	char		*ptr;
 
-	if (!str)
-	{
-		ptr = key_value(SESSIO);
+	str = NULL;
+	ptr = prompt_expansion(SESSIO);
+	if (ptr)
 		str = safe_substr(ptr, 6, session_name_len(ptr + 6));
-	}
 	return (str);
 }
 
@@ -43,20 +53,20 @@ char	*creat_prompt(void)
 
 	if (!str)
 	{
-		user = key_value(USR);
+		user = prompt_expansion(USR);
 		session = export_session();
 		str = NULL;
-		if (*session && *user)
+		if (session && user)
 		{
 			if (*user)
 				str = ft_strjoin(user, "@");
 			if (*session)
 				str = ft_gnl_strjoin(str, session);
 			str = ft_gnl_strjoin(str, ":~$ ");
+			g_lst_addback(g_new_garbage(str));
 		}
-		g_lst_addback(g_new_garbage(str));
-		if (!str)
-			ult_exit();
 	}
+	if (!str)
+		str = safe_substr("minishell >", 0, 12);
 	return (str);
 }
