@@ -6,25 +6,27 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:17:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 16:20:23 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/24 16:32:18 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-bool	exit_arg_check(char **str)
+bool	exit_arg_check(char *str)
 {
 	int	i;
 
 	i = 0;
-	while ((*str)[i])
-	{
+	if (str[i] == '+' || str[i] == '-')
 		i++;
-		if (!ft_isdigit((*str)[i]))
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
 		{
 			ft_putstr_fd("sheru: exit: ", 2);
-			return (err((*str), 7, 0),false);
+			return (err(str, 7, 0), false);
 		}
+		i++;
 	}
 	return (true);
 }
@@ -39,8 +41,10 @@ void	ft_exit(t_data *cmd)
 		code_setter(1);
 		return (ft_putendl_fd("sheru: exit: too many arguments", 2));
 	}
-	if (cmd->cmd[1] && exit_arg_check(cmd->cmd + 1))
+	if (cmd->cmd[1] && exit_arg_check(cmd->cmd[1]))
 		exit_nbr = ft_atoi(cmd->cmd[1]);
+	else if (!cmd->cmd[1])
+		exit_nbr = 0;
 	close_pipes();
 	if (offs()->pids)
 		free(offs()->pids);
