@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mini_shell.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 02:15:20 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 16:14:37 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,7 @@ void		ft_cd(t_data *cmd);
 void		sort_tenv(char **env);
 void		export_print(t_env **env);
 void		ft_unset(t_data *data, t_env **env);
-void		ft_exit(void);
+void		ft_exit(t_data *cmd);
 void		ft_echo(t_data *data);
 void		ft_env(t_env **env);
 void		ft_pwd(void);

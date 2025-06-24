@@ -3,22 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   uns_exp_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:17:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 01:33:48 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 16:20:23 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
 
-void	ft_exit(void)
+bool	exit_arg_check(char **str)
 {
+	int	i;
+
+	i = 0;
+	while ((*str)[i])
+	{
+		i++;
+		if (!ft_isdigit((*str)[i]))
+		{
+			ft_putstr_fd("sheru: exit: ", 2);
+			return (err((*str), 7, 0),false);
+		}
+	}
+	return (true);
+}
+
+void	ft_exit(t_data *cmd)
+{
+	int	exit_nbr;
+
+	exit_nbr = 2;
+	if (cmd->cmd[1] && cmd->cmd[2])
+	{
+		code_setter(1);
+		return (ft_putendl_fd("sheru: exit: too many arguments", 2));
+	}
+	if (cmd->cmd[1] && exit_arg_check(cmd->cmd + 1))
+		exit_nbr = ft_atoi(cmd->cmd[1]);
 	close_pipes();
 	if (offs()->pids)
 		free(offs()->pids);
 	clear_container();
-	exit(EXIT_SUCCESS);
+	exit(exit_nbr);
 }
 
 void	ft_unset(t_data *data, t_env **env)

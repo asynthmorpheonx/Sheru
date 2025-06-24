@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 00:00:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 00:00:40 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 16:08:54 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ void	err(char *str, int error_status, bool ex_it)
 		ft_putendl_fd(": No such file or directory", 2);
 	else if (error_status == 6)
 		ft_putendl_fd(": Is a directory", 2);
+	else if (error_status == 7)
+		return (ft_putendl_fd(": numeric argument required", 2));
 	clear_container();
 	if (ex_it)
 		exit(EXIT_FAILURE);
