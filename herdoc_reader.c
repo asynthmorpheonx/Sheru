@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:25:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 21:26:50 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 21:28:06 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,12 @@ void	expand_herdoc_data(char *str, int fd)
 	{
 		if (str[i] == '$' && str[i + 1])
 		{
-			tmp = key_value(str + i + 1);
-			len = key_len(str + i + 1, 0);
+			i++;
+			tmp = key_value(str + i);
+			len = key_len(str + i, 0);
 			if (*tmp)
 				write(fd, tmp, ft_strlen(tmp));
-			i += len + 1;
+			i += len;
 		}
 		else
 		{
