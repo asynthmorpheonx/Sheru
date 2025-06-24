@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:14:56 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:49:25 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 01:37:53 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,17 @@ void	ft_cd(t_data *cmd)
 			return (code_setter(1),
 				ft_putendl_fd("sheru: cd: HOME not set", 2));
 	}
+	else if (cmd->cmd[2])
+	{
+		code_setter(1);
+		return (ft_putendl_fd("sheru: cd: too many arguments", 2));
+	}
 	else
 		path = cmd->cmd[1];
 	if (chdir(path))
+	{
+		code_setter(1);
 		return (perror(cmd->cmd[1]));
+	}
 	update_pwd(getcwd(offs()->pwd, 4096), NULL);
 }

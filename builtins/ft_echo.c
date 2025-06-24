@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:39:34 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:49:57 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 02:21:55 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,7 @@ void	ft_echo(t_data *cmd)
 	if (cmd->cmd[1])
 		mode = check_n(cmd->cmd[1]);
 	if (mode)
-	{
 		echo_print(cmd->cmd + 2);
-	}
 	else
 	{
 		echo_print(cmd->cmd + 1);

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:17:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:47:25 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 01:33:48 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	ft_unset(t_data *data, t_env **env)
 	t_env	*prev;
 	t_env	*current;
 
+	if (!data->cmd[1])
+		return ;
 	prev = NULL;
 	current = *env;
 	while (current)

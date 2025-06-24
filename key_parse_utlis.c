@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:27:22 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:33:00 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 01:28:59 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ int	key_len(char *str, int pos)
 {
 	int	i;
 
-	i = pos + 1;
+	i = pos;
+	if (str[pos] == '?')
+		return (pos + 1);
 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 		i++;
 	return (i);

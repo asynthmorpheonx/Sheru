@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:47:35 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:18:12 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 01:57:09 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	child_exec(t_data *cmd)
 
 	status = 0;
 	handle_pipes(cmd, executer()->ind);
-	if (!redirect(cmd))
+	if (!redirect(cmd, true))
 		return (free(offs()->pids), close_pipes(), exit(1));
 	if (cmd->cmd && *cmd->cmd && !executer()->is_builtin)
 	{

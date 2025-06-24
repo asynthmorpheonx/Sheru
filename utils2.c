@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 09:28:45 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/23 23:47:51 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 02:15:07 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,18 @@ bool	safer_fork(pid_t process_id, int ind, t_data *cmd)
 	else
 		offs()->pids[ind] = process_id;
 	return (false);
+}
+
+void	redir_msg_err(int err_num, char *str)
+{
+	if (!err_num)
+		return ;
+	ft_putstr_fd("sheru: ", 2);
+	if (err_num == 1)
+		perror(str);
+	else if (err_num == 2)
+	{
+		ft_putstr_fd(str, 2);
+		ft_putendl_fd(": No such file or directory", 2);
+	}
 }

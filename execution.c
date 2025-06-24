@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/23 23:24:51 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 02:03:46 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ void	exec_builtin(t_data *cmd)
 		offs()->in_backup = dup(0);
 		offs()->out_backup = dup(1);
 	}
-	redirect(cmd);
-	ft_ceue(cmd, envp());
+	if (redirect(cmd, false))
+		ft_ceue(cmd, envp());
 	if (offs()->in_backup)
 	{
 		dup2(offs()->in_backup, 0);

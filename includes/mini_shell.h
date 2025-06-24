@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 00:27:34 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 02:15:20 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ bool		*mask_joining(bool *o_mask, char *pre, char *suff);
 bool		creat_mask(void);
 bool		*handle_masking(char *str, int start, int len);
 bool		*mask_joining(bool *o_mask, char *pre, char *suff);
-bool		redirect(t_data *cmd);
+bool		redirect(t_data *cmd, bool child_pr);
 bool		safer_fork(pid_t process_id, int ind, t_data *cmd);
 bool		syntax_check(void);
 bool		check_value(char *str);
@@ -238,5 +238,6 @@ void		add_extended(t_exp *ubox);
 void		add_suffix(t_exp *ubox);
 void		expansion_util(int *ind, t_exp *ubox, int end, int tmp);
 void		build_data(char **args);
+void		redir_msg_err(int err_num, char *str);
 
 #endif
