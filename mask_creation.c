@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 22:01:09 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:34:02 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 01:10:45 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,12 @@ bool	*handle_masking(char *str, int start, int len)
 	mask = safe_alloc(ft_strlen(str) + 1, 0);
 	if (!mask)
 		ult_exit();
-	while (i - start < len)
+	if (!*str)
+	{
+		mask[0] = true;
+		return (mask);
+	}
+	while (i < len + start - 1)
 	{
 		mask[i] = true;
 		i++;

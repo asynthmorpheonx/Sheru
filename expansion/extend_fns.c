@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:56:15 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:16:17 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 01:12:02 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,14 @@ void	replace_key_to_value(int *ind, int *strt, int k_len, char *value)
 		dup = ft_substr(util()->s[*ind], 0, *strt);
 	dup = ft_gnl_strjoin(dup, value);
 	var = ft_strlen(dup);
-	dup = safe_join(dup, util()->s[*ind] + k_len);
+	if (util()->s[*ind] + k_len)
+		dup = safe_join(dup, util()->s[*ind] + k_len);
 	delete_one(util()->s[*ind]);
 	delete_one(util()->mask[*ind]);
 	util()->s[*ind] = dup;
 	(util()->mask)[*ind] = handle_masking(dup, *strt, len);
 	if (*value)
-		*strt = len - 1;
+		*strt += len - 1;
 }
 
 bool	check_value(char *str)

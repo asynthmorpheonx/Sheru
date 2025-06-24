@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 18:21:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 00:27:49 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 01:17:38 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	expansion_util(int *ind, t_exp *ubox, int end, int tmp)
 
 bool	begin_expand(int *i, int *j, int *to)
 {
-	if (util()->s[*i][*j + 1])
+	if (util()->s[*i][*j + 1] && !ft_iswhitespace(util()->s[*i][*j + 1]))
 	{
 		fetch_setter(SET, *i, false);
 		if (*to)
