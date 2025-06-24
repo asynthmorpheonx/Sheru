@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:25:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:30:28 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/24 21:26:50 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,10 @@ void	expand_herdoc_data(char *str, int fd)
 		if (str[i] == '$' && str[i + 1])
 		{
 			tmp = key_value(str + i + 1);
-			len = key_len(str + i, 0);
-			if (str[i + 1] == '?')
-				len++;
+			len = key_len(str + i + 1, 0);
 			if (*tmp)
 				write(fd, tmp, ft_strlen(tmp));
-			i += len;
+			i += len + 1;
 		}
 		else
 		{
@@ -53,7 +51,7 @@ char	*here_doc_reader(char *str, bool mode, int i)
 	{
 		input = readline("> ");
 		if (*process_status() == INTERRUPTED
-			|| !input || !ft_memcmp(input, str, ft_strlen(input) + 1))
+			|| !input || !ft_strncmp(input, str, ft_strlen(input) + 1))
 			break ;
 		if (mode)
 			here_doc_util(input, fds[1]);
