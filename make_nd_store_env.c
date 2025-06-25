@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_nd_store_env.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:01:00 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 21:41:37 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/25 22:28:07 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	set_path(void)
 		tmp->key = safe_substr("PATH", 0, 4);
 		tmp->value = safe_substr(DFLPATH, 0, 61);
 		add_to_envp(envp(), tmp);
-		offs()->dfl_pth = true;
 	}
 }
 
