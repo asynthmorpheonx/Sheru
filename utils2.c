@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 09:28:45 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/24 16:14:54 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/25 16:59:50 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,11 @@ bool	safer_fork(pid_t process_id, int ind, t_data *cmd)
 	if (process_id == -1)
 		ult_exit();
 	if ((!process_id && !cmd->cmd) || !process_id)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		return (true);
+	}
 	else
 		offs()->pids[ind] = process_id;
 	return (false);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 18:31:33 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/24 15:55:52 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:58:33 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int	node_count(void)
 
 void	exec_builtin(t_data *cmd)
 {
-	code_setter(0);
 	if (cmd->file.infile || cmd->file.outfile)
 	{
 		offs()->in_backup = dup(0);

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:39:34 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 02:21:55 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:59:33 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,46 @@ static bool	check_n(char *arg)
 	return (true);
 }
 
+int	check_flags(char **arg)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (arg[i])
+	{
+		if (arg[i][0] != '-')
+			return (i);
+		j = 1;
+		while (arg[i][j])
+		{
+			if (arg[i][j] != 'n')
+				return (i);
+			j++;
+		}
+		i++;
+	}
+	return (i);
+}
+
 void	ft_echo(t_data *cmd)
 {
 	bool	mode;
+	int		i;
 
 	mode = false;
+	i = 2;
 	if (cmd->cmd[1])
 		mode = check_n(cmd->cmd[1]);
 	if (mode)
-		echo_print(cmd->cmd + 2);
+	{
+		i += check_flags(cmd->cmd + 2);
+		echo_print(cmd->cmd + i);
+	}
 	else
 	{
 		echo_print(cmd->cmd + 1);
 		printf("\n");
 	}
+	code_setter(0);
 }

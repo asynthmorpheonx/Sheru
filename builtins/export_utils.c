@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 23:56:14 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:58:44 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:59:05 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	build_data(char **args)
 	int	mode;
 
 	i = 0;
+	code_setter(0);
 	while (args[i])
 	{
 		if (export_syntax(args[i], &mode, &start))

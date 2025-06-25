@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   uns_exp_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:17:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 16:32:18 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/25 18:00:45 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_exit(t_data *cmd)
 	if (cmd->cmd[1] && exit_arg_check(cmd->cmd[1]))
 		exit_nbr = ft_atoi(cmd->cmd[1]);
 	else if (!cmd->cmd[1])
-		exit_nbr = 0;
+		exit_nbr = ft_atoi(exit_code());
 	close_pipes();
 	if (offs()->pids)
 		free(offs()->pids);
@@ -57,6 +57,7 @@ void	ft_unset(t_data *data, t_env **env)
 	t_env	*prev;
 	t_env	*current;
 
+	code_setter(0);
 	if (!data->cmd[1])
 		return ;
 	prev = NULL;

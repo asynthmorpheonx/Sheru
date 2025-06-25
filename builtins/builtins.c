@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:12:32 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:48:56 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:59:47 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	ft_env(t_env **env)
 		}
 		tmp = tmp->next;
 	}
+	code_setter(0);
 }
 
 void	ft_pwd(void)
@@ -44,4 +45,5 @@ void	ft_pwd(void)
 		ft_putstr_fd(path, STDOUT_FILENO);
 	free(path);
 	printf("\n");
+	code_setter(0);
 }
