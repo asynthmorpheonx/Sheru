@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:01:00 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 21:36:29 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/25 21:41:37 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ void	set_path(void)
 	if (!*path)
 	{
 		tmp = safe_alloc(sizeof(t_env), 0);
-		if(!tmp)
+		if (!tmp)
 			ult_exit();
 		tmp->key = safe_substr("PATH", 0, 4);
-		tmp->value = safe_substr(DFL_PATH, 0, ft_strlen(DFL_PATH));
+		tmp->value = safe_substr(DFLPATH, 0, 61);
 		add_to_envp(envp(), tmp);
-		offs()->dfl_Pth = true;
+		offs()->dfl_pth = true;
 	}
 }
 

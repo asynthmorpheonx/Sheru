@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 21:32:01 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/25 21:41:28 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef char	t_prstat;
 # define ESET 0b00000001
 # define ENOT 0b00000000
 
-#define DFL_PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+# define DFLPATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 typedef struct s_exutil
 {
@@ -85,7 +85,7 @@ typedef struct s_offs
 	char	pwd[4096];
 	int		fpi[2];
 	int		spi[2];
-	bool	dfl_Pth;
+	bool	dfl_pth;
 	pid_t	*pids;
 }	t_offs;
 

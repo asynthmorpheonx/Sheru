@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 00:00:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 21:35:24 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/25 21:42:02 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	sort_tenv(char **env)
 
 void	dfl_path_err(void)
 {
-	if (!offs()->dfl_Pth)
+	if (!offs()->dfl_pth)
 		ft_putendl_fd(": command not found", 2);
 	else
 		ft_putendl_fd(": No such file or directory", 2);
