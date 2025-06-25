@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_shlvl.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 16:22:03 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 20:44:21 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/25 21:18:42 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ static int	check_lvl(char	*shlvl)
 	}
 	nbr = ft_atoi(shlvl);
 	if (nbr >= 999)
-		return (ft_putstr_fd("bash: warning: shell level (", 2),
-			ft_putstr_fd(shlvl, 2),
+		return (ft_putstr_fd("sheru: warning: shell level (", 2),
+			ft_putnbr_fd(nbr + 1, 2),
 			ft_putendl_fd(") too high, resetting to 1", 2), 0);
 	return (nbr);
 }
