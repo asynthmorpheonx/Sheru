@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:12:32 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 17:59:47 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/25 18:16:24 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,8 @@ void	ft_pwd(void)
 
 	path = getcwd(NULL, 0);
 	if (!path)
-	{
-		clear_container();
-		perror("pwd");
-	}
-	else
-		ft_putstr_fd(path, STDOUT_FILENO);
+		return (code_setter(0), ft_putendl_fd(offs()->pwd, 1));
+	ft_putstr_fd(path, STDOUT_FILENO);
 	free(path);
 	printf("\n");
-	code_setter(0);
 }

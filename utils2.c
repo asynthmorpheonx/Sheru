@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 09:28:45 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/25 16:59:50 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/25 20:36:44 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,12 +84,19 @@ void	redir_msg_err(int err_num, char *str)
 {
 	if (!err_num)
 		return ;
-	ft_putstr_fd("sheru: ", 2);
+	if (err_num != 3)
+		ft_putstr_fd("sheru: ", 2);
 	if (err_num == 1)
 		perror(str);
 	else if (err_num == 2)
 	{
 		ft_putstr_fd(str, 2);
+		ft_putendl_fd(": No such file or directory", 2);
+	}
+	else if (err_num == 3)
+	{
+		ft_putstr_fd("cd: error retrieving current directory:", 2);
+		ft_putstr_fd(" getcwd: cannot access parent directories", 2);
 		ft_putendl_fd(": No such file or directory", 2);
 	}
 }

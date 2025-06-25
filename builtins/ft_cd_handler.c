@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:14:56 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 18:02:07 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/25 20:35:33 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	update_oldwd(char *new_oldwd, t_env *oldwd)
 		oldwd = safe_alloc(sizeof(t_env), 0);
 		if (!oldwd)
 			ult_exit();
-		oldwd->key = "OLDPWD";
+		oldwd->key = safe_substr("OLDPWD", 0, 6);
 		last_env(*envp())->next = oldwd;
 	}
 	oldwd->value = new_oldwd;
@@ -44,7 +44,7 @@ static void	update_pwd(char *new_wd, t_env *tmp)
 	if (!nwd)
 	{
 		nwd = safe_alloc(sizeof(t_env), 0);
-		nwd->key = "PWD";
+		nwd->key = safe_substr("PWD", 0, 3);
 		last_env(*envp())->next = nwd;
 	}
 	else if (nwd)
@@ -57,6 +57,7 @@ static void	update_pwd(char *new_wd, t_env *tmp)
 void	ft_cd(t_data *cmd)
 {
 	char	*path;
+	char	*tmp;
 
 	if (!cmd->cmd[1] || (cmd->cmd[1] && !*cmd->cmd[1]))
 	{
@@ -70,6 +71,10 @@ void	ft_cd(t_data *cmd)
 			ft_putendl_fd("sheru: cd: too many arguments", 2));
 	else
 		path = cmd->cmd[1];
+	tmp = getcwd(NULL, 0);
+	if (!tmp)
+		return (redir_msg_err(3, NULL));
+	free(tmp);
 	if (chdir(path))
 		return (code_setter(1), perror(cmd->cmd[1]));
 	code_setter(0);
