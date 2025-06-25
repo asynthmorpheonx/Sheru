@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 16:22:03 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 20:12:29 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/25 20:44:21 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static int	check_lvl(char	*shlvl)
 {
 	int	i;
+	int	nbr;
 
 	i = 0;
 	while (shlvl[i])
@@ -23,7 +24,12 @@ static int	check_lvl(char	*shlvl)
 			return (0);
 		i++;
 	}
-	return (ft_atoi(shlvl));
+	nbr = ft_atoi(shlvl);
+	if (nbr >= 999)
+		return (ft_putstr_fd("bash: warning: shell level (", 2),
+			ft_putstr_fd(shlvl, 2),
+			ft_putendl_fd(") too high, resetting to 1", 2), 0);
+	return (nbr);
 }
 
 void	init_shlvl(void)
