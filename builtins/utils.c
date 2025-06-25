@@ -6,7 +6,7 @@
 /*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 00:00:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 16:08:54 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/25 21:35:24 by hoel-mos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,14 @@ void	sort_tenv(char **env)
 	}
 }
 
+void	dfl_path_err(void)
+{
+	if (!offs()->dfl_Pth)
+		ft_putendl_fd(": command not found", 2);
+	else
+		ft_putendl_fd(": No such file or directory", 2);
+}
+
 void	err(char *str, int error_status, bool ex_it)
 {
 	if (error_status == 4)
@@ -58,7 +66,7 @@ void	err(char *str, int error_status, bool ex_it)
 	else if (error_status == 4)
 		ft_putendl_fd(": ambiguous redirect", 2);
 	else if (error_status == 127)
-		ft_putendl_fd(": command not found", 2);
+		dfl_path_err();
 	else if (error_status == 126)
 		ft_putendl_fd(": permission denied", 2);
 	else if (error_status == 5)
