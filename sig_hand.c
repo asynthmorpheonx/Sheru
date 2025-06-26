@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 16:29:08 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/26 23:05:47 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/27 00:03:35 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 void	interupt_handle(int sig_num)
 {
-	if (sig_num == SIGINT
-		&& *process_status() != INTERRUPTED && *process_status() != WAITIN)
+	if (*process_status() != WAITIN)
 	{
 		if (*process_status() == HERDOC_READ)
 		{
@@ -29,5 +28,7 @@ void	interupt_handle(int sig_num)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+	else if (ft_atoi(exit_code()) != 130)
+		write(STDOUT_FILENO, "\n", 1);
 	code_setter(128 + sig_num);
 }
