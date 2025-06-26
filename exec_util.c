@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 23:29:57 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/27 00:07:59 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/27 00:09:07 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	wait_for_childs(void)
 			{
 				code_setter(128 + WTERMSIG(status));
 				if (WTERMSIG(status) == SIGQUIT)
-					write(1, "Quit (core dumped)\n", 19);
+					ft_putendl_fd("Quit (core dumped)", 2);
 			}
 		}
 		i++;

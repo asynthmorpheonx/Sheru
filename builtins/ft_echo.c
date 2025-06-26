@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:39:34 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 17:59:33 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/27 00:24:50 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,13 @@ static void	echo_print(char **str)
 	int	i;
 
 	i = 0;
+	if (write(1, NULL, 0) == -1)
+		return (perror("sheru: echo: write error"), code_setter(1));
 	while (str[i])
 	{
-		ft_putstr_fd(str[i], 1);
+		printf("%s", str[i]);
 		if (str[i + 1])
-			ft_putstr_fd(" ", 1);
+			printf(" ");
 		i++;
 	}
 }
@@ -73,6 +75,7 @@ void	ft_echo(t_data *cmd)
 
 	mode = false;
 	i = 2;
+	code_setter(0);
 	if (cmd->cmd[1])
 		mode = check_n(cmd->cmd[1]);
 	if (mode)
@@ -85,5 +88,4 @@ void	ft_echo(t_data *cmd)
 		echo_print(cmd->cmd + 1);
 		printf("\n");
 	}
-	code_setter(0);
 }
