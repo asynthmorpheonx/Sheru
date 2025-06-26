@@ -36,6 +36,7 @@ typedef char	t_prstat;
 # define SCANIN 0b1001010
 # define HERDOC_READ 0b1011001
 # define INTERRUPTED 0b1110010
+# define WAITIN 0b0010011
 # define EAPP 0b00000010
 # define ESET 0b00000001
 # define ENOT 0b00000000

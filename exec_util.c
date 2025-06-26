@@ -46,6 +46,7 @@ void	wait_for_childs(void)
 
 	i = 0;
 	status = 0;
+	*process_status() = WAITIN;
 	while (i < executer()->c_count)
 	{
 		if (offs()->pids[i])

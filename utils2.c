@@ -82,8 +82,6 @@ bool	safer_fork(pid_t process_id, int ind, t_data *cmd)
 
 void	redir_msg_err(int err_num, char *str)
 {
-	if (!err_num)
-		return ;
 	if (err_num != 3)
 		ft_putstr_fd("sheru: ", 2);
 	if (err_num == 1)
