@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 09:28:45 by hoel-mos          #+#    #+#             */
-/*   Updated: 2025/06/25 20:36:44 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/26 22:23:11 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,10 @@ bool	safer_fork(pid_t process_id, int ind, t_data *cmd)
 		return (true);
 	}
 	else
+	{
+		*process_status() = WAITIN;
 		offs()->pids[ind] = process_id;
+	}
 	return (false);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:25:11 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 21:28:06 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/26 23:17:31 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,20 +44,19 @@ char	*here_doc_reader(char *str, bool mode, int i)
 	char	*input;
 	int		fds[2];
 
-	input = NULL;
 	if (mode)
 		safe_pipe(fds);
 	*process_status() = HERDOC_READ;
+	input = ft_readline();
 	while (1)
 	{
-		input = readline("> ");
 		if (*process_status() == INTERRUPTED
 			|| !input || !ft_strncmp(input, str, ft_strlen(input) + 1))
 			break ;
 		if (mode)
 			here_doc_util(input, fds[1]);
 		free(input);
-		input = NULL;
+		input = ft_readline();
 	}
 	if (mode)
 	{

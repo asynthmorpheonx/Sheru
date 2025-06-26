@@ -6,11 +6,17 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:38:01 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 20:38:07 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/26 23:16:51 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mini_shell.h>
+
+char	*ft_readline(void)
+{
+	write(1, "> ", 2);
+	return (readline(""));
+}
 
 void	begin_lexing(char *line)
 {

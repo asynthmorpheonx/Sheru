@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 08:53:04 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 22:27:55 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/26 23:17:08 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,7 @@ char		**env_to_array(t_env *ptr);
 char		*path_join(char *path, char *cmd, int *status);
 char		*path_already(char *cmd, int *status);
 char		*get_path(char *cmd, int *error_status);
+char		*ft_readline(void);
 void		begin_lexing(char *line);
 void		fill_with_token(char **buffer, int token_id);
 void		add_to_envp(t_env **lst, t_env *tmp);
