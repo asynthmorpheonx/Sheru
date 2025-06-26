@@ -1,2 +1,4 @@
 readline.supp
 *.o
+*.a
+minishell
