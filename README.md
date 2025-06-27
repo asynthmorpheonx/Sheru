@@ -23,7 +23,7 @@ Setup
 
     Clone the repository:
 
-git clone https://github.com/yourusername/minishell.git
+git clone https://github.com/asynthmorpheonx/minishell.git
 cd minishell
 
 Build the executable:
