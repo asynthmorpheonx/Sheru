@@ -6,11 +6,11 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:21:34 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/24 20:43:44 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/27 14:26:05 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mini_shell.h>
+#include <sheru.h>
 
 char	*path_join(char *path, char *cmd, int *status)
 {

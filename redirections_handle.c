@@ -6,11 +6,11 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:07:45 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:42:02 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/27 14:26:05 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mini_shell.h>
+#include <sheru.h>
 
 void	stor_redirections(int *arr, char **strs, t_file *file, int i)
 {

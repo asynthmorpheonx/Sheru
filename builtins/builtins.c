@@ -6,11 +6,11 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:12:32 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 18:16:24 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/27 14:26:05 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mini_shell.h>
+#include <sheru.h>
 
 void	ft_env(t_env **env)
 {

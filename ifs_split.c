@@ -6,11 +6,11 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 00:28:53 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:30:49 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/27 14:26:05 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mini_shell.h>
+#include <sheru.h>
 
 static int	count_word(char const *s)
 {

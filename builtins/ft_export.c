@@ -6,11 +6,11 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 21:40:29 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:59:14 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/27 14:26:05 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mini_shell.h>
+#include <sheru.h>
 
 int	ft_varcmp(char *s1, char *s2)
 {

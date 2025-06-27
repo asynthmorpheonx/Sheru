@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoel-mos <hoel-mos@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 22:14:56 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/25 21:15:52 by hoel-mos         ###   ########.fr       */
+/*   Updated: 2025/06/27 14:26:05 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mini_shell.h>
+#include <sheru.h>
 
 static void	update_oldwd(char *new_oldwd, t_env *oldwd)
 {

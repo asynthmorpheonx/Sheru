@@ -7,7 +7,7 @@ SRC= builtins/builtins.c builtins/ft_cd_handler.c builtins/ft_echo.c builtins/ft
 	expansion/expansion_handle.c expansion/expand_utils.c
 
 OBJ= $(SRC:%.c=%.o)
-NAME= minishell
+NAME= Sheru
 LIBS= libs/libft.a
 CC= cc
 CFLAGS= -Wall -Werror -Wextra -ggdb
