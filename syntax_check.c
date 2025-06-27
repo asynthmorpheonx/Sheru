@@ -34,7 +34,7 @@ bool	syntax_check(void)
 			&& (i + 1 >= util()->t || !i || util()->a[i - 1] != WORD))
 			return (syntax_err_msg(util()->s[i]), false);
 		else if ((util()->a[i] == IND || util()->a[i] == OUD)
-			&& (i + 1 >= util()->t || util()->a[i] != WORD))
+			&& (i + 1 >= util()->t || util()->a[i + 1] != WORD))
 			return (syntax_err_msg(util()->s[i]), false);
 		else if ((util()->a[i] == APP || util()->a[i] == HERDOC)
 			&& (i + 1 >= util()->t || util()->a[i + 1] != WORD))

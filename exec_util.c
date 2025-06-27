@@ -59,6 +59,8 @@ void	wait_for_childs(void)
 				code_setter(128 + WTERMSIG(status));
 				if (WTERMSIG(status) == SIGQUIT)
 					ft_putendl_fd("Quit (core dumped)", 2);
+				else if (WTERMSIG(status) == SIGINT)
+					ft_putendl_fd("", 1);
 			}
 		}
 		i++;

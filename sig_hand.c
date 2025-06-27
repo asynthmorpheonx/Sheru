@@ -14,7 +14,6 @@
 
 void	interupt_handle(int sig_num)
 {
-	code_setter(128 + sig_num);
 	if (*process_status() != WAITIN)
 	{
 		if (*process_status() == HERDOC_READ)
@@ -29,6 +28,5 @@ void	interupt_handle(int sig_num)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
-	else if (ft_atoi(exit_code()) != 130)
-		write(1, "\n", 1);
+	code_setter(128 + sig_num);
 }
