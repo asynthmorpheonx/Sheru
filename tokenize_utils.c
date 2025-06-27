@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 22:07:38 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:45:46 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/27 14:05:09 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ bool	token_count(char *str)
 		else if (str[i] == '|' || str[i] == '>' || str[i] == '<')
 			i++;
 		else if (!skip_quots(str, &i))
-			return (ft_putendl_fd("non end quots", 2), false);
+			return (ft_putendl_fd("sheu: syntax error non end quots", 2),
+				code_setter(2), false);
 		tcount++;
 	}
 	util()->t = tcount;

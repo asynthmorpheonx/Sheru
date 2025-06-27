@@ -6,7 +6,7 @@
 /*   By: mel-mouh <mel-mouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 23:26:43 by mel-mouh          #+#    #+#             */
-/*   Updated: 2025/06/23 23:45:05 by mel-mouh         ###   ########.fr       */
+/*   Updated: 2025/06/27 14:03:51 by mel-mouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ bool	syntax_check(void)
 	{
 		if (util()->a[i] == PIPE
 			&& (i + 1 >= util()->t || !i || util()->a[i - 1] != WORD))
-			return (syntax_err_msg(util()->s[i + 1]), false);
+			return (syntax_err_msg(util()->s[i]), false);
 		else if ((util()->a[i] == IND || util()->a[i] == OUD)
-			&& (i + 1 >= util()->t || util()->a[i + 1] != WORD))
-			return (syntax_err_msg(util()->s[i + 1]), false);
+			&& (i + 1 >= util()->t || util()->a[i] != WORD))
+			return (syntax_err_msg(util()->s[i]), false);
 		else if ((util()->a[i] == APP || util()->a[i] == HERDOC)
 			&& (i + 1 >= util()->t || util()->a[i + 1] != WORD))
-			return (syntax_err_msg(util()->s[i + 1]), false);
+			return (syntax_err_msg(util()->s[i]), false);
 		i++;
 	}
 	return (true);
