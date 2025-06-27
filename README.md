@@ -36,12 +36,12 @@ Usage
 
 Start the shell by running:
 
-./minishell
+./Sheru
 
 Once running, you can type commands just like in a standard shell. Use built-ins like cd or export, or run external programs if they’re in your PATH.
 Notes
 
-    The shell handles Ctrl+C and Ctrl+\ signals gracefully.
+    The Sheru handles Ctrl+C and Ctrl+\ signals gracefully.
 
     Environment is inherited from the parent, unless started with env -i.
 
