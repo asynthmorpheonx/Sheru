@@ -13,7 +13,7 @@ Features
 
         echo — supports only -n flag
 
-        exit — exit the shell
+        exit — exit the shell with optional code statue
 
         env — print environment variables
 
@@ -21,22 +21,24 @@ Features
 
 Setup
 
-    Clone the repository:
+Clone the repository:
 
-git clone https://github.com/asynthmorpheonx/minishell.git
-cd minishell
+    git clone https://github.com/asynthmorpheonx/Sheru.git
+    cd Sheru
+
+
 
 Build the executable:
 
     make
 
-    This will generate the minishell binary.
+This will generate the Sheru binary.
 
 Usage
 
 Start the shell by running:
 
-./Sheru
+    ./Sheru
 
 Once running, you can type commands just like in a standard shell. Use built-ins like cd or export, or run external programs if they’re in your PATH.
 Notes
